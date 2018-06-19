@@ -6,12 +6,17 @@ from pyglet.window import key
 
 class Player(pyglet.sprite.Sprite):
 
+    randomized = False
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.keys = dict(left=False, right=False, up=False, down=False)
         self.key_handler = key.KeyStateHandler()
         self.spot = self.x #point it is spawned (off screen r)        
         self.has_spot = False
+        self.speed = 3
+        self.item = "None"
+
 
     def update(self, dt):
         self.check_spots()
@@ -19,25 +24,14 @@ class Player(pyglet.sprite.Sprite):
         print(util.Line.spots)
         print(util.Line.spots_avail)
         self.move_player()
-#        if self.key_handler[key.LEFT]:
-#            self.x -= 1
-#        if self.key_handler[key.RIGHT]:
-#            self.x += 1
-#        if self.key_handler[key.UP]:
-#            self.y += 1
-#        if self.key_handler[key.DOWN]:
-#            self.y -= 1
-#        else:
-#            pass
-
 
     def move_player(self):
         """Player moves to their assigned spot."""
         if self.x != self.spot:
             if self.x < self.spot:
-                self.x += 1
+                self.x += self.speed
             if self.x > self.spot:
-                self.x -= 1 
+                self.x -= self.speed 
 
     def check_spots(self):
         """Looks for an available spot closest to the upper platform."""
