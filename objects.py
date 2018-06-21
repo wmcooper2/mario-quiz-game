@@ -25,24 +25,44 @@ class Player(pyglet.sprite.Sprite):
         self.key_handler = key.KeyStateHandler()
         self.spot = self.x #point it is spawned (off screen r)        
         self.has_spot = False
-        self.speed = 3
         self.item = "None"
-
-
+#        self.movement = "left"    
+        self.moving = False
+        self.speed = "walk"
+            
     def update(self, dt):
-        self.check_spots()
-        print("player = ", self.image)
-        print(util.Line.spots)
-        print(util.Line.spots_avail)
-        self.move_player()
+        self.check_spots()  #check, assign spots
+        self.animate()      #set moving attribute
 
-    def move_player(self):
-        """Player moves to their assigned spot."""
-        if self.x != self.spot:
-            if self.x < self.spot:
-                self.x += self.speed
-            if self.x > self.spot:
-                self.x -= self.speed 
+    def delta_x(self):
+        """Get the distance between objects position and spot position.
+            Returns Integer."""
+        return self.x - self.spot
+
+    def animate(self):
+        if self.speed == "walk":
+            self.walk()
+        if self.speed == "run": #add running sprite sequences for mario, speed up the timing on others
+            self.run()
+
+    def walk(self):
+        """Walks the player left or right.
+            Returns None."""
+        delta = self.delta_x()
+        #update sprite image
+        if delta != 0 and self.moving == False:
+            self.moving = True
+            if delta > 0:
+                self.image = self.walk_left_anim
+            if delta < 0:
+                self.image = self.walk_right_anim
+        elif delta == 0:
+            self.image = self.stand_left_anim 
+        #move left or right
+        if delta > 0:
+            self.x -= 1
+        if delta < 0:
+            self.x += 1
 
     def check_spots(self):
         """Looks for an available spot closest to the upper platform."""
@@ -56,14 +76,11 @@ class Player(pyglet.sprite.Sprite):
             if spot_available(spot) and not self.has_spot:
                 self.assign_spot(spot)
                 self.has_spot = True 
-#                util.Line.spots_avail[util.Line.spots.index(spot)] = False   
                 spot_unavailable(spot)
 
     def assign_spot(self, new_spot):
         """Assigns a spot to the players."""
         self.spot = new_spot
-
-
 
 class FloatingPlayer(Player):
     
@@ -73,7 +90,7 @@ class FloatingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def floating(self):
+    def float(self):
         """Makes the character float up and down in place.
             Returns None."""
         radians = math.radians(FloatingPlayer.float_deg)
@@ -83,76 +100,111 @@ class FloatingPlayer(Player):
             FloatingPlayer.float_height = 0
         FloatingPlayer.float_deg += 1
         self.y = self.y + (FloatingPlayer.float_height / 3) 
-#        print("float_height = ", FloatingPlayer.float_height)
-#        print("float_deg = ", FloatingPlayer.float_deg)
-
-    def update2(self, dt): #changed name from 'update' to not conflict
-        self.floating()
-        self.y = self.y + (FloatingPlayer.float_height / 3) 
-        if self.key_handler[key.LEFT]:
-            self.x -= 1
-        if self.key_handler[key.RIGHT]:
-            self.x += 1
-        if self.key_handler[key.UP]:
-            self.y += 1
-        if self.key_handler[key.DOWN]:
-            self.y -= 1
-        else:
-            pass
 
 class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-    def walk(self):
-        """Update walking sequence images."""
-        print("walking")
-
 class FireLight(FloatingPlayer):
     
-    fire_light_img = pyglet.resource.image("fire_light1.png")
-    util.center_floating_player(fire_light_img)
-
+    #stand_left => stand_left_img because of motion while standing
+    stand_left = pyglet.resource.image("fire_light_walk_left.png")
+    util.center_floating_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 2)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
+#    stand_left = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
+    walk_right = pyglet.resource.image("fire_light_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left = pyglet.resource.image("fire_light_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        print(self.__class__)    
+        print(self.__class__ == "objects.FireLight")
+
 class Dragon(WalkingPlayer):
     
-    dragon_img = pyglet.resource.image("dragon_walk1.png")
-    util.center_walking_player(dragon_img)
+    stand_left = pyglet.resource.image("dragon_stand_left.png")
+    util.center_walking_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
+    walk_right = pyglet.resource.image("dragon_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left = pyglet.resource.image("dragon_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigBoo(FloatingPlayer):
     
-    big_boo_img = pyglet.resource.image("big_boo1_left.png")
-    util.center_floating_player(big_boo_img)
+    stand_left = pyglet.resource.image("big_boo_stand_left.png")
+    util.center_floating_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
+    walk_right = pyglet.resource.image("big_boo_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left = pyglet.resource.image("big_boo_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class GreenKoopa(WalkingPlayer):
     
-    green_koopa_img = pyglet.resource.image("green_koopa1_left.png")
-    util.center_walking_player(green_koopa_img)
+    stand_left = pyglet.resource.image("green_koopa_stand_left.png")
+    util.center_walking_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
+    walk_right = pyglet.resource.image("green_koopa_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left = pyglet.resource.image("green_koopa_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigMole(WalkingPlayer):
     
-    big_mole_img = pyglet.resource.image("big_mole1_left.png")
-    util.center_walking_player(big_mole_img)
-
+    stand_left = pyglet.resource.image("big_mole_stand_left.png")
+    util.center_walking_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
+    walk_right = pyglet.resource.image("big_mole_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left = pyglet.resource.image("big_mole_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+ 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Mario(WalkingPlayer):
 
-    mario_img = pyglet.resource.image("mario_big_left_1.png")
-    util.center_walking_player(mario_img)
+    stand_left = pyglet.resource.image("big_mario_standing_left.png")
+    util.center_walking_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
+    walk_right_img = pyglet.resource.image("mario_walking_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right_img, 1, 3)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left_img = pyglet.resource.image("mario_walking_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left_img, 1, 3)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.key_handler = key.KeyStateHandler()
+
 
