@@ -1,7 +1,6 @@
 import math
 import util
 import pyglet
-from pyglet.window import key
 
 #setup resource dirs
 resource_dir = "./resources"
@@ -21,25 +20,51 @@ class Player(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.keys = dict(left=False, right=False, up=False, down=False)
-        self.key_handler = key.KeyStateHandler()
-        self.spot = self.x #point it is spawned (off screen r)        
+        self.spot = self.x #initially, off screen, changed immediately
         self.has_spot = False
         self.item = "None"
-#        self.movement = "left"    
         self.moving = False
         self.speed = "walk"
             
     def update(self, dt):
-        self.check_spots()  #check, assign spots
-        self.animate()      #set moving attribute
+        self.check_spots()  #check, assign player_spots
+        self.move()      #set moving attribute
+
+    def check_spots(self):
+        """Looks for an available spot closest to the upper platform."""
+        def spot_available(spot):
+            return not util.Line.player_spots_occupied[util.Line.player_spots.index(spot)] #not (False) == True 
+
+        def make_spot_unavailable(spot):
+            util.Line.player_spots_occupied[util.Line.player_spots.index(spot)] = True 
+
+        for spot in util.Line.player_spots:
+            if spot_available(spot) and not self.has_spot: # after player rotation, need to move one spot to the left
+                self.assign_spot(spot)
+                self.has_spot = True 
+                make_spot_unavailable(spot)
+            try:
+                if not spot_available(spot-1) and self.has_spot:
+                    print("self.spot = ", self.spot)
+                    print("spot -1 = ", spot-1)
+    #            if spot_available(spot):
+                    #move to that spot (conflicting with earlier conditional? or wont because it will run first until all player_spots are filled. when the ready spot is opened, then this block will execute because the players will already have a spot, then spot_available(spot) is the only one that will execute)???
+    #                self.assign_spot(spot)
+    #                self.has_spot = True
+    #                self.move()
+            except ValueError:
+                pass
+
+    def assign_spot(self, new_spot):
+        """Assigns a spot to the players."""
+        self.spot = new_spot
 
     def delta_x(self):
         """Get the distance between objects position and spot position.
             Returns Integer."""
         return self.x - self.spot
 
-    def animate(self):
+    def move(self):
         if self.speed == "walk":
             self.walk()
         if self.speed == "run": #add running sprite sequences for mario, speed up the timing on others
@@ -58,32 +83,27 @@ class Player(pyglet.sprite.Sprite):
                 self.image = self.walk_right_anim
         elif delta == 0:
             self.image = self.stand_left_anim 
+            self.moving = False
         #move left or right
         if delta > 0:
             self.x -= 1
         if delta < 0:
             self.x += 1
 
-    def check_spots(self):
-        """Looks for an available spot closest to the upper platform."""
-        def spot_available(spot):
-            return util.Line.spots_avail[util.Line.spots.index(spot)] 
-
-        def spot_unavailable(spot):
-            util.Line.spots_avail[util.Line.spots.index(spot)] = False
-
-        for spot in util.Line.spots:
-            if spot_available(spot) and not self.has_spot:
-                self.assign_spot(spot)
-                self.has_spot = True 
-                spot_unavailable(spot)
-
-    def assign_spot(self, new_spot):
-        """Assigns a spot to the players."""
-        self.spot = new_spot
+    def leave_ready_position(self):
+        """Removes a player from the ready position. Returns None."""
+        if self.spot == util.Line.player_spots[0]:
+            util.Line.player_spots_occupied[0] = False 
+            #temp change of self.spot
+            print("self.spot = ", self.spot)
+            self.spot = 0 #ASSIGN TO SPOT-1 IF NOT SPOT[0]
+#        self.check_spots() #shouldn't have to call this, called through self.update(dt)
+            self.walk()
+        
 
 class FloatingPlayer(Player):
-    
+    """Creates a player that floats cyclicly in the air."""    
+ 
     float_height = 0
     float_deg = 0
 
@@ -122,8 +142,6 @@ class FireLight(FloatingPlayer):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(self.__class__)    
-        print(self.__class__ == "objects.FireLight")
 
 class Dragon(WalkingPlayer):
     
@@ -205,6 +223,5 @@ class Mario(WalkingPlayer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.key_handler = key.KeyStateHandler()
 
 
