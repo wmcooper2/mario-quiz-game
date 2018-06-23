@@ -1,6 +1,5 @@
 import pyglet
 
-
 def center_image(image):
     """Centers the anchor point in the image."""
     image.anchor_x = image.width // 2
@@ -36,16 +35,13 @@ class Line():
             Returns None."""
         for place in range(self.num_players):
             if len(self.player_spots) == 0:
-                first_spot = (self.screen_w // 2) - 100
+                first_spot = (self.screen_w // 2) - 150
                 self.player_spots.append(first_spot)
             else:
-                next_spot = (self.screen_w // 2) + (90 * place)
+                next_spot = (self.screen_w // 2) - 150 + (100 * place)
                 self.player_spots.append(next_spot)
         for place in self.player_spots:
             self.player_spots_occupied.append(False)#changed from True
-
-        print("player_spots          = ", self.player_spots)
-        print("player_spots_occupied = ", self.player_spots_occupied)
 
     def item_line_up(self, items):
         """Sets the available item positions on the screen.
@@ -61,15 +57,3 @@ class Line():
             index += 1
         for item in self.item_spots:
             self.item_spots_occupied.append(False) #changed from True
-    
-        print("item_spots          = ", self.item_spots)
-        print("item_spots_occupied = ", self.item_spots_occupied)
-
-
-
-
-
-
-
-
-

@@ -90,11 +90,6 @@ def randomize_players():
             game_objects.append(player) 
 randomize_players()
 
-
-
-
-
-
 #setup item sprites
 green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stop, x = ITEM_PLATFORM_W, y = ITEM_PLATFORM_H, batch = main_batch)
 green_mushroom.scale = 1.5
@@ -107,6 +102,7 @@ item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
 item_spots.item_line_up(game_items)
 
 print(game_items)
+print(players)
 
 @game_window.event
 def on_draw():
@@ -115,39 +111,31 @@ def on_draw():
 
 def update(dt):
     for obj in game_objects:
+        obj.spot = util.Line.player_spots[game_objects.index(obj)]
         obj.update(dt)
     for obj in floating_players:
         obj.float()
-    if key_handler[key.LEFT]:
-#        clock.schedule_once(next_player, 1)
+    if key_handler[key.LEFT] and game_objects[-1].moving == False:
         next_player()
-        for obj in game_objects:
-            print("player and spot = ", obj.__class__, obj.spot)
+    if key_handler[key.UP]:
+        scatter_players()
 
-def next_player(): #pass 'dt' if using a clock method
-    """Next player's turn. Returns None."""
+def next_player(): 
+    """Gets the next player into the ready position. Returns None."""
     player_leaving = game_objects[0]
-    rotate_player_list() #works
-    leave_ready_position(player_leaving) #works
-    move_player_lineup()
+    rotate_player_list() 
 
 def rotate_player_list():
     """Rotates contents of players list to the left by one. Returns None."""
-    print("game_objects = ", game_objects)
     temp_player = game_objects[0]
     game_objects.remove(temp_player)
     game_objects.append(temp_player)
-    print("game_objects = ", game_objects)
 
-def leave_ready_position(player_leaving):
-    """Moves the player from the ready position. Returns None."""
-    objects.Player.leave_ready_position(player_leaving)
-    print("player_spots_occupied = ", util.Line.player_spots_occupied)
-
-def move_player_lineup():
-    """Every player moves up one in the lineup. Returns None."""
-    print("move_player_lineup()")
+def scatter_players():
+    """Players are assigned random spots. Returns None."""
+    print("scattered players")
 
 if __name__ == "__main__":
-    pyglet.clock.schedule_interval(update, 1/30)
+    pyglet.clock.schedule_interval(update, 1/120)
+    pyglet.clock.schedule_once(objects.Player.game_in_play, 5)
     pyglet.app.run()

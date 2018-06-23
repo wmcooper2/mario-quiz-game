@@ -1,8 +1,6 @@
 import pyglet
 import util
 
-
-
 class Item(pyglet.sprite.Sprite):
     
     def __init__(self, *args, **kwargs):
@@ -24,7 +22,3 @@ class GreenMushroom(Item):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-#        print("GreenMushroom.x = ", self.x)
-#        print("GreenMushroom.y = ", self.y)
-
-
