@@ -1,4 +1,5 @@
 import pyglet
+import random
 
 def center_image(image):
     """Centers the anchor point in the image."""
@@ -21,9 +22,7 @@ def center_ground_sprite(obj):
 class Line():
 
     player_spots = [] #filled by Line.line_up() 
-    player_spots_occupied = []
     item_spots = []
-    item_spots_occupied = []
 
     def __init__(self, num_players = 0, screen_w = 0, num_items = 0, *args, **kwargs):
         self.num_players = num_players
@@ -40,20 +39,15 @@ class Line():
             else:
                 next_spot = (self.screen_w // 2) - 150 + (100 * place)
                 self.player_spots.append(next_spot)
-        for place in self.player_spots:
-            self.player_spots_occupied.append(False)#changed from True
 
     def item_line_up(self, items):
         """Sets the available item positions on the screen.
             Returns None."""
-        index = 0
         for item in range(self.num_items):
             if len(self.item_spots) == 0:
-                first_spot = (self.screen_w // 2) - 200
+                first_spot = (self.screen_w // 2) - 216
                 self.item_spots.append(first_spot)
             else:
-                next_spot = (self.screen_w // 2) - 200 - (16 * item) #problem with width math
+                next_spot = (self.screen_w // 2) - 216 - (24 * item) #problem with width math
                 self.item_spots.append(next_spot)
-            index += 1
-        for item in self.item_spots:
-            self.item_spots_occupied.append(False) #changed from True
+        print("item_spots = ", Line.item_spots)

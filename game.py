@@ -18,19 +18,20 @@ game_window.push_handlers(key_handler)
 SCREEN_W = game_window.width
 SCREEN_H = game_window.height
 OFF_SCREEN_R = 1100
+OFF_SCREEN_L = -100
 FLOAT_H = 100
 WALK_H = 63
 ITEM_PLATFORM_H = 264
 ITEM_PLATFORM_W = 300
 #determine number of players (replace with return val from menu screen)
 NUM_PLAYERS = 6
-NUM_ITEMS = 1
+NUM_ITEMS = 6
 
 #create the spots for player positions on the screen
 player_spots = util.Line(screen_w = SCREEN_W, num_players=NUM_PLAYERS)
 player_spots.line_up()
 
-#setup images
+#setup player containers 
 game_objects = [] #all players are added in randomize_players()
 floating_players = []
 walking_players = []
@@ -76,26 +77,33 @@ walking_players.append(mario)
 
 #add lakitu, luigi, peach, toad
 
-##randomize player selection
-def randomize_players():
-    if objects.Player.randomized == False:
-        objects.Player.randomized = True
-        random_players = []
-        copy = players[:]
-        for x in range(NUM_PLAYERS):
-            player_choice = random.choice(copy)
-            random_players.append(player_choice)
-            copy.remove(player_choice)
-        for player in random_players:
-            game_objects.append(player) 
-randomize_players()
-
-#setup item sprites
-green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stop, x = ITEM_PLATFORM_W, y = ITEM_PLATFORM_H, batch = main_batch)
-green_mushroom.scale = 1.5
+#setup item containers
 game_items = []
 
+#setup item sprites
+green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+green_mushroom.scale = 1.5
 game_items.append(green_mushroom)
+
+red_mushroom = items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+red_mushroom.scale = 1.5
+game_items.append(red_mushroom)
+
+pow_button = items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+pow_button.scale = 1.5
+game_items.append(pow_button) 
+
+yoshi_coin = items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+yoshi_coin.scale = 1.5
+game_items.append(yoshi_coin) 
+
+spiny_beetle = items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+spiny_beetle.scale = 1.5
+game_items.append(spiny_beetle) 
+
+pirahna_plant = items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+pirahna_plant.scale = 1.5
+game_items.append(pirahna_plant) 
 
 #line up the items
 item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
@@ -110,6 +118,7 @@ def on_draw():
     main_batch.draw()
 
 def update(dt):
+    #players update
     for obj in game_objects:
         obj.spot = util.Line.player_spots[game_objects.index(obj)]
         obj.update(dt)
@@ -117,8 +126,10 @@ def update(dt):
         obj.float()
     if key_handler[key.LEFT] and game_objects[-1].moving == False:
         next_player()
-    if key_handler[key.UP]:
-        scatter_players()
+    #items update
+    for obj in game_items:
+        obj.spot = util.Line.item_spots[game_items.index(obj)]
+        obj.update(dt)
 
 def next_player(): 
     """Gets the next player into the ready position. Returns None."""
@@ -131,11 +142,21 @@ def rotate_player_list():
     game_objects.remove(temp_player)
     game_objects.append(temp_player)
 
-def scatter_players():
-    """Players are assigned random spots. Returns None."""
-    print("scattered players")
+def randomize_players():
+    """Randomizes the starting order of the player line up. Returns None."""
+    if objects.Player.randomized == False:
+        objects.Player.randomized = True
+        random_players = []
+        copy = players[:]
+        for x in range(NUM_PLAYERS):
+            player_choice = random.choice(copy)
+            random_players.append(player_choice)
+            copy.remove(player_choice)
+        for player in random_players:
+            game_objects.append(player) 
+randomize_players()
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)
-    pyglet.clock.schedule_once(objects.Player.game_in_play, 5)
+    clock.schedule_once(objects.Player.game_in_play, 5) #prevents running all the time.
     pyglet.app.run()

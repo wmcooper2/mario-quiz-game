@@ -18,6 +18,7 @@ class Background(pyglet.sprite.Sprite):
 class Player(pyglet.sprite.Sprite):
 
     randomized = False
+    game_just_started = True #use this to prevent the last player from running on stage?
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,19 +28,22 @@ class Player(pyglet.sprite.Sprite):
         self.moving = False
         self.speed = "walk"
         self.rotating_players = False
-        self.game_just_started = True #use this to prevent the last player from running on stage?
             
     def update(self, dt):
         self.delta_x = self.x - self.spot
-        if self.game_just_started:
+        if Player.game_just_started:
             self.speed = "run"
         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
             self.speed = "run"
         self.move() 
+        #refactor move, walk, run and call them here
+        #self.change_speed
+        #self.change_animation
+        #self.move 
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
-        self.game_just_started = False
+        Player.game_just_started = False
 
     def move(self):
         """Moves the player. Returns None."""
