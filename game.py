@@ -141,10 +141,16 @@ def update(dt):
         obj.update(dt)
     for obj in floating_players:
         obj.float()
-    
+    #items update
+    for obj in game_items:
+        obj.spot_x = util.Line.item_spots[game_items.index(obj)]
+        obj.update(dt)
+    if yammy.inventory:
+        for obj in yammy.inventory:
+            obj.update(dt)
     #yammy animation
     yammy.fading()
-    if key_handler[key._1] and not any_movement() and not yammy.transition:
+    if key_handler[key.F] and not any_movement() and not yammy.transition:
         #yammy wand action
         yammy.transition = True
         if yammy.fade == "in":
@@ -152,11 +158,32 @@ def update(dt):
         elif yammy.fade == "out":
             yammy.fade = "in"
         print("yammy.fade = ", yammy.fade)
+    
+    if key_handler[key._1] and not any_movement() and not yammy.magic_happening:
+        #player gets one item
+        print("give one item")
+        yammy.magic_happening = True
+#        if yammy.item_fade == "in":
+#            yammy.item_fade = "out"
+#        elif yammy.item_fade == "out":
+#            yammy.item_fade = "in"
+        
+        give_item()
+
+    if key_handler[key._2] and not any_movement():
+        #player gets two items
+        print("give two items")
+        for x in range(2):
+            yammys_item = game_items[0]
+            yammy.inventory.append(yammys_item)
+            game_items.remove(yammys_item)
+        yammy.give_item()
 
     if key_handler[key.LEFT] and not any_movement():
         #rotate players left one
         next_player()
         print("next_player(), lineup = ", game_objects)
+
     if key_handler[key.UP] and not any_movement():
         #randomly mix players
         mix_players()
@@ -167,12 +194,20 @@ def update(dt):
 #        print("falling_item[0] = ", falling_item[0])
 #        game_items.remove(game_items[0]) #separate from original list
 
-    #items update
-    for obj in game_items:
-        obj.spot = util.Line.item_spots[game_items.index(obj)]
-        obj.update(dt)
-
-    #global timer control without using clock.Clock() to limit repeat actions too fast.
+def give_item():
+    """Item is given to player in the ready position. Returns None."""
+    print("game_items = ", game_items)
+    yammys_item = game_items[0]
+    yammy.inventory.append(yammys_item)
+    game_items.remove(yammys_item)
+    yammy.inventory[0].spot_x = game_objects[0].x
+    yammy.inventory[0].spot_y = 400
+#    print("game_objects = ", game_objects)
+#    print("game_objects[0].x = ", game_objects[0].x)
+#    game_items[0].spot_x = game_objects[0].x
+#    game_items[0].spot_y = 400
+#    print("game_items = ", game_items)
+#    print("yammy's inv = ", yammy.inventory)
 
 def any_movement():
     """Checks if any player is moving. Returns Boolean."""

@@ -7,8 +7,10 @@ class Item(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.spot = self.x
-        self.delta = 0        
+        self.spot_x = self.x
+        self.spot_y = self.y
+        self.delta_x = 0        
+        self.delta_y = 0
         self.moving = False
         self.falling = False
 
@@ -21,32 +23,39 @@ class Item(pyglet.sprite.Sprite):
         pass
     
     def update(self, dt):
-        self.delta_x = self.x - self.spot
+        self.delta_x = self.x - self.spot_x
+        self.delta_y = self.y - self.spot_y
         self.walk()
         self.move()
         if Item.debug == True:
             self.debug_info()
 
     def move(self):
-        """Moves the items left or right. Returns None."""
+        """Moves the items closer to spot_x and spot_y. Returns None."""
         #move left or right
-        delta = self.delta_x
-        if delta > 0:
+        delta_x = self.delta_x
+        delta_y = self.delta_y
+        if delta_x > 0:
             self.x -= 1
-        if delta < 0:
+        if delta_x < 0:
             self.x += 1
+        if delta_y > 0:
+            self.y -= 1
+        if delta_y < 0:
+            self.y += 1
 
     def walk(self):
         """Changes the animation of the sprite"""
-        delta = self.delta_x
+        delta_x = self.delta_x
+        delta_y = self.delta_y
         #update sprite image
-        if delta != 0 and self.moving == False:
+        if delta_x != 0 and self.moving == False:
             self.moving = True
-            if delta > 0:
+            if delta_x > 0:
                 self.image = self.walk_left_anim 
-            if delta < 0:
+            if delta_x < 0:
                 self.image = self.walk_right_anim 
-        elif delta == 0:
+        elif delta_x == 0:
             self.image = self.stand_right_anim
             self.moving = False
 

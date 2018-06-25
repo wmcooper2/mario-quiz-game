@@ -150,6 +150,9 @@ class Yammy(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
         self.fade = "out"
         self.transition = False
+        self.inventory = []
+        self.magic_happening = False
+        self.item_fade = "out"
 
     def action(self):
         """Animates the magic wand wave. Returns None."""
@@ -163,22 +166,38 @@ class Yammy(pyglet.sprite.Sprite):
         my_clock = clock.Clock()
         my_clock.schedule_once(yammy_standing, 0.6) 
 
+    def give_item2(self):
+        """Gives an item to a player. Returns String."""
+        if self.item_fade == "in" and self.inventory and self.inventory[0].opacity < 255:
+            self.item_fade_in()
+        if self.item_fade == "out" and self.inventory and self.inventory[0].opacity > 0:
+            self.item_fade_out()
+        if self.inventory and self.inventory[0].opacity == 255:
+            self.transition = False
+        if self.inventory and self.inventory[0].opacity == 0:
+            self.transition = False
+#            return "item gone"
+
+    def give_item(self):
+        """Gives an item to a player. Returns String."""
+        pass
+
+    def item_fade_out(self):
+        """Fades first inventory item out. Returns None."""
+        self.inventory[0].opacity -=1
+
+    def item_fade_in(self):
+        """Fades first inventory item in. Returns None."""
+        self.inventory[0].opacity += 1
+
     def fading(self):
         """Toggles fading animation. Returns None."""
-        
-#        print("opacity = ", self.opacity, "trans = ", self.transition, "fade = ", self.fade)
-        def start_fade_out(self):
-            """Sets Yammy.fade to 'out'. Returns None."""
-            Yammy.__init__.fade = "out"
-        
         if self.fade == "in" and self.opacity < 255:
             self.fade_in()
         if self.fade == "out" and self.opacity > 0:
             self.fade_out()
         if self.opacity == 255:
             self.transition = False
-#            self.action() ##need to call action() only once
-#            pyglet.clock.schedule_once(start_fade_out, 1)
         if self.opacity == 0:
             self.transition = False
 
@@ -189,7 +208,6 @@ class Yammy(pyglet.sprite.Sprite):
     def fade_out(self):
         """Fades Yammy out to 0 opacity. Returns None."""
         self.opacity -= 3
-
 
 class FireLight(FloatingPlayer):
     
