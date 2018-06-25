@@ -50,6 +50,7 @@ background = objects.Background(img = objects.Background.background_img, batch =
 #yammy (not a playing character)
 yammy = objects.Yammy(img = objects.Yammy.stand_right, x = 30, y = ITEM_PLATFORM_H, batch = main_batch)
 yammy.scale = 2
+yammy.opacity = 0
 
 #fire_light
 fire_light = objects.FireLight(img = objects.FireLight.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
@@ -132,18 +133,32 @@ def on_draw():
             obj.debug_xpos.draw()
 
 def update(dt):
+    """Game update loop. Returns None."""
+
     #players update
     for obj in game_objects:
         obj.spot = util.Line.player_spots[game_objects.index(obj)]
         obj.update(dt)
     for obj in floating_players:
         obj.float()
+    
+    #yammy animation
+    yammy.fading()
+    if key_handler[key._1] and not any_movement() and not yammy.transition:
+        #yammy wand action
+        yammy.transition = True
+        if yammy.fade == "in":
+            yammy.fade = "out"
+        elif yammy.fade == "out":
+            yammy.fade = "in"
+        print("yammy.fade = ", yammy.fade)
 
-    #key_handlers
     if key_handler[key.LEFT] and not any_movement():
+        #rotate players left one
         next_player()
         print("next_player(), lineup = ", game_objects)
     if key_handler[key.UP] and not any_movement():
+        #randomly mix players
         mix_players()
         print("mix_players(), lineup = ", game_objects)
 #    if key_handler[key.RIGHT] and not any_movement(): 
@@ -155,9 +170,9 @@ def update(dt):
     #items update
     for obj in game_items:
         obj.spot = util.Line.item_spots[game_items.index(obj)]
-#        if obj.falling == True:
-#           fall(obj, dt) 
         obj.update(dt)
+
+    #global timer control without using clock.Clock() to limit repeat actions too fast.
 
 def any_movement():
     """Checks if any player is moving. Returns Boolean."""
@@ -224,6 +239,5 @@ randomize_players()
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)
-#    clock.schedule_once(objects.Player.game_in_play, 5) #prevents running all the time.
     pyglet.app.run()
 

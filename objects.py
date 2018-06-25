@@ -142,12 +142,53 @@ class WalkingPlayer(Player):
 class Yammy(pyglet.sprite.Sprite):
     
     stand_right = pyglet.resource.image("yammy_stand_right.png")    
+    action_right_img = pyglet.resource.image("yammy_action_right.png")
+    action_right_seq = pyglet.image.ImageGrid(action_right_img, 1, 2)
+    action_right_anim = pyglet.image.Animation.from_image_sequence(action_right_seq, 0.2, False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fade = "out"
+        self.transition = False
 
+    def action(self):
+        """Animates the magic wand wave. Returns None."""
+
+        print("yammy timer induced action")
+        def yammy_standing():
+            """Returns Yammy to the standing position. Returns None."""
+            self.img = Yammy.stand_right
+
+        self.img = Yammy.action_right_anim
+        my_clock = clock.Clock()
+        my_clock.schedule_once(yammy_standing, 0.6) 
+
+    def fading(self):
+        """Toggles fading animation. Returns None."""
+        
+#        print("opacity = ", self.opacity, "trans = ", self.transition, "fade = ", self.fade)
+        def start_fade_out(self):
+            """Sets Yammy.fade to 'out'. Returns None."""
+            Yammy.__init__.fade = "out"
+        
+        if self.fade == "in" and self.opacity < 255:
+            self.fade_in()
+        if self.fade == "out" and self.opacity > 0:
+            self.fade_out()
+        if self.opacity == 255:
+            self.transition = False
+#            self.action() ##need to call action() only once
+#            pyglet.clock.schedule_once(start_fade_out, 1)
+        if self.opacity == 0:
+            self.transition = False
+
+    def fade_in(self):
+        """Fades Yammy in to 255 opacity. Returns None."""
+        self.opacity += 3
     
-
+    def fade_out(self):
+        """Fades Yammy out to 0 opacity. Returns None."""
+        self.opacity -= 3
 
 
 class FireLight(FloatingPlayer):
