@@ -19,6 +19,7 @@ class Player(pyglet.sprite.Sprite):
 
     randomized = False
     game_just_started = True #use this to prevent the last player from running on stage?
+    debug = False
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,6 +29,8 @@ class Player(pyglet.sprite.Sprite):
         self.moving = False
         self.speed = "walk"
         self.rotating_players = False
+        self.inventory = []
+#        self.debug_xpos = pyglet.text.Label(text = str(self.x), font_name = 'Times New Roman', font_size = 10, x = self.delta_x, y = 10, color = (0, 0, 0, 255))
             
     def update(self, dt):
         self.delta_x = self.x - self.spot
@@ -35,7 +38,8 @@ class Player(pyglet.sprite.Sprite):
             self.speed = "run"
         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
             self.speed = "run"
-        self.move() 
+        self.move()
+#        self.debug_xpos.draw()
         #refactor move, walk, run and call them here
         #self.change_speed
         #self.change_animation
@@ -102,6 +106,15 @@ class Player(pyglet.sprite.Sprite):
             Returns Integer."""
         return self.x - self.spot
 
+    def debug_info(self):
+        """Displays sprite information. Returns None."""
+        spot = pyglet.text.Label(str(self.spot), font_name = 'Times New Roman', font_size = 10, x = self.anchor_x, y = 50, batch = main_batch)
+        
+#label = pyglet.text.Label('Hello, world', 
+#                          font_name='Times New Roman', 
+#                          font_size=36,
+#                          x=10, y=10)
+
 class FloatingPlayer(Player):
     """Creates a player that floats cyclicly in the air."""    
  
@@ -126,6 +139,17 @@ class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+class Yammy(pyglet.sprite.Sprite):
+    
+    stand_right = pyglet.resource.image("yammy_stand_right.png")    
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    
+
+
+
 class FireLight(FloatingPlayer):
     
     #stand_left => stand_left_img because of motion while standing

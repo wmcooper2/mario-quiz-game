@@ -1,3 +1,4 @@
+import math
 import pyglet
 import random
 
@@ -19,10 +20,16 @@ def center_ground_sprite(obj):
     obj.anchor_x = obj.width // 2
     obj.anchor_y = 0
 
+def falling_object(time):
+    """Calculates y position of falling object. Returns Integer."""
+    #calculates "-(1/2) * g * t^2" where g == 9.8 and time is the accumulated time for falling
+    return math.floor(-(0.5 * 9.8) * (time ** 2))
+
 class Line():
 
     player_spots = [] #filled by Line.line_up() 
     item_spots = []
+    mixing_player_spots = False
 
     def __init__(self, num_players = 0, screen_w = 0, num_items = 0, *args, **kwargs):
         self.num_players = num_players
@@ -48,6 +55,15 @@ class Line():
                 first_spot = (self.screen_w // 2) - 216
                 self.item_spots.append(first_spot)
             else:
-                next_spot = (self.screen_w // 2) - 216 - (24 * item) #problem with width math
+                next_spot = (self.screen_w // 2) - 216 - (24 * item) 
                 self.item_spots.append(next_spot)
         print("item_spots = ", Line.item_spots)
+
+    def falling(self):
+        """Calculates y_position of falling item. Returns Integer."""
+        pass
+        
+        time += timestep;
+        position += timestep * (velocity + timestep * acceleration / 2);
+        velocity += timestep * acceleration;
+    

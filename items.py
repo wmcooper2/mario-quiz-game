@@ -3,11 +3,14 @@ import util
 
 class Item(pyglet.sprite.Sprite):
     
+    debug = False
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spot = self.x
         self.delta = 0        
         self.moving = False
+        self.falling = False
 
     def normal(self, obj):
         """Applies the item's affect to the player. Returns None."""
@@ -21,6 +24,8 @@ class Item(pyglet.sprite.Sprite):
         self.delta_x = self.x - self.spot
         self.walk()
         self.move()
+        if Item.debug == True:
+            self.debug_info()
 
     def move(self):
         """Moves the items left or right. Returns None."""
@@ -44,7 +49,15 @@ class Item(pyglet.sprite.Sprite):
         elif delta == 0:
             self.image = self.stand_right_anim
             self.moving = False
+
+    def debug_info(self):
+        """Displays information about the sprites. Returns None."""
+        pass
         
+    def not_falling(self):
+        """Resets falling attribute to False. Returns None."""
+        self.falling = False
+
 class GreenMushroom(Item):
     """Green Mushroom is a free point. Returns None."""
 

@@ -1,0 +1,22 @@
+TODO
+----
+
+
+game.py
+-------
+* move the functions that control line behavior to the util.Line class.
+* 
+
+
+
+objects.py
+----------
+* if a player's index is 3 or more away from its new index, then it should run there.
+
+
+
+items.py
+--------
+* postpone the falling object mechanics for now. To speed up a working a prototype, just "pop" the item off with magic from yammy?
+* when the item list is reduced, add new items. (later have luigi kick them from the edge?)
+

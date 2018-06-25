@@ -6,6 +6,12 @@ import items #must come after objects (resource mod is defined in objects... mov
 from pyglet.window import key
 from pyglet import clock
 
+DEBUG = False
+if DEBUG == True:
+    #set debug in all classes to True
+    objects.Player.debug = True
+    items.Item.debug = True
+
 #game_window
 game_window = pyglet.window.Window(1000,563) #16:9 screen
 
@@ -40,6 +46,10 @@ main_batch = pyglet.graphics.Batch()
 
 #background
 background = objects.Background(img = objects.Background.background_img, batch = main_batch)
+
+#yammy (not a playing character)
+yammy = objects.Yammy(img = objects.Yammy.stand_right, x = 30, y = ITEM_PLATFORM_H, batch = main_batch)
+yammy.scale = 2
 
 #fire_light
 fire_light = objects.FireLight(img = objects.FireLight.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
@@ -79,6 +89,7 @@ walking_players.append(mario)
 
 #setup item containers
 game_items = []
+falling_item = []
 
 #setup item sprites
 green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
@@ -116,6 +127,9 @@ print(players)
 def on_draw():
     game_window.clear()
     main_batch.draw()
+    if DEBUG == True:
+        for obj in game_objects:
+            obj.debug_xpos.draw()
 
 def update(dt):
     #players update
@@ -124,13 +138,54 @@ def update(dt):
         obj.update(dt)
     for obj in floating_players:
         obj.float()
-    if key_handler[key.LEFT] and game_objects[-1].moving == False:
+
+    #key_handlers
+    if key_handler[key.LEFT] and not any_movement():
         next_player()
+        print("next_player(), lineup = ", game_objects)
+    if key_handler[key.UP] and not any_movement():
+        mix_players()
+        print("mix_players(), lineup = ", game_objects)
+#    if key_handler[key.RIGHT] and not any_movement(): 
+#        game_items[0].falling = True #trigger the conditional in update(dt)
+#        falling_item.append(game_items[0]) #add to special list
+#        print("falling_item[0] = ", falling_item[0])
+#        game_items.remove(game_items[0]) #separate from original list
+
     #items update
     for obj in game_items:
         obj.spot = util.Line.item_spots[game_items.index(obj)]
+#        if obj.falling == True:
+#           fall(obj, dt) 
         obj.update(dt)
 
+def any_movement():
+    """Checks if any player is moving. Returns Boolean."""
+    movement = []
+    for obj in game_objects:
+        movement.append(obj.moving)
+    for obj in game_items:
+        movement.append(obj.falling)
+    return any(movement)
+
+#accumulated_time = 0
+#def fall(obj, dt):
+#    """Player gets and item from the upper platform. Returns None."""
+#    global accumulated_time
+#
+#    if accumulated_time > 3: #Should not fall for more than 3 seconds
+#        accumulated_time = 0 
+#        obj.falling = False #reset falling attribute
+#
+#    #update falling_item[0].y and .x
+#    obj.y += util.falling_object(accumulated_time)
+#    accumulated_time += dt
+#
+##    obj.x += (distance from player to origin of item) divided by time for y to reach player
+#    #if falling_item.x == player[0].x, then dont increment x
+#    #if falling_item.y == player[0].height, then dont decrement y
+#    #if falling_item.y == player[0].height, then add item to player[0].inventory
+    
 def next_player(): 
     """Gets the next player into the ready position. Returns None."""
     player_leaving = game_objects[0]
@@ -141,6 +196,17 @@ def rotate_player_list():
     temp_player = game_objects[0]
     game_objects.remove(temp_player)
     game_objects.append(temp_player)
+
+def mix_players():
+    """Mixes the players in the line. Returns None."""
+    global game_objects
+    mixed_players = []
+    copy = game_objects[:]
+    for x in game_objects:
+        player_choice = random.choice(copy)
+        mixed_players.append(player_choice)
+        copy.remove(player_choice)
+    game_objects = mixed_players[:]
 
 def randomize_players():
     """Randomizes the starting order of the player line up. Returns None."""
@@ -158,5 +224,6 @@ randomize_players()
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)
-    clock.schedule_once(objects.Player.game_in_play, 5) #prevents running all the time.
+#    clock.schedule_once(objects.Player.game_in_play, 5) #prevents running all the time.
     pyglet.app.run()
+
