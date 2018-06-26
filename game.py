@@ -29,6 +29,7 @@ FLOAT_H = 100
 WALK_H = 63
 ITEM_PLATFORM_H = 264
 ITEM_PLATFORM_W = 300
+ITEM_DISAPPEAR_H = 350
 #determine number of players (replace with return val from menu screen)
 NUM_PLAYERS = 6
 NUM_ITEMS = 6
@@ -137,6 +138,7 @@ def update(dt):
 
     #players update
     for obj in game_objects:
+        #give the players a spot
         obj.spot = util.Line.player_spots[game_objects.index(obj)]
         obj.update(dt)
     for obj in floating_players:
@@ -145,96 +147,67 @@ def update(dt):
     for obj in game_items:
         obj.spot_x = util.Line.item_spots[game_items.index(obj)]
         obj.update(dt)
-    if yammy.inventory:
+
+    #yammy animation
+    yammy.update()
+    if yammy.inventory: #only if len() > 0
         for obj in yammy.inventory:
             obj.update(dt)
-    #yammy animation
-    yammy.fading()
-    if key_handler[key.F] and not any_movement() and not yammy.transition:
-        #yammy wand action
-        yammy.transition = True
-        if yammy.fade == "in":
-            yammy.fade = "out"
-        elif yammy.fade == "out":
-            yammy.fade = "in"
-        print("yammy.fade = ", yammy.fade)
+            obj.transition() 
+    if key_handler[key.F] and not player_movement() and not yammy.transitioning:
+        yammy.transitioning = True
+        yammy.toggle_transition_direction()
     
-    if key_handler[key._1] and not any_movement() and not yammy.magic_happening:
+    if key_handler[key._1] and not player_movement() and not item_movement():
         #player gets one item
         print("give one item")
-        yammy.magic_happening = True
-#        if yammy.item_fade == "in":
-#            yammy.item_fade = "out"
-#        elif yammy.item_fade == "out":
-#            yammy.item_fade = "in"
-        
-        give_item()
+        yammy_take_item(game_objects[0])
+        yammy.inventory[0].transitioning = True
+        yammy.inventory[0].toggle_transition_direction()
 
-    if key_handler[key._2] and not any_movement():
-        #player gets two items
-        print("give two items")
-        for x in range(2):
-            yammys_item = game_items[0]
-            yammy.inventory.append(yammys_item)
-            game_items.remove(yammys_item)
-        yammy.give_item()
+#    if key_handler[key._2] and not player_movement():
+#        #player gets two items
+#        print("give two items")
+#        for x in range(2):
+#            yammys_item = game_items[0]
+#            yammy.inventory.append(yammys_item)
+#            game_items.remove(yammys_item)
+#        yammy.yammy_take_item()
 
-    if key_handler[key.LEFT] and not any_movement():
+    if key_handler[key.LEFT] and not player_movement():
         #rotate players left one
         next_player()
         print("next_player(), lineup = ", game_objects)
 
-    if key_handler[key.UP] and not any_movement():
+    if key_handler[key.UP] and not player_movement():
         #randomly mix players
         mix_players()
         print("mix_players(), lineup = ", game_objects)
-#    if key_handler[key.RIGHT] and not any_movement(): 
-#        game_items[0].falling = True #trigger the conditional in update(dt)
-#        falling_item.append(game_items[0]) #add to special list
-#        print("falling_item[0] = ", falling_item[0])
-#        game_items.remove(game_items[0]) #separate from original list
 
-def give_item():
-    """Item is given to player in the ready position. Returns None."""
+def yammy_take_item(obj):
+    """Item is taken by Yammy from the platform. Returns None."""
     print("game_items = ", game_items)
     yammys_item = game_items[0]
     yammy.inventory.append(yammys_item)
     game_items.remove(yammys_item)
-    yammy.inventory[0].spot_x = game_objects[0].x
-    yammy.inventory[0].spot_y = 400
-#    print("game_objects = ", game_objects)
-#    print("game_objects[0].x = ", game_objects[0].x)
-#    game_items[0].spot_x = game_objects[0].x
-#    game_items[0].spot_y = 400
-#    print("game_items = ", game_items)
-#    print("yammy's inv = ", yammy.inventory)
+    yammy.inventory[0].spot_y = ITEM_DISAPPEAR_H
 
-def any_movement():
+def player_movement():
     """Checks if any player is moving. Returns Boolean."""
     movement = []
-    for obj in game_objects:
+    for obj in game_objects: 
         movement.append(obj.moving)
-    for obj in game_items:
-        movement.append(obj.falling)
     return any(movement)
 
-#accumulated_time = 0
-#def fall(obj, dt):
-#    """Player gets and item from the upper platform. Returns None."""
-#    global accumulated_time
-#
-#    if accumulated_time > 3: #Should not fall for more than 3 seconds
-#        accumulated_time = 0 
-#        obj.falling = False #reset falling attribute
-#
-#    #update falling_item[0].y and .x
-#    obj.y += util.falling_object(accumulated_time)
-#    accumulated_time += dt
-#
-##    obj.x += (distance from player to origin of item) divided by time for y to reach player
-#    #if falling_item.x == player[0].x, then dont increment x
-#    #if falling_item.y == player[0].height, then dont decrement y
-#    #if falling_item.y == player[0].height, then add item to player[0].inventory
+def item_movement():
+    """Checks if any item is moving. Return Boolean."""
+    movement = []
+    for obj in game_items: 
+        movement.append(obj.moving)
+    if yammy.inventory:
+        for obj in yammy.inventory:
+            movement.append(obj.moving)
+    return any(movement)
     
 def next_player(): 
     """Gets the next player into the ready position. Returns None."""

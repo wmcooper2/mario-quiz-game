@@ -5,7 +5,7 @@ TODO
 game.py
 -------
 * move the functions that control line behavior to the util.Line class.
-* 
+* players are always running because Player.game_just_started is not reset to False. 
 
 
 

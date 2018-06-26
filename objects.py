@@ -26,8 +26,8 @@ class Player(pyglet.sprite.Sprite):
         self.spot = self.x #initially, off screen, changed immediately
         self.delta_x = 0 #intially zero, changed immediately
         self.item = "None"
-        self.moving = False
         self.speed = "walk"
+        self.moving = False
         self.rotating_players = False
         self.inventory = []
 #        self.debug_xpos = pyglet.text.Label(text = str(self.x), font_name = 'Times New Roman', font_size = 10, x = self.delta_x, y = 10, color = (0, 0, 0, 255))
@@ -148,66 +148,48 @@ class Yammy(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fade = "out"
-        self.transition = False
+        self.transition_direction = "out"
+        self.transitioning = False
         self.inventory = []
-        self.magic_happening = False
-        self.item_fade = "out"
+#        self.magic_happening = False
+        self.transition_rate = 3
 
-    def action(self):
-        """Animates the magic wand wave. Returns None."""
-
-        print("yammy timer induced action")
-        def yammy_standing():
-            """Returns Yammy to the standing position. Returns None."""
-            self.img = Yammy.stand_right
-
-        self.img = Yammy.action_right_anim
-        my_clock = clock.Clock()
-        my_clock.schedule_once(yammy_standing, 0.6) 
-
-    def give_item2(self):
-        """Gives an item to a player. Returns String."""
-        if self.item_fade == "in" and self.inventory and self.inventory[0].opacity < 255:
-            self.item_fade_in()
-        if self.item_fade == "out" and self.inventory and self.inventory[0].opacity > 0:
-            self.item_fade_out()
-        if self.inventory and self.inventory[0].opacity == 255:
-            self.transition = False
-        if self.inventory and self.inventory[0].opacity == 0:
-            self.transition = False
-#            return "item gone"
-
+    def update(self):
+        """Yammy's main update loop. Returns None."""
+        self.transition()
+    
     def give_item(self):
         """Gives an item to a player. Returns String."""
         pass
 
-    def item_fade_out(self):
+    def transition_out(self):
         """Fades first inventory item out. Returns None."""
         self.inventory[0].opacity -=1
 
-    def item_fade_in(self):
+    def transition_in(self):
         """Fades first inventory item in. Returns None."""
         self.inventory[0].opacity += 1
 
-    def fading(self):
-        """Toggles fading animation. Returns None."""
-        if self.fade == "in" and self.opacity < 255:
-            self.fade_in()
-        if self.fade == "out" and self.opacity > 0:
-            self.fade_out()
-        if self.opacity == 255:
-            self.transition = False
-        if self.opacity == 0:
-            self.transition = False
+    def toggle_transition_direction(self):
+        """Toggles transition_direction attribute between in and out. Returns None."""
+        if self.transition_direction == "in":
+            self.transition_direction = "out"
+        elif self.transition_direction == "out":
+            self.transition_direction = "in"
 
-    def fade_in(self):
-        """Fades Yammy in to 255 opacity. Returns None."""
-        self.opacity += 3
-    
-    def fade_out(self):
-        """Fades Yammy out to 0 opacity. Returns None."""
-        self.opacity -= 3
+    def transition(self):
+        """Toggles fading animation. Returns None."""
+        if self.transitioning:
+            if self.transition_direction == "in":
+                self.opacity += self.transition_rate
+            if self.transition_direction == "out":
+                self.opacity -= self.transition_rate
+            if self.opacity >= 255:
+                self.opacity = 255 
+                self.transitioning = False
+            if self.opacity <= 0:
+                self.opacity = 0
+                self.transitioning = False
 
 class FireLight(FloatingPlayer):
     
