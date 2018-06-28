@@ -153,10 +153,12 @@ class Yammy(pyglet.sprite.Sprite):
         self.inventory = []
 #        self.magic_happening = False
         self.transition_rate = 3
+        self.victim = "" 
 
     def update(self):
         """Yammy's main update loop. Returns None."""
         self.transition()
+        self.give_item()
     
     def transition_out(self):
         """Fades first inventory item out. Returns None."""
@@ -191,14 +193,28 @@ class Yammy(pyglet.sprite.Sprite):
         """Yammy waves his magic wand. Returns None."""
         self.image = self.action_right_anim
 
-    def give_item(self):
-        """Gives an item to a player. Returns String."""
-        pass
-
     def take_item(self, item):
         """Adds item to Yammy's inventory. Returns None."""
         self.inventory.append(item)
         print("yammy.inventory = ", self.inventory)
+
+    def give_item(self):
+        """Gives an item to a player. Returns String."""
+        if self.inventory:
+            yammys_item = self.inventory[0]
+            if yammys_item.opacity == 0 and yammys_item.delta_y == 0:
+                print("giving to player --- ", self.victim) 
+                yammys_item.spot_x = self.victim.spot
+                yammys_item.x = self.victim.spot
+                yammys_item.falling = True #need to reset to False after giving to player
+#                self.item_drop()
+                yammys_item.toggle_transition_direction()
+                yammys_item.transitioning = True
+
+    def item_drop(self):
+        """Drops the item onto the player. Returns None."""
+        #change the opacity here
+        #add gravity to self.inventory[0].spot_y
 
 class FireLight(FloatingPlayer):
     

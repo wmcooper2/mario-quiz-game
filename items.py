@@ -2,6 +2,8 @@ import pyglet
 import math
 import util
 
+main_time = 0
+
 class Item(pyglet.sprite.Sprite):
     
     debug = False
@@ -29,6 +31,16 @@ class Item(pyglet.sprite.Sprite):
         pass
     
     def update(self, dt):
+
+        #adding gravity effect to item
+        if self.falling: 
+            global main_time
+            main_time += dt
+            if main_time > 5:
+                main_time = 0
+            self.y += util.falling_object(main_time)
+        #need to check for when the item's bottom is touching the player's top
+
         self.delta_x = self.x - self.spot_x #current spot "x" - where its supposed to be "spot_x"
         self.delta_y = self.y - self.spot_y
         self.walk()
@@ -36,6 +48,7 @@ class Item(pyglet.sprite.Sprite):
         if Item.debug == True:
             self.debug_info()
         self.transition()
+
 
     def move(self): #, x_speed):
         """Moves the items closer to spot_x and spot_y. Returns None."""

@@ -89,35 +89,25 @@ walking_players.append(mario)
 
 #add lakitu, luigi, peach, toad
 
+def randomize_players():
+    """Randomizes the starting order of the player line up. Returns None."""
+    if objects.Player.randomized == False:
+        objects.Player.randomized = True
+        random_players = []
+        copy = players[:]
+        for x in range(NUM_PLAYERS):
+            player_choice = random.choice(copy)
+            random_players.append(player_choice)
+            copy.remove(player_choice)
+        for player in random_players:
+            game_objects.append(player) 
+randomize_players()
+
+
+
 #setup item containers
 game_items = []
 falling_item = []
-
-#setup item sprites
-#green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#green_mushroom.scale = 1.5
-#game_items.append(green_mushroom)
-
-#red_mushroom = items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#red_mushroom.scale = 1.5
-#game_items.append(red_mushroom)
-
-#pow_button = items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#pow_button.scale = 1.5
-#game_items.append(pow_button) 
-
-#yoshi_coin = items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#yoshi_coin.scale = 1.5
-#game_items.append(yoshi_coin) 
-
-#spiny_beetle = items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#spiny_beetle.scale = 1.5
-#game_items.append(spiny_beetle) 
-
-#pirahna_plant = items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-#pirahna_plant.scale = 1.5
-#game_items.append(pirahna_plant) 
-
 item_choices = [   "green mushroom", 
             "red mushroom", 
             "pow button", 
@@ -147,11 +137,11 @@ def new_item():
 for item in range(NUM_ITEMS):
     new_item()
 
-
 #line up the items
 item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
 item_spots.item_line_up(game_items)
 
+#debug
 print(game_items)
 print(players)
 
@@ -195,23 +185,15 @@ def update(dt):
         yammy.wave_wand()
         yammy.take_item(yammys_item)
         game_items.remove(yammys_item)
-#        print("game_items = ", game_items)
 
         #make item disappear
         yammys_item.spot_y = 400 #make the item rise by changing "spot" attribute
         yammys_item.transitioning = True
-        new_item()
-        print("new_item = ", game_items[-1])
-        print("game_items = ", game_items)
+        new_item()         
+        yammy.victim = game_objects[0] #victim is player in ready position
+        
 
 
-
-
-#        yammy.transition() #set yammy.transitiong = True ?
-#        yammy.item_transition()
-         
-#        yammy.inventory[0].transitioning = True # move to yammy.item_transition()?
-#        choose_player() #need 
 #        yammy.item_reappear(player)
 #        yammy.item_drop()
     
@@ -287,20 +269,6 @@ def mix_players():
         mixed_players.append(player_choice)
         copy.remove(player_choice)
     game_objects = mixed_players[:]
-
-def randomize_players():
-    """Randomizes the starting order of the player line up. Returns None."""
-    if objects.Player.randomized == False:
-        objects.Player.randomized = True
-        random_players = []
-        copy = players[:]
-        for x in range(NUM_PLAYERS):
-            player_choice = random.choice(copy)
-            random_players.append(player_choice)
-            copy.remove(player_choice)
-        for player in random_players:
-            game_objects.append(player) 
-randomize_players()
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)
