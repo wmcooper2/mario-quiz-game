@@ -175,6 +175,10 @@ def update(dt):
         for obj in yammy.inventory:
             obj.update(dt)
             obj.transition() 
+#        for player in game_objects:
+#            if yammy.inventory[0].y <= player.y:
+#                print("item has fallen into the victims hands")
+
     if key_handler[key.F] and not player_movement() and not yammy.transitioning:
         yammy.transitioning = True
         yammy.toggle_transition_direction()
@@ -191,6 +195,8 @@ def update(dt):
         yammys_item.transitioning = True
         new_item()         
         yammy.victim = game_objects[0] #victim is player in ready position
+
+    
         
 
 

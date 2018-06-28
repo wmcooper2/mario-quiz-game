@@ -39,11 +39,10 @@ class Player(pyglet.sprite.Sprite):
         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
             self.speed = "run"
         self.move()
-#        self.debug_xpos.draw()
-        #refactor move, walk, run and call them here
-        #self.change_speed
-        #self.change_animation
-        #self.move 
+        if self.inventory:
+            item = self.inventory[0]
+            if not item.special:
+                item.effect() 
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
@@ -203,18 +202,21 @@ class Yammy(pyglet.sprite.Sprite):
         if self.inventory:
             yammys_item = self.inventory[0]
             if yammys_item.opacity == 0 and yammys_item.delta_y == 0:
-                print("giving to player --- ", self.victim) 
                 yammys_item.spot_x = self.victim.spot
                 yammys_item.x = self.victim.spot
-                yammys_item.falling = True #need to reset to False after giving to player
-#                self.item_drop()
+                yammys_item.falling = True #reset flag 
                 yammys_item.toggle_transition_direction()
-                yammys_item.transitioning = True
+                yammys_item.transitioning = True #change flag
+            if yammys_item.y <= self.victim.y:
+                yammys_item.falling = False #reset flag
+                self.victim.inventory.append(yammys_item)
+                self.inventory = []
+                print("victim == ", self.victim)
+                print("victim.inventory = ", self.victim.inventory) 
+                print("yammys inventory = ", self.inventory) 
 
-    def item_drop(self):
-        """Drops the item onto the player. Returns None."""
-        #change the opacity here
-        #add gravity to self.inventory[0].spot_y
+                #ask a question based on the items "effect"                
+                #every Player() must check their inventory ..update(dt).. and if the item is special, then they can save it for later ..require key press to activate from ready position.. otherwise the simple items are things that occur now.
 
 class FireLight(FloatingPlayer):
     

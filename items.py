@@ -21,6 +21,7 @@ class Item(pyglet.sprite.Sprite):
         self.moving = False
         self.falling = False
         self.transitioning = False
+        self.special == False
 
     def normal(self, obj):
         """Applies the item's affect to the player. Returns None."""
@@ -30,6 +31,10 @@ class Item(pyglet.sprite.Sprite):
         """Applies the special affect to the player. Returns None."""
         pass
     
+    def effect(self):
+        """Performs the basic effect of the item."""
+        print("performing item's basic effect")
+
     def update(self, dt):
 
         #adding gravity effect to item
@@ -48,7 +53,6 @@ class Item(pyglet.sprite.Sprite):
         if Item.debug == True:
             self.debug_info()
         self.transition()
-
 
     def move(self): #, x_speed):
         """Moves the items closer to spot_x and spot_y. Returns None."""
@@ -104,9 +108,9 @@ class Item(pyglet.sprite.Sprite):
         """Displays information about the sprites. Returns None."""
         pass
         
-    def not_falling(self):
-        """Resets falling attribute to False. Returns None."""
-        self.falling = False
+#    def not_falling(self):
+#        """Resets falling attribute to False. Returns None."""
+#        self.falling = False
 
 class GreenMushroom(Item):
     """Green Mushroom is a free point. Returns None."""
