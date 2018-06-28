@@ -94,29 +94,59 @@ game_items = []
 falling_item = []
 
 #setup item sprites
-green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-green_mushroom.scale = 1.5
-game_items.append(green_mushroom)
+#green_mushroom = items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#green_mushroom.scale = 1.5
+#game_items.append(green_mushroom)
 
-red_mushroom = items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-red_mushroom.scale = 1.5
-game_items.append(red_mushroom)
+#red_mushroom = items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#red_mushroom.scale = 1.5
+#game_items.append(red_mushroom)
 
-pow_button = items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-pow_button.scale = 1.5
-game_items.append(pow_button) 
+#pow_button = items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#pow_button.scale = 1.5
+#game_items.append(pow_button) 
 
-yoshi_coin = items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-yoshi_coin.scale = 1.5
-game_items.append(yoshi_coin) 
+#yoshi_coin = items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#yoshi_coin.scale = 1.5
+#game_items.append(yoshi_coin) 
 
-spiny_beetle = items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-spiny_beetle.scale = 1.5
-game_items.append(spiny_beetle) 
+#spiny_beetle = items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#spiny_beetle.scale = 1.5
+#game_items.append(spiny_beetle) 
 
-pirahna_plant = items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
-pirahna_plant.scale = 1.5
-game_items.append(pirahna_plant) 
+#pirahna_plant = items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch)
+#pirahna_plant.scale = 1.5
+#game_items.append(pirahna_plant) 
+
+item_choices = [   "green mushroom", 
+            "red mushroom", 
+            "pow button", 
+            "yoshi coin", 
+            "spiny beetle", 
+            "pirahna plant",]
+
+def new_item():
+    """Adds new item to game_items. Returns None."""
+    item = random.choice(item_choices)
+    if item == "green mushroom": 
+        item = (items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "red mushroom": 
+        item = (items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "pow button": 
+        item = (items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "yoshi coin": 
+        item = (items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "spiny beetle": 
+        item = (items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "pirahna plant":
+        item = (items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    item.scale = 1.5
+    game_items.append(item)
+
+#initial loading of items to game_items
+for item in range(NUM_ITEMS):
+    new_item()
+
 
 #line up the items
 item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
@@ -136,19 +166,20 @@ def on_draw():
 def update(dt):
     """Game update loop. Returns None."""
 
-    #players update
+    #update players 
     for obj in game_objects:
         #give the players a spot
         obj.spot = util.Line.player_spots[game_objects.index(obj)]
         obj.update(dt)
     for obj in floating_players:
         obj.float()
-    #items update
+
+    #update items 
     for obj in game_items:
         obj.spot_x = util.Line.item_spots[game_items.index(obj)]
         obj.update(dt)
 
-    #yammy animation
+    #animate yammy 
     yammy.update()
     if yammy.inventory: #only if len() > 0
         for obj in yammy.inventory:
@@ -158,21 +189,34 @@ def update(dt):
         yammy.transitioning = True
         yammy.toggle_transition_direction()
     
-    if key_handler[key._1] and not player_movement() and not item_movement():
+    if key_handler[key._1] and not any_movement(): 
         #player gets one item
-        print("give one item")
-        yammy_take_item(game_objects[0])
-        yammy.inventory[0].transitioning = True
-        yammy.inventory[0].toggle_transition_direction()
+        yammys_item = game_items[0]
+        yammy.wave_wand()
+        yammy.take_item(yammys_item)
+        game_items.remove(yammys_item)
+#        print("game_items = ", game_items)
 
-#    if key_handler[key._2] and not player_movement():
-#        #player gets two items
-#        print("give two items")
-#        for x in range(2):
-#            yammys_item = game_items[0]
-#            yammy.inventory.append(yammys_item)
-#            game_items.remove(yammys_item)
-#        yammy.yammy_take_item()
+        #make item disappear
+        yammys_item.spot_y = 400 #make the item rise by changing "spot" attribute
+        yammys_item.transitioning = True
+        new_item()
+        print("new_item = ", game_items[-1])
+        print("game_items = ", game_items)
+
+
+
+
+#        yammy.transition() #set yammy.transitiong = True ?
+#        yammy.item_transition()
+         
+#        yammy.inventory[0].transitioning = True # move to yammy.item_transition()?
+#        choose_player() #need 
+#        yammy.item_reappear(player)
+#        yammy.item_drop()
+    
+#        player.take_item(yammys_item) #yammys_item = yammy.inventory[0]
+#        player.item_effect()
 
     if key_handler[key.LEFT] and not player_movement():
         #rotate players left one
@@ -191,6 +235,19 @@ def yammy_take_item(obj):
     yammy.inventory.append(yammys_item)
     game_items.remove(yammys_item)
     yammy.inventory[0].spot_y = ITEM_DISAPPEAR_H
+    yammy.inventory[0].toggle_transition_direction()
+
+def any_movement():
+    """Checks if anything is moving. Returns Boolean."""
+    movement = []
+    for obj in game_objects: 
+        movement.append(obj.moving)
+    for obj in game_items: 
+        movement.append(obj.moving)
+    if yammy.inventory:
+        for obj in yammy.inventory: #is this needed? only one item in his inventory?
+            movement.append(obj.moving)
+    return any(movement)
 
 def player_movement():
     """Checks if any player is moving. Returns Boolean."""

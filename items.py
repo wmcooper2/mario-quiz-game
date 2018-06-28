@@ -12,8 +12,10 @@ class Item(pyglet.sprite.Sprite):
         self.spot_y = self.y
         self.delta_x = 0        
         self.delta_y = 0
+        self.y_speed = 2
+        self.x_speed = 1
         self.transition_direction = "out"
-        self.transition_rate = 9
+        self.transition_rate = 7
         self.moving = False
         self.falling = False
         self.transitioning = False
@@ -27,12 +29,13 @@ class Item(pyglet.sprite.Sprite):
         pass
     
     def update(self, dt):
-        self.delta_x = self.x - self.spot_x
+        self.delta_x = self.x - self.spot_x #current spot "x" - where its supposed to be "spot_x"
         self.delta_y = self.y - self.spot_y
         self.walk()
         self.move() #self.x_speed)
         if Item.debug == True:
             self.debug_info()
+        self.transition()
 
     def move(self): #, x_speed):
         """Moves the items closer to spot_x and spot_y. Returns None."""
@@ -40,18 +43,18 @@ class Item(pyglet.sprite.Sprite):
         delta_x = self.delta_x
         delta_y = self.delta_y
         if delta_x > 0:
-            self.x -= 1
+            self.x -= self.x_speed
         if delta_x < 0:
-            self.x += 1
+            self.x += self.x_speed
         if delta_y > 0:
-            self.y -= 1
+            self.y -= self.y_speed
         if delta_y < 0:
-            self.y += 1
+            self.y += self.y_speed
 
     def walk(self):
         """Changes the animation of the sprite"""
         delta_x = self.delta_x
-        delta_y = self.delta_y
+#        delta_y = self.delta_y
         #update sprite image
         if delta_x != 0 and self.moving == False:
             self.moving = True
@@ -71,7 +74,7 @@ class Item(pyglet.sprite.Sprite):
             self.transition_direction = "in"
 
     def transition(self):
-        """Makes item disappear vertically. Returns None."""
+        """Toggles item opacity. Returns None."""
         if self.transitioning:
             if self.transition_direction == "in":
                 self.opacity += self.transition_rate
@@ -83,7 +86,7 @@ class Item(pyglet.sprite.Sprite):
             if self.opacity <= 0:
                 self.opacity = 0
                 self.transitioning = False
-    
+
     def debug_info(self):
         """Displays information about the sprites. Returns None."""
         pass

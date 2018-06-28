@@ -158,10 +158,6 @@ class Yammy(pyglet.sprite.Sprite):
         """Yammy's main update loop. Returns None."""
         self.transition()
     
-    def give_item(self):
-        """Gives an item to a player. Returns String."""
-        pass
-
     def transition_out(self):
         """Fades first inventory item out. Returns None."""
         self.inventory[0].opacity -=1
@@ -190,6 +186,19 @@ class Yammy(pyglet.sprite.Sprite):
             if self.opacity <= 0:
                 self.opacity = 0
                 self.transitioning = False
+
+    def wave_wand(self):
+        """Yammy waves his magic wand. Returns None."""
+        self.image = self.action_right_anim
+
+    def give_item(self):
+        """Gives an item to a player. Returns String."""
+        pass
+
+    def take_item(self, item):
+        """Adds item to Yammy's inventory. Returns None."""
+        self.inventory.append(item)
+        print("yammy.inventory = ", self.inventory)
 
 class FireLight(FloatingPlayer):
     
