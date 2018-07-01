@@ -23,14 +23,14 @@ class Player(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.spot = self.x #initially, off screen, changed immediately
-        self.delta_x = 0 #intially zero, changed immediately
-        self.item = "None"
+        self.spot = self.x      #initially, off screen, changed immediately
+        self.delta_x = 0        #intially zero, changed immediately
+        self.item = False
         self.speed = "walk"
         self.moving = False
         self.rotating_players = False
         self.inventory = []
-#        self.debug_xpos = pyglet.text.Label(text = str(self.x), font_name = 'Times New Roman', font_size = 10, x = self.delta_x, y = 10, color = (0, 0, 0, 255))
+        self.points = 0
             
     def update(self, dt):
         self.delta_x = self.x - self.spot
@@ -39,10 +39,18 @@ class Player(pyglet.sprite.Sprite):
         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
             self.speed = "run"
         self.move()
-        if self.inventory:
-            item = self.inventory[0]
-            if not item.special:
-                item.effect() 
+
+    def has_item(self):
+        """Checks if the player has an item in their inventory. Returns None."""
+        if len(self.inventory) == 0:
+            return False
+        elif len(self.inventory) > 0:
+            return True
+
+    def use_item(self):
+        """Player uses the item in their inventory. Returns None."""
+        self.inventory[0].effect()  #use the item
+        self.item = True
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
@@ -105,15 +113,6 @@ class Player(pyglet.sprite.Sprite):
             Returns Integer."""
         return self.x - self.spot
 
-    def debug_info(self):
-        """Displays sprite information. Returns None."""
-        spot = pyglet.text.Label(str(self.spot), font_name = 'Times New Roman', font_size = 10, x = self.anchor_x, y = 50, batch = main_batch)
-        
-#label = pyglet.text.Label('Hello, world', 
-#                          font_name='Times New Roman', 
-#                          font_size=36,
-#                          x=10, y=10)
-
 class FloatingPlayer(Player):
     """Creates a player that floats cyclicly in the air."""    
  
@@ -150,7 +149,6 @@ class Yammy(pyglet.sprite.Sprite):
         self.transition_direction = "out"
         self.transitioning = False
         self.inventory = []
-#        self.magic_happening = False
         self.transition_rate = 3
         self.victim = "" 
 
@@ -195,7 +193,6 @@ class Yammy(pyglet.sprite.Sprite):
     def take_item(self, item):
         """Adds item to Yammy's inventory. Returns None."""
         self.inventory.append(item)
-        print("yammy.inventory = ", self.inventory)
 
     def give_item(self):
         """Gives an item to a player. Returns String."""
@@ -204,19 +201,13 @@ class Yammy(pyglet.sprite.Sprite):
             if yammys_item.opacity == 0 and yammys_item.delta_y == 0:
                 yammys_item.spot_x = self.victim.spot
                 yammys_item.x = self.victim.spot
-                yammys_item.falling = True #reset flag 
+                yammys_item.falling = True                  #reset flag 
                 yammys_item.toggle_transition_direction()
-                yammys_item.transitioning = True #change flag
+                yammys_item.transitioning = True            #change flag
             if yammys_item.y <= self.victim.y:
-                yammys_item.falling = False #reset flag
-                self.victim.inventory.append(yammys_item)
-                self.inventory = []
-                print("victim == ", self.victim)
-                print("victim.inventory = ", self.victim.inventory) 
-                print("yammys inventory = ", self.inventory) 
-
-                #ask a question based on the items "effect"                
-                #every Player() must check their inventory ..update(dt).. and if the item is special, then they can save it for later ..require key press to activate from ready position.. otherwise the simple items are things that occur now.
+                yammys_item.falling = False                 #reset flag
+                self.victim.inventory.append(yammys_item)   #give item to game_objects[0]
+                self.inventory.remove(yammys_item)          #remove reference to item
 
 class FireLight(FloatingPlayer):
     
@@ -225,7 +216,6 @@ class FireLight(FloatingPlayer):
     util.center_floating_player(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 2)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
-#    stand_left = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
     walk_right = pyglet.resource.image("fire_light_walk_right.png")
     walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
     walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)

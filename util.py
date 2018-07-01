@@ -57,7 +57,6 @@ class Line():
             else:
                 next_spot = (self.screen_w // 2) - 216 - (24 * item) 
                 self.item_spots.append(next_spot)
-        print("item_spots = ", Line.item_spots)
 
     def falling(self):
         """Calculates y_position of falling item. Returns Integer."""

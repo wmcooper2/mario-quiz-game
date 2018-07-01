@@ -2,22 +2,17 @@ import util
 import pyglet
 import random
 import objects
+import problems
 import items #must come after objects (resource mod is defined in objects... move to main?)
 from pyglet.window import key
 from pyglet import clock
-
-DEBUG = False
-if DEBUG == True:
-    #set debug in all classes to True
-    objects.Player.debug = True
-    items.Item.debug = True
 
 #game_window
 game_window = pyglet.window.Window(1000,563) #16:9 screen
 
 #key_handler
 key_handler = key.KeyStateHandler()
-keys = dict(left=False)
+#keys = dict(left=False)
 game_window.push_handlers(key_handler)
 
 #constants
@@ -103,17 +98,15 @@ def randomize_players():
             game_objects.append(player) 
 randomize_players()
 
-
-
 #setup item containers
 game_items = []
 falling_item = []
-item_choices = [   "green mushroom", 
-            "red mushroom", 
-            "pow button", 
-            "yoshi coin", 
-            "spiny beetle", 
-            "pirahna plant",]
+item_choices = [    "green mushroom", 
+                    "red mushroom", 
+                    "pow button", 
+                    "yoshi coin", 
+                    "spiny beetle", 
+                    "pirahna plant",]
 
 def new_item():
     """Adds new item to game_items. Returns None."""
@@ -142,83 +135,95 @@ item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
 item_spots.item_line_up(game_items)
 
 #debug
-print(game_items)
-print(players)
 
 @game_window.event
 def on_draw():
     game_window.clear()
     main_batch.draw()
-    if DEBUG == True:
-        for obj in game_objects:
-            obj.debug_xpos.draw()
+    
+    #show the problem
+    if game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+        problems.Problem.vocab_black_box.draw()
+        game_objects[0].inventory[0].effect() # move this somewhere else.
+        game_objects[0].inventory[0].problem.question.draw()
 
 def update(dt):
     """Game update loop. Returns None."""
+    for player in game_objects:         #update players 
+        player.spot = util.Line.player_spots[game_objects.index(player)]
+        player.update(dt)
 
-    #update players 
-    for obj in game_objects:
-        #give the players a spot
-        obj.spot = util.Line.player_spots[game_objects.index(obj)]
-        obj.update(dt)
-    for obj in floating_players:
-        obj.float()
-
-    #update items 
-    for obj in game_items:
-        obj.spot_x = util.Line.item_spots[game_items.index(obj)]
-        obj.update(dt)
-
-    #animate yammy 
-    yammy.update()
-    if yammy.inventory: #only if len() > 0
+        #player automatically uses item
+        if player.has_item() and game_objects[0].inventory[0].problem.showing_black_box == False: 
+            player.use_item()           #Player.item = True, Problem.showing_black_box = True
+    for player in floating_players:
+        player.float()
+    for item in game_items:             #update items 
+        item.spot_x = util.Line.item_spots[game_items.index(item)]
+        item.update(dt)
+    yammy.update()                      #animate yammy, give items automatically 
+    if yammy.inventory:                 #only if len() > 0
         for obj in yammy.inventory:
             obj.update(dt)
             obj.transition() 
-#        for player in game_objects:
-#            if yammy.inventory[0].y <= player.y:
-#                print("item has fallen into the victims hands")
 
+    #fade yammy in and out
     if key_handler[key.F] and not player_movement() and not yammy.transitioning:
         yammy.transitioning = True
         yammy.toggle_transition_direction()
     
+    #player gets one item
     if key_handler[key._1] and not any_movement(): 
-        #player gets one item
         yammys_item = game_items[0]
         yammy.wave_wand()
         yammy.take_item(yammys_item)
         game_items.remove(yammys_item)
+        yammys_item.spot_y = 400            #make the item rise
+        yammys_item.transitioning = True    #make item disappear
+        new_item()                          #add new item to lineup
 
-        #make item disappear
-        yammys_item.spot_y = 400 #make the item rise by changing "spot" attribute
-        yammys_item.transitioning = True
-        new_item()         
+        #player in the ready position is set up to receive the item
+        #item automatically given, part of Yammy.update()
         yammy.victim = game_objects[0] #victim is player in ready position
 
-    
-        
-
-
-#        yammy.item_reappear(player)
-#        yammy.item_drop()
-    
-#        player.take_item(yammys_item) #yammys_item = yammy.inventory[0]
-#        player.item_effect()
-
+    #manually rotate the players left
     if key_handler[key.LEFT] and not player_movement():
         #rotate players left one
         next_player()
-        print("next_player(), lineup = ", game_objects)
+
+    if key_handler[key.RIGHT] and not player_movement():
+        reverse_next_player()
 
     if key_handler[key.UP] and not player_movement():
         #randomly mix players
         mix_players()
-        print("mix_players(), lineup = ", game_objects)
+
+#    if problems.Problem.showing_black_box and key_handler[key.O]:
+    if key_handler[key.O] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+        #right answer, one point given
+        right_answer()
+        item_sequence()
+
+#    if problems.Problem.showing_black_box and key_handler[key.X]:
+    if key_handler[key.X] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+        #wrong answer, no points given, no points taken
+        item_sequence()
+
+def right_answer():
+    """Gives the player in the ready position a point. Returns None."""
+    game_objects[0].points += 1
+
+def item_sequence():
+    players_item = game_objects[0].inventory[0]
+    problems.Problem.showing_black_box = False #reset flag, stop showing box
+    game_objects[0].item = False
+    game_objects[0].inventory.remove(players_item)
+    players_item.delete()
+    for player in game_objects:
+        print(player.__class__, " has ", player.points, " points.")
 
 def yammy_take_item(obj):
     """Item is taken by Yammy from the platform. Returns None."""
-    print("game_items = ", game_items)
     yammys_item = game_items[0]
     yammy.inventory.append(yammys_item)
     game_items.remove(yammys_item)
@@ -233,7 +238,7 @@ def any_movement():
     for obj in game_items: 
         movement.append(obj.moving)
     if yammy.inventory:
-        for obj in yammy.inventory: #is this needed? only one item in his inventory?
+        for obj in yammy.inventory: 
             movement.append(obj.moving)
     return any(movement)
 
@@ -259,11 +264,20 @@ def next_player():
     player_leaving = game_objects[0]
     rotate_player_list() 
 
+def reverse_next_player():
+    """Reverse rotation of the players, from the back to the front. Returns None."""
+    player_leaving = game_objects[0]
+    reverse_rotate_player_list() 
+
 def rotate_player_list():
     """Rotates contents of players list to the left by one. Returns None."""
     temp_player = game_objects[0]
     game_objects.remove(temp_player)
     game_objects.append(temp_player)
+
+def reverse_rotate_player_list():
+    """Rotates contents of players list to the right by one. Returns None."""
+    print("reverse rotate players")
 
 def mix_players():
     """Mixes the players in the line. Returns None."""

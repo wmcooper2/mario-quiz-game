@@ -1,6 +1,7 @@
 import pyglet
 import math
 import util
+import problems
 
 main_time = 0
 
@@ -14,14 +15,15 @@ class Item(pyglet.sprite.Sprite):
         self.spot_y = self.y
         self.delta_x = 0        
         self.delta_y = 0
-        self.y_speed = 2
+        self.y_speed = 1
         self.x_speed = 1
         self.transition_direction = "out"
-        self.transition_rate = 7
+        self.transition_rate = 9
         self.moving = False
         self.falling = False
         self.transitioning = False
         self.special == False
+        self.problem = problems.Problem()
 
     def normal(self, obj):
         """Applies the item's affect to the player. Returns None."""
@@ -31,12 +33,7 @@ class Item(pyglet.sprite.Sprite):
         """Applies the special affect to the player. Returns None."""
         pass
     
-    def effect(self):
-        """Performs the basic effect of the item."""
-        print("performing item's basic effect")
-
     def update(self, dt):
-
         #adding gravity effect to item
         if self.falling: 
             global main_time
@@ -44,7 +41,6 @@ class Item(pyglet.sprite.Sprite):
             if main_time > 5:
                 main_time = 0
             self.y += util.falling_object(main_time)
-        #need to check for when the item's bottom is touching the player's top
 
         self.delta_x = self.x - self.spot_x #current spot "x" - where its supposed to be "spot_x"
         self.delta_y = self.y - self.spot_y
@@ -54,9 +50,8 @@ class Item(pyglet.sprite.Sprite):
             self.debug_info()
         self.transition()
 
-    def move(self): #, x_speed):
+    def move(self): 
         """Moves the items closer to spot_x and spot_y. Returns None."""
-        #move left or right
         delta_x = self.delta_x
         delta_y = self.delta_y
         if delta_x > 0:
@@ -71,7 +66,6 @@ class Item(pyglet.sprite.Sprite):
     def walk(self):
         """Changes the animation of the sprite"""
         delta_x = self.delta_x
-#        delta_y = self.delta_y
         #update sprite image
         if delta_x != 0 and self.moving == False:
             self.moving = True
@@ -104,16 +98,8 @@ class Item(pyglet.sprite.Sprite):
                 self.opacity = 0
                 self.transitioning = False
 
-    def debug_info(self):
-        """Displays information about the sprites. Returns None."""
-        pass
-        
-#    def not_falling(self):
-#        """Resets falling attribute to False. Returns None."""
-#        self.falling = False
-
 class GreenMushroom(Item):
-    """Green Mushroom is a free point. Returns None."""
+    """Green Mushroom is a random verb form question. Returns None."""
 
     stand_left = pyglet.resource.image("green_mushroom.png")
     util.center_ground_sprite(stand_left)
@@ -127,8 +113,16 @@ class GreenMushroom(Item):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def effect(self):
+        """Presents a verb form problem. Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.random_verb()
+
+    def delete(self):
+        super(Item, self).delete()
+
 class RedMushroom(Item):
-    """Red Mushroom is a vocabulary question. Returns None."""
+    """Red Mushroom is a random vocabulary question. Returns None."""
     
     stand_left = pyglet.resource.image("red_mushroom.png")
     util.center_ground_sprite(stand_left)
@@ -142,8 +136,17 @@ class RedMushroom(Item):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def effect(self):
+        """Presents a vocabulary word problem. Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.english_word()
+
+    def delete(self):
+        super(Item, self).delete()
+
 class PowButton(Item):
     """Pow Button takes away one point from everyone. Returns None."""
+    #rethink the effect of this item
         
     stand_left = pyglet.resource.image("pow_button.png")
     util.center_ground_sprite(stand_left)
@@ -157,8 +160,16 @@ class PowButton(Item):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def effect(self):
+        """Presents an unknown problem. Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.image_word()
+
+    def delete(self):
+        super(Item, self).delete()
+
 class YoshiCoin(Item):
-    """Yoshi Coin is a translation question. Returns None."""
+    """Yoshi Coin is a pronunciation question. Returns None."""
     
     stand_right = pyglet.resource.image("yoshi_coin_right.png")
     util.center_ground_sprite(stand_right)
@@ -180,8 +191,16 @@ class YoshiCoin(Item):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def effect(self):
+        """Presents a pronunciation problem. Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.question.text = "pronunciation problem"
+
+    def delete(self):
+        super(Item, self).delete()
+
 class PirahnaPlant(Item):
-    """Pirahna Plant takes a point from away from the player. Returns None."""
+    """Pirahna Plant is a sentence translation problem (English to Japanese). Returns None."""
 
     stand_right = pyglet.resource.image("pirahna_plant_small.png")
     util.center_ground_sprite(stand_right)
@@ -203,8 +222,16 @@ class PirahnaPlant(Item):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def effect(self):
+        """Presents a sentence translation problem (English to Japanese). Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.target_sentence()
+
+    def delete(self):
+        super(Item, self).delete()
+
 class SpinyBeetle(Item):
-    """Spiny Beetle takes away two points from a player. Returns None."""
+    """Spiny Beetle is a sentence translation problem (Japanese to English). Returns None."""
 
     stand_right = pyglet.resource.image("spiny_beetle_stand_right.png")
     util.center_ground_sprite(stand_right)
@@ -223,5 +250,13 @@ class SpinyBeetle(Item):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Presents a sentence translation problem (Japanese to English). Returns None"""
+        self.problem.showing_black_box = True
+        self.problem.target_sentence()
+
+    def delete(self):
+        super(Item, self).delete()
 
     
