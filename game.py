@@ -205,10 +205,16 @@ def update(dt):
         item_sequence()
 
     if key_handler[key.A] and not item_movement():
+        #rotates the items left (screen)
         rotate_items_left()
 
     if key_handler[key.D] and not item_movement():
+        #rotates the items right (screen)
         rotate_items_right()
+
+    if key_handler[key.S] and not item_movement():
+        #randomly mix the items (screen)
+        mix_items()
 
 def right_answer():
     """Gives the player in the ready position a point. Returns None."""
@@ -271,23 +277,29 @@ def rotate_items_right():
     temp_item = game_items[0]
     game_items.remove(temp_item)
     game_items.append(temp_item) 
+
+def mix_items():
+    """Randomly mixes the items in the line. Returns None."""
+    global game_items
+    mixed_items = []
+    copy = game_items[:]
+    for x in game_items:
+        item_choice = random.choice(copy)
+        mixed_items.append(item_choice)
+        copy.remove(item_choice)
+    game_items = mixed_items[:]
     
-#condense the following four function into two
 def rotate_players_left(): 
-    """Gets the next player into the ready position. Returns None."""
-    player_leaving = game_objects[0]
-    rotate_player_list() 
-
-def rotate_players_right():
-    """Reverse rotation of the players, from the back to the front. Returns None."""
-    player_leaving = game_objects[0]
-    reverse_rotate_player_list() 
-
-def rotate_player_list():
     """Rotates contents of players list to the left by one. Returns None."""
     temp_player = game_objects[0]
     game_objects.remove(temp_player)
     game_objects.append(temp_player)
+
+def rotate_players_right():
+    """Rotates contents of players list to the right by one. Returns None."""
+    temp_player = game_objects[-1]
+    game_objects.remove(temp_player)
+    game_objects.insert(0, temp_player)
 
 def reverse_rotate_player_list():
     """Rotates contents of players list to the right by one. Returns None."""
@@ -296,7 +308,7 @@ def reverse_rotate_player_list():
     game_objects.insert(0, temp_player)
     
 def mix_players():
-    """Mixes the players in the line. Returns None."""
+    """Randomly mixes the players in the line. Returns None."""
     global game_objects
     mixed_players = []
     copy = game_objects[:]
