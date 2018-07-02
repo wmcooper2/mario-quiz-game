@@ -24,7 +24,7 @@ FLOAT_H = 100
 WALK_H = 63
 ITEM_PLATFORM_H = 264
 ITEM_PLATFORM_W = 300
-ITEM_DISAPPEAR_H = 350
+ITEM_DISAPPEAR_H = 300
 #determine number of players (replace with return val from menu screen)
 NUM_PLAYERS = 6
 NUM_ITEMS = 6
@@ -106,7 +106,8 @@ item_choices = [    "green mushroom",
                     "pow button", 
                     "yoshi coin", 
                     "spiny beetle", 
-                    "pirahna plant",]
+                    "pirahna plant",
+                    "bombomb",]
 
 def new_item():
     """Adds new item to game_items. Returns None."""
@@ -123,6 +124,8 @@ def new_item():
         item = (items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
     if item == "pirahna plant":
         item = (items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    if item == "bombomb":
+        item = (items.Bombomb(img = items.Bombomb.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
     item.scale = 1.5
     game_items.append(item)
 
@@ -140,24 +143,42 @@ def on_draw():
     main_batch.draw()
     
     #show the problem
-    if game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+#    if game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+#    if game_objects[0].item and problems.showing_black_box: 
+    if problems.showing_black_box: 
         problems.Problem.vocab_black_box.draw()
-        game_objects[0].inventory[0].problem.question.draw()
+#        game_objects[0].inventory
+        game_objects[0].inventory[0].problem.question.draw() #change so that it doesnt go through the item instance, but goes directly to the class attribute
+#        items.Item.problem.question.draw()
 
 def update(dt):
     """Game update loop. Returns None."""
+    #non-question effects go below this comment.
+    if items.bombomb_effect:
+        print("bombomb_effect,from game.py = ", items.bombomb_effect)
+        mix_items()
+        items.bombomb_effect = False    #reset the flag
+        item_sequence()
+
     for player in game_objects:         #update players 
         player.spot = util.Line.player_spots[game_objects.index(player)]
         player.update(dt)
 
         #player automatically uses item
-        if player.has_item() and game_objects[0].inventory[0].problem.showing_black_box == False: 
-            player.use_item()           #Player.item = True, Problem.showing_black_box = True
+#        if player.has_item() and game_objects[0].inventory[0].problem.showing_black_box == False: 
+        if player.has_item() and problems.showing_black_box == False: 
+            players_item = game_objects[0].inventory[0]
+            print("player's item = ", player.inventory)
+            player.use_item()           
+            # player.has item needs to be false after this
+#            players_item.delete()                                   #item instance is deleted
+
     for player in floating_players:
         player.float()
     for item in game_items:             #update items 
         item.spot_x = util.Line.item_spots[game_items.index(item)]
         item.update(dt)
+
     yammy.update()                      #animate yammy, give items automatically 
     if yammy.inventory:                 #only if len() > 0
         for obj in yammy.inventory:
@@ -175,9 +196,9 @@ def update(dt):
         yammy.wave_wand()
         yammy.take_item(yammys_item)
         game_items.remove(yammys_item)
-        yammys_item.spot_y = 400            #make the item rise
-        yammys_item.transitioning = True    #make item disappear
-        new_item()                          #add new item to lineup
+        yammys_item.spot_y = ITEM_DISAPPEAR_H            #make the item rise
+        yammys_item.transitioning = True                 #make item disappear
+        new_item()                                       #add new item to lineup
 
         #player in the ready position is set up to receive the item
         #item automatically given, part of Yammy.update()
@@ -195,12 +216,14 @@ def update(dt):
         #randomly mix players
         mix_players()
 
-    if key_handler[key.O] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+#    if key_handler[key.O] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+    if key_handler[key.O] and game_objects[0].item and problems.showing_black_box:
         #right answer, one point given
         right_answer()
         item_sequence()
 
-    if key_handler[key.X] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+#    if key_handler[key.X] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
+    if key_handler[key.X] and game_objects[0].item and problems.showing_black_box:
         #wrong answer, no points given, no points taken
         item_sequence()
 
@@ -216,18 +239,22 @@ def update(dt):
         #randomly mix the items (screen)
         mix_items()
 
+def item_sequence():
+    """Performs the effect of the item. Returns None."""
+    players_item = game_objects[0].inventory[0]
+#    problems.Problem.showing_black_box = False              #reset flag, stop showing box
+    problems.showing_black_box = False                       #reset flag, stop showing box
+    game_objects[0].item = False                             #reset flag
+    game_objects[0].inventory.remove(players_item)           #remove the item from player's inventory
+    players_item.delete()                                    #item's instance is deleted
+
+    #show points in terminal
+    for player in game_objects:
+        print(player.__class__, " has ", player.points, " points.")
+
 def right_answer():
     """Gives the player in the ready position a point. Returns None."""
     game_objects[0].points += 1
-
-def item_sequence():
-    players_item = game_objects[0].inventory[0]
-    problems.Problem.showing_black_box = False              #reset flag, stop showing box
-    game_objects[0].item = False
-    game_objects[0].inventory.remove(players_item)
-    players_item.delete()
-    for player in game_objects:
-        print(player.__class__, " has ", player.points, " points.")
 
 def yammy_take_item(obj):
     """Item is taken by Yammy from the platform. Returns None."""

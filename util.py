@@ -23,7 +23,8 @@ def center_ground_sprite(obj):
 def falling_object(time):
     """Calculates y position of falling object. Returns Integer."""
     #calculates "-(1/2) * g * t^2" where g == 9.8 and time is the accumulated time for falling
-    return math.floor(-(0.5 * 9.8) * (time ** 2))
+    #changed gravity to 6 from 9.8
+    return math.floor(-(0.5 * 6) * (time ** 2))
 
 class Line():
 

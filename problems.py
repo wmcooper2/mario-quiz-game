@@ -3,9 +3,11 @@
 import pyglet
 import temporarydatasolution as tds
 
+showing_black_box = False
+
 class Problem(pyglet.text.Label):
 
-    showing_black_box = False
+#    showing_black_box = False
     vocab_black_box_img = pyglet.resource.image("black_box.png")
     vocab_black_box = pyglet.sprite.Sprite(vocab_black_box_img, x = 345, y = 300)
     question_center_x = vocab_black_box_img.width // 2 + vocab_black_box.x
@@ -22,6 +24,9 @@ class Problem(pyglet.text.Label):
 
     def random_english_word(self):
         """Chooses a random English vocabulary word. Returns None."""
+        #Student should translate the English word into Japanese
+        random_word = self.data.english_word()
+        basic_format = random_word + " "
         self.question.text = self.data.english_word() 
 
     def random_japanese_word(self):

@@ -4,11 +4,10 @@ import util
 import problems
 
 main_time = 0
+bombomb_effect = False
 
 class Item(pyglet.sprite.Sprite):
     
-    debug = False
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spot_x = self.x
@@ -42,13 +41,10 @@ class Item(pyglet.sprite.Sprite):
             if main_time > 5:
                 main_time = 0
             self.y += util.falling_object(main_time)
-
         self.delta_x = self.x - self.spot_x #current spot "x" - where its supposed to be "spot_x"
         self.delta_y = self.y - self.spot_y
         self.walk()
-        self.move() #self.x_speed)
-        if Item.debug == True:
-            self.debug_info()
+        self.move() 
         self.transition()
 
     def move(self): 
@@ -116,10 +112,9 @@ class GreenMushroom(Item):
 
     def effect(self):
         """Presents a verb form problem. Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.random_present_verb()
-
+        
     def delete(self):
         super(Item, self).delete()
 
@@ -140,8 +135,7 @@ class RedMushroom(Item):
 
     def effect(self):
         """Presents a vocabulary word problem. Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.random_english_word()
 
     def delete(self):
@@ -165,8 +159,7 @@ class PowButton(Item):
 
     def effect(self):
         """Presents an unknown problem. Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.random_image()
 
     def delete(self):
@@ -197,8 +190,7 @@ class YoshiCoin(Item):
 
     def effect(self):
         """Presents a pronunciation problem. Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.question.text = "pronunciation problem"
         #not complete in problems.py
         #not complete in temporarydatasolution.py
@@ -231,8 +223,7 @@ class PirahnaPlant(Item):
 
     def effect(self):
         """Presents a sentence translation problem (English to Japanese). Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.random_target_sentence()
 
     def delete(self):
@@ -261,12 +252,39 @@ class SpinyBeetle(Item):
 
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
-        print("item effect, Items()")
-        self.problem.showing_black_box = True
+        problems.showing_black_box = True
         self.problem.text = "spiny beetle"
         #unfinished
 
     def delete(self):
         super(Item, self).delete()
 
+class Bombomb(Item):
+    """Bombomb randomly mixes the order of the items on the screen. Returns None."""
+
+    stand_right = pyglet.resource.image("bombomb_stand_right.png")
+    util.center_ground_sprite(stand_right)
+    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
+    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+
+    walk_left = pyglet.resource.image("bombomb_walk_left.png")
+    util.center_ground_sprite(walk_left)
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+
+    walk_right = pyglet.resource.image("bombomb_walk_right.png")
+    util.center_ground_sprite(walk_right)
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Randomly mix the order of items on the screen. Returns None."""
+        global bombomb_effect
+        bombomb_effect = True 
+#        self.delete()
+
+    def delete(self):
+        super(Item, self).delete()

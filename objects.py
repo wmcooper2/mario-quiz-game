@@ -18,7 +18,7 @@ class Background(pyglet.sprite.Sprite):
 class Player(pyglet.sprite.Sprite):
 
     randomized = False
-    game_just_started = True #use this to prevent the last player from running on stage?
+    game_just_started = True 
     debug = False
 
     def __init__(self, *args, **kwargs):
@@ -50,11 +50,11 @@ class Player(pyglet.sprite.Sprite):
     def use_item(self):
         """Player uses the item in their inventory. Returns None."""
         self.item = True
-        if self.inventory[0].item_not_used == True:
-            print("objects.py, use_item()")
-            self.inventory[0].effect()                       #use the item
-            self.inventory[0].item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
-            print("item_not_used = ", self.inventory[0].item_not_used)
+        item = self.inventory[0]
+        if item.item_not_used == True:
+            item.effect()                       
+            item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+#        self.inventory.clear()                               #clear the inventory
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
@@ -211,6 +211,7 @@ class Yammy(pyglet.sprite.Sprite):
             if yammys_item.y <= self.victim.y:
                 yammys_item.falling = False                 #reset flag
                 self.victim.inventory.append(yammys_item)   #give item to game_objects[0]
+                print("game_objects[0].inventory = ", self.victim.inventory)    
                 self.inventory.remove(yammys_item)          #remove reference to item
 
 class FireLight(FloatingPlayer):
