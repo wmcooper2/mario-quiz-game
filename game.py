@@ -134,8 +134,6 @@ for item in range(NUM_ITEMS):
 item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
 item_spots.item_line_up(game_items)
 
-#debug
-
 @game_window.event
 def on_draw():
     game_window.clear()
@@ -144,7 +142,6 @@ def on_draw():
     #show the problem
     if game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
         problems.Problem.vocab_black_box.draw()
-        game_objects[0].inventory[0].effect() # move this somewhere else.
         game_objects[0].inventory[0].problem.question.draw()
 
 def update(dt):
@@ -189,25 +186,29 @@ def update(dt):
     #manually rotate the players left
     if key_handler[key.LEFT] and not player_movement():
         #rotate players left one
-        next_player()
+        rotate_players_left()
 
     if key_handler[key.RIGHT] and not player_movement():
-        reverse_next_player()
+        rotate_players_right()
 
     if key_handler[key.UP] and not player_movement():
         #randomly mix players
         mix_players()
 
-#    if problems.Problem.showing_black_box and key_handler[key.O]:
     if key_handler[key.O] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
         #right answer, one point given
         right_answer()
         item_sequence()
 
-#    if problems.Problem.showing_black_box and key_handler[key.X]:
     if key_handler[key.X] and game_objects[0].item and game_objects[0].inventory[0].problem.showing_black_box:
         #wrong answer, no points given, no points taken
         item_sequence()
+
+    if key_handler[key.A] and not item_movement():
+        rotate_items_left()
+
+    if key_handler[key.D] and not item_movement():
+        rotate_items_right()
 
 def right_answer():
     """Gives the player in the ready position a point. Returns None."""
@@ -215,7 +216,7 @@ def right_answer():
 
 def item_sequence():
     players_item = game_objects[0].inventory[0]
-    problems.Problem.showing_black_box = False #reset flag, stop showing box
+    problems.Problem.showing_black_box = False              #reset flag, stop showing box
     game_objects[0].item = False
     game_objects[0].inventory.remove(players_item)
     players_item.delete()
@@ -258,13 +259,26 @@ def item_movement():
         for obj in yammy.inventory:
             movement.append(obj.moving)
     return any(movement)
+
+def rotate_items_left():
+    """Rotates contents of items list to the right by one. Returns None."""         #reverse order from what appears on screen
+    temp_item = game_items[-1]
+    game_items.remove(temp_item)
+    game_items.insert(0, temp_item)
+
+def rotate_items_right():
+    """Rotates contents of the items list to left the by one. Returns None."""      #reverse order from what appears on screen
+    temp_item = game_items[0]
+    game_items.remove(temp_item)
+    game_items.append(temp_item) 
     
-def next_player(): 
+#condense the following four function into two
+def rotate_players_left(): 
     """Gets the next player into the ready position. Returns None."""
     player_leaving = game_objects[0]
     rotate_player_list() 
 
-def reverse_next_player():
+def rotate_players_right():
     """Reverse rotation of the players, from the back to the front. Returns None."""
     player_leaving = game_objects[0]
     reverse_rotate_player_list() 
@@ -277,8 +291,10 @@ def rotate_player_list():
 
 def reverse_rotate_player_list():
     """Rotates contents of players list to the right by one. Returns None."""
-    print("reverse rotate players")
-
+    temp_player = game_objects[-1]
+    game_objects.remove(temp_player)
+    game_objects.insert(0, temp_player)
+    
 def mix_players():
     """Mixes the players in the line. Returns None."""
     global game_objects

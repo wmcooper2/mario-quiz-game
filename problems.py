@@ -18,42 +18,39 @@ class Problem(pyglet.text.Label):
         self.question = pyglet.text.Label(text = "blank", font_name = "Comic Sans MS", x = self.q_x, y = self.q_y, font_size = 24)
         self.question.anchor_x = "center"
         self.question.anchor_y = "center"
+        self.data = tds.Data()
 
-    def english_word(self):
+    def random_english_word(self):
         """Chooses a random English vocabulary word. Returns None."""
-#        self.text = random.choice(english words
-#        self.question.text = random.choice(tds.Data.words)
-        self.question.text = "english word" 
+        self.question.text = self.data.english_word() 
 
-    def japanese_word(self):
+    def random_japanese_word(self):
         """Chooses a random Japanese vocabulary word. Returns None."""
-#        self.text = random.choice(japanese words
-#        self.question.text = random.choice(tds.Data.words)
-        self.question.text = "japanese word" 
+        choice = self.data.english_word()
+        self.question.text = self.data.japanese_word() 
     
-    def image_word(self):
+    def random_image(self):
         """Chooses a random word and loads the associated image. Returns None."""
         self.question.text = "image word" 
         #need to change the size of the image to fit within the Vocab box dimensions
+        #not completed in temporarydatasolution.py
 
-    def random_verb(self):
-        """Chooses random type of verb form. Returns None."""
-#        choice = random.choice(self.past_verb, self.present_verb, self.continuous_verb)
-#        choice()
-        self.question.text = "random verb" 
+    def random_present_verb(self):
+        """Chooses random type of present-tense verb. Returns None."""
+        self.question.text = self.data.random_verb() 
 
-    def past_verb(self):
+    def random_verb_form(self):
+        """Chooses a random verb form from a random verb. Returns None."""
+        self.question.text = self.data.random_verb_form()
+
+    def random_past_verb(self):
         """Chooses a random verb's past form. Returns None."""
-        self.question.text = "past verb" 
+        self.question.text = self.data.random_past_verb() 
     
-    def present_verb(self):
-        """Chooses a random verb's present form. Returns None."""
-        self.question.text = "present verb" 
-    
-    def continuous_verb(self):
-        """Chooses a random verb's continuous form. Returns None."""
-        self.question.text = "continuous verb" 
+#    def continuous_verb(self):
+#        """Chooses a random verb's continuous form. Returns None."""
+#        self.question.text = self.data.random_continuous_verb() 
 
-    def target_sentence(self):
+    def random_target_sentence(self):
         """Chooses a random target sentence. Returns None."""
-        self.question.text = "target sentence" 
+        self.question.text = self.data.random_target_sentence() 

@@ -49,8 +49,12 @@ class Player(pyglet.sprite.Sprite):
 
     def use_item(self):
         """Player uses the item in their inventory. Returns None."""
-        self.inventory[0].effect()  #use the item
         self.item = True
+        if self.inventory[0].item_not_used == True:
+            print("objects.py, use_item()")
+            self.inventory[0].effect()                       #use the item
+            self.inventory[0].item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+            print("item_not_used = ", self.inventory[0].item_not_used)
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""

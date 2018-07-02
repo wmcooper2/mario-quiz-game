@@ -24,6 +24,7 @@ class Item(pyglet.sprite.Sprite):
         self.transitioning = False
         self.special == False
         self.problem = problems.Problem()
+        self.item_not_used = True
 
     def normal(self, obj):
         """Applies the item's affect to the player. Returns None."""
@@ -115,8 +116,9 @@ class GreenMushroom(Item):
 
     def effect(self):
         """Presents a verb form problem. Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
-        self.problem.random_verb()
+        self.problem.random_present_verb()
 
     def delete(self):
         super(Item, self).delete()
@@ -138,8 +140,9 @@ class RedMushroom(Item):
 
     def effect(self):
         """Presents a vocabulary word problem. Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
-        self.problem.english_word()
+        self.problem.random_english_word()
 
     def delete(self):
         super(Item, self).delete()
@@ -162,8 +165,9 @@ class PowButton(Item):
 
     def effect(self):
         """Presents an unknown problem. Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
-        self.problem.image_word()
+        self.problem.random_image()
 
     def delete(self):
         super(Item, self).delete()
@@ -193,8 +197,11 @@ class YoshiCoin(Item):
 
     def effect(self):
         """Presents a pronunciation problem. Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
         self.problem.question.text = "pronunciation problem"
+        #not complete in problems.py
+        #not complete in temporarydatasolution.py
 
     def delete(self):
         super(Item, self).delete()
@@ -224,8 +231,9 @@ class PirahnaPlant(Item):
 
     def effect(self):
         """Presents a sentence translation problem (English to Japanese). Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
-        self.problem.target_sentence()
+        self.problem.random_target_sentence()
 
     def delete(self):
         super(Item, self).delete()
@@ -253,8 +261,10 @@ class SpinyBeetle(Item):
 
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
+        print("item effect, Items()")
         self.problem.showing_black_box = True
-        self.problem.target_sentence()
+        self.problem.text = "spiny beetle"
+        #unfinished
 
     def delete(self):
         super(Item, self).delete()

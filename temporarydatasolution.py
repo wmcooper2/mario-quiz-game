@@ -71,25 +71,6 @@ class Data():
                 list_.append(word)
         return list_
 
-    def japanese(self, word):
-        """Gets the Japanese definition, returns String."""
-        return self.dictionary[word.lower()]["japanese"]
-#        return self.dictionary[word]["japanese"]
-
-    def random_verb_form(self):
-        """Gets a random verb in a random form. Returns String."""
-        choice = random.choice(self.verbs)
-        verb_forms = self.verb_forms[choice].keys()
-        verb_forms = ["normal", "present", "past", "past participle", "gerund"]
-        form_choice = random.choice(verb_forms)
-        if type(self.verb_forms[choice][form_choice]) == list:
-            return self.verb_forms[choice][form_choice][0]
-        return self.verb_forms[choice][form_choice]        
-
-    def random_target_sentence(self):
-        """Gets a random target sentence. Returns String."""
-        return random.choice(self.target_sentences)
-
     def initialize_nouns(self):
         """Filters the nouns into an easy to access list, returns None."""
         for word in self.dictionary.keys():
@@ -128,3 +109,46 @@ class Data():
         for sentence in self.book_3_target_sentences:
             self.target_sentences.append(sentence)
         
+    def japanese_word(self, word):
+        """Gets the Japanese definition. Returns String."""
+        return self.dictionary[word]["japanese"]
+
+    def english_word(self):
+        """Gets a random English word. Returns String."""
+        return random.choice(self.words)
+
+    def random_verb_form(self):
+        """Gets a random verb in a random form. Returns String."""
+        choice = random.choice(self.verbs)
+        verb_forms = self.verb_forms[choice].keys()
+        verb_forms = ["normal", "present", "past", "past participle", "gerund"]
+        form_choice = random.choice(verb_forms)
+        if type(self.verb_forms[choice][form_choice]) == list:
+            return self.verb_forms[choice][form_choice][0]
+        return self.verb_forms[choice][form_choice]        
+
+    def random_verb(self):
+        """Gets a random, present-tense verb. Returns String."""
+        return random.choice(self.verbs)
+
+    def random_past_verb(self):
+        """Gets a random, past-tense verb. Returns String."""
+        choice = random.choice(self.verbs)
+        if type(self.verb_forms[choice]["past"]) == list:
+            return self.verb_forms[choice]["past"][0]
+        return self.verb_forms[choice]["past"]        
+
+#    def random_continuous_verb(self):
+#        """Gets random, continuous verb. Returns String."""
+#        choice = random.choice(self.verbs)
+#        if type(self.verb_forms[choice]["continuous"]== list:
+#            return self.verb_forms[choice]["past"][0]
+#        return self.verb_forms[choice]["past"]        
+
+    def random_target_sentence(self):
+        """Gets a random target sentence. Returns String."""
+        return random.choice(self.target_sentences)
+
+    def random_image(self):
+        """Gets a random image. Returns Image ojbect."""
+        pass 
