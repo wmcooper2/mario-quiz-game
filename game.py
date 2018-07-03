@@ -29,9 +29,6 @@ ITEM_DISAPPEAR_H = 300
 NUM_PLAYERS = 6
 NUM_ITEMS = 6
 
-#create the spots for player positions on the screen
-player_spots = util.Line(screen_w = SCREEN_W, num_players=NUM_PLAYERS)
-player_spots.line_up()
 
 #setup player containers 
 game_objects = [] #all players are added in randomize_players()
@@ -133,9 +130,18 @@ def new_item():
 for item in range(NUM_ITEMS):
     new_item()
 
+#create the spots for player positions on the screen
+player_spots = util.Line(screen_w = SCREEN_W, num_players=NUM_PLAYERS)
+player_spots.line_up()
+
 #line up the items
 item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
 item_spots.item_line_up(game_items)
+
+#debug
+print("player spots = ", player_spots.player_spots)
+print("item spots = ", item_spots.item_spots)
+
 
 @game_window.event
 def on_draw():
