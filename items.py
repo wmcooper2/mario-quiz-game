@@ -151,7 +151,7 @@ class PowButton(Item):
         super().__init__(*args, **kwargs)
 
     def effect(self):
-        """Presents an unknown problem. Returns None"""
+        """Pow Button takes one point away from everyone. Returns None"""
         global pow_button_effect
         pow_button_effect = True 
 

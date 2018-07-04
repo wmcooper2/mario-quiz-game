@@ -102,6 +102,26 @@ item_choices = [    "green mushroom",
                     "pirahna plant",
                     "bombomb",]
 
+#probability distribution of item choices
+#replace the call to random below and the item assignments with this block function
+#for x in range(NUM_ITEMS):
+#    choice = random.choice(1, 100)
+#    if choice <= 5:                             #  5%
+#        item = "pow button"
+#    if choice > 5 and choice <= 20:             # 15%
+#        item = "yoshi coin"
+#    if choice > 20 and choice <= 35:            # 15%
+#        item = "bombomb"
+#    if choice > 35 and choice <= 55:            # 20%
+#        item = "red mushroom"
+     
+
+
+
+
+
+
+
 def new_item():
     """Adds new item to all_items. Returns None."""
     item = random.choice(item_choices)
@@ -157,8 +177,10 @@ def on_draw():
             players_item = player.inventory[0]
             if isinstance(players_item, items.RedMushroom):
                 problems.Problem.english_vocab_guide.draw()
+            if isinstance(players_item, items.GreenMushroom):
+                problems.Problem.present_verb_guide.draw()
             if isinstance(players_item, items.PirahnaPlant):
-                problems.Problem.japanese_vocab_guide.draw() #same for japanese to english translation, for now.
+                problems.Problem.english_sentence_guide.draw() #same for japanese to english translation, for now.
             if isinstance(players_item, items.YoshiCoin):
                 problems.Problem.pronunciation_guide.draw()
 

@@ -12,6 +12,8 @@ class Problem(pyglet.text.Label):
     question_center_x = vocab_black_box_img.width // 2 + vocab_black_box.x
     question_center_y = vocab_black_box_img.height // 2 + vocab_black_box.y
     english_vocab_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    english_sentence_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    present_verb_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
     japanese_vocab_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
     pronunciation_guide = pyglet.text.Label(text = "Speak", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
 
