@@ -3,7 +3,7 @@ import util
 import pyglet
 from pyglet import clock
 
-#setup resource dirs
+#setup image directory
 resource_dir = "./resources"
 pyglet.resource.path = [resource_dir]
 pyglet.resource.reindex()
@@ -23,7 +23,7 @@ class Player(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.spot = self.x      #initially, off screen, changed immediately
+        self.spot = self.x      #initially off screen, changed immediately
         self.delta_x = 0        #intially zero, changed immediately
         self.item = False
         self.speed = "walk"
@@ -54,7 +54,6 @@ class Player(pyglet.sprite.Sprite):
         if item.item_not_used == True:
             item.effect()                       
             item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
-#        self.inventory.clear()                               #clear the inventory
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
@@ -216,7 +215,6 @@ class Yammy(pyglet.sprite.Sprite):
 
 class FireLight(FloatingPlayer):
     
-    #stand_left => stand_left_img because of motion while standing
     stand_left = pyglet.resource.image("fire_light_walk_left.png")
     util.center_floating_player(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 2)

@@ -8,6 +8,7 @@ import string
 import random
 import verbforms
 import targetsentences 
+import pronunciation #custom made for this game
 
 class Data():
     """Creates an instance of the chosen dictionary, returns none."""
@@ -28,6 +29,8 @@ class Data():
     adjectives = []   
     target_sentences = []
 
+    pronunciation_words = pronunciation.words
+    
     lowercase = string.ascii_lowercase
 
     def __init__(self):
@@ -152,3 +155,7 @@ class Data():
     def random_image(self):
         """Gets a random image. Returns Image ojbect."""
         pass 
+
+    def random_pronunciation(self):
+        """Gets a random word that is difficult to pronounce. Returns String."""
+        return random.choice(self.pronunciation_words)

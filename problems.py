@@ -7,11 +7,13 @@ showing_black_box = False
 
 class Problem(pyglet.text.Label):
 
-#    showing_black_box = False
     vocab_black_box_img = pyglet.resource.image("black_box.png")
     vocab_black_box = pyglet.sprite.Sprite(vocab_black_box_img, x = 345, y = 300)
     question_center_x = vocab_black_box_img.width // 2 + vocab_black_box.x
     question_center_y = vocab_black_box_img.height // 2 + vocab_black_box.y
+    english_vocab_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    japanese_vocab_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    pronunciation_guide = pyglet.text.Label(text = "Speak", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
 
     def __init__(self, x = 345, y = 300, text = "blank",  *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,7 +23,12 @@ class Problem(pyglet.text.Label):
         self.question.anchor_x = "center"
         self.question.anchor_y = "center"
         self.data = tds.Data()
-
+#        self.present_verb_guide = pyglet.text.Label(text = "present verb guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.past_verb_guide = pyglet.text.Label(text = "past verb guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.japanese_translation_guide = pyglet.text.Label(text = "japanese translation guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.target_sentence_guide= pyglet.text.Label(text = "target sentence guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.image_guide = pyglet.text.Label(text = "image guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+    
     def random_english_word(self):
         """Chooses a random English vocabulary word. Returns None."""
         #Student should translate the English word into Japanese
@@ -59,3 +66,7 @@ class Problem(pyglet.text.Label):
     def random_target_sentence(self):
         """Chooses a random target sentence. Returns None."""
         self.question.text = self.data.random_target_sentence() 
+
+    def random_pronunciation(self):
+        """Chooses a random word that is difficult to pronuounce. Returns None."""
+        self.question.text = self.data.random_pronunciation() 

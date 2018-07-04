@@ -5,6 +5,7 @@ import problems
 
 main_time = 0
 bombomb_effect = False
+pow_button_effect = False
 
 class Item(pyglet.sprite.Sprite):
     
@@ -21,27 +22,20 @@ class Item(pyglet.sprite.Sprite):
         self.moving = False
         self.falling = False
         self.transitioning = False
-        self.special == False
+        self.special = False
         self.problem = problems.Problem()
         self.item_not_used = True
 
-    def normal(self, obj):
-        """Applies the item's affect to the player. Returns None."""
-        pass 
-    
-    def special(self, obj):
-        """Applies the special affect to the player. Returns None."""
-        pass
-    
     def update(self, dt):
-        #adding gravity effect to item
         if self.falling: 
             global main_time
             main_time += dt
             if main_time > 5:
                 main_time = 0
-            self.y += util.falling_object(main_time)
-        self.delta_x = self.x - self.spot_x #current spot "x" - where its supposed to be "spot_x"
+            self.y += util.falling_object(main_time) #add gravity
+
+        #(current spot "x") - (where its supposed to be "spot_x")
+        self.delta_x = self.x - self.spot_x 
         self.delta_y = self.y - self.spot_y
         self.walk()
         self.move() 
@@ -119,7 +113,7 @@ class GreenMushroom(Item):
         super(Item, self).delete()
 
 class RedMushroom(Item):
-    """Red Mushroom is a random vocabulary question. Returns None."""
+    """Red Mushroom is a random English vocabulary question. Returns None."""
     
     stand_left = pyglet.resource.image("red_mushroom.png")
     util.center_ground_sprite(stand_left)
@@ -134,7 +128,7 @@ class RedMushroom(Item):
         super().__init__(*args, **kwargs)
 
     def effect(self):
-        """Presents a vocabulary word problem. Returns None"""
+        """Presents a random English word. Returns None"""
         problems.showing_black_box = True
         self.problem.random_english_word()
 
@@ -143,7 +137,6 @@ class RedMushroom(Item):
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone. Returns None."""
-    #rethink the effect of this item
         
     stand_left = pyglet.resource.image("pow_button.png")
     util.center_ground_sprite(stand_left)
@@ -159,8 +152,8 @@ class PowButton(Item):
 
     def effect(self):
         """Presents an unknown problem. Returns None"""
-        problems.showing_black_box = True
-        self.problem.random_image()
+        global pow_button_effect
+        pow_button_effect = True 
 
     def delete(self):
         super(Item, self).delete()
@@ -191,9 +184,7 @@ class YoshiCoin(Item):
     def effect(self):
         """Presents a pronunciation problem. Returns None"""
         problems.showing_black_box = True
-        self.problem.question.text = "pronunciation problem"
-        #not complete in problems.py
-        #not complete in temporarydatasolution.py
+        self.problem.random_pronunciation()
 
     def delete(self):
         super(Item, self).delete()
@@ -284,7 +275,6 @@ class Bombomb(Item):
         """Randomly mix the order of items on the screen. Returns None."""
         global bombomb_effect
         bombomb_effect = True 
-#        self.delete()
 
     def delete(self):
         super(Item, self).delete()
