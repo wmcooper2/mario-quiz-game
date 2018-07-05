@@ -75,9 +75,14 @@ mario.scale = 2
 characters.append(mario)
 walking_characters.append(mario)
 
+#luigi
+luigi = players.Luigi(img = players.Luigi.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
+luigi.scale = 2
+characters.append(luigi)
+walking_characters.append(luigi)
 #add luigi, peach 
 
-
+#this random player selection assumes that the players dont want to choose their characters.
 def randomize_players():
     """Randomizes the starting order of the player line up. Returns None."""
     if players.Player.randomized == False:

@@ -305,18 +305,36 @@ class BigMole(WalkingPlayer):
 
 class Mario(WalkingPlayer):
 
-    stand_left = pyglet.resource.image("big_mario_standing_left.png")
+    stand_left = pyglet.resource.image("big_mario_stand_left.png")
     util.center_walking_player(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
-    walk_right_img = pyglet.resource.image("mario_walking_right.png")
+    walk_right_img = pyglet.resource.image("big_mario_walk_right.png")
     walk_right_seq = pyglet.image.ImageGrid(walk_right_img, 1, 3)
     walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left_img = pyglet.resource.image("mario_walking_left.png")
+    walk_left_img = pyglet.resource.image("big_mario_walk_left.png")
     walk_left_seq = pyglet.image.ImageGrid(walk_left_img, 1, 3)
     walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
     run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
     run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+class Luigi(WalkingPlayer):
+    
+    stand_left = pyglet.resource.image("big_luigi_stand_left.png")
+    util.center_walking_player(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
+    walk_right_img = pyglet.resource.image("big_luigi_walk_right.png")
+    walk_right_seq = pyglet.image.ImageGrid(walk_right_img, 1, 2)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_left_img = pyglet.resource.image("big_luigi_walk_left.png")
+    walk_left_seq = pyglet.image.ImageGrid(walk_left_img, 1, 2)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
+    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
