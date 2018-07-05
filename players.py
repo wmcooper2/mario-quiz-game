@@ -30,7 +30,7 @@ class Player(pyglet.sprite.Sprite):
         self.moving = False
         self.rotating_players = False
         self.inventory = []
-        self.points = 0
+        self.score = 0
             
     def update(self, dt):
         self.delta_x = self.x - self.spot

@@ -244,7 +244,7 @@ class SpinyBeetle(Item):
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
         problems.showing_black_box = True
-        self.problem.text = "spiny beetle"
+        self.problem.text = "Translate to English."
         #unfinished
 
     def delete(self):

@@ -1,10 +1,9 @@
 import util
 import pyglet
 import random
-import objects
+import players
 import problems
-#import builtins
-import items #must come after objects (resource mod is defined in objects... move to main?)
+import items #must come after players (resource mod is defined in players... move to main?)
 from pyglet.window import key
 from pyglet import clock
 
@@ -18,71 +17,73 @@ game_window.push_handlers(key_handler)
 SCREEN_W = game_window.width
 SCREEN_H = game_window.height
 OFF_SCREEN_R = 1100
-OFF_SCREEN_L = -100 #not used
+OFF_SCREEN_L = -100     #not used
 FLOAT_H = 100
 WALK_H = 63
 ITEM_PLATFORM_H = 264
 ITEM_PLATFORM_W = 300
 ITEM_DISAPPEAR_H = 300
-NUM_PLAYERS = 6 # (replace with return val from menu screen)
+NUM_PLAYERS = 6         #(replace with return val from menu screen)
 NUM_ITEMS = 6
 
 #setup player containers 
-all_players = [] #global #players added in randomize_players()
-floating_players = []
-walking_players = []
-players = [] #temp holder for sprite creation
+player_order = []       #used to line up the scores at the top, and the intial player order 
+all_players = []        #global #players added in randomize_players()
+floating_characters = []
+walking_characters = []
+characters = []         #temp holder for sprite creation
 
 #background
-background = objects.Background(img = objects.Background.background_img, batch = main_batch)
+background = players.Background(img = players.Background.background_img, batch = main_batch)
 
 #yammy (not a playing character)
-yammy = objects.Yammy(img = objects.Yammy.stand_right, x = 30, y = ITEM_PLATFORM_H, batch = main_batch)
+yammy = players.Yammy(img = players.Yammy.stand_right, x = 30, y = ITEM_PLATFORM_H, batch = main_batch)
 yammy.scale = 2
 yammy.opacity = 0
 
 #fire_light
-fire_light = objects.FireLight(img = objects.FireLight.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
-players.append(fire_light)
-floating_players.append(fire_light)
+fire_light = players.FireLight(img = players.FireLight.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
+characters.append(fire_light)
+floating_characters.append(fire_light)
 
 #dragon
-dragon = objects.Dragon(img = objects.Dragon.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
+dragon = players.Dragon(img = players.Dragon.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
 dragon.scale = 2
-players.append(dragon)
-walking_players.append(dragon)
+characters.append(dragon)
+walking_characters.append(dragon)
 
 #big_boo
-big_boo = objects.BigBoo(img = objects.BigBoo.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
-players.append(big_boo)
-floating_players.append(big_boo)
+big_boo = players.BigBoo(img = players.BigBoo.stand_left, x = OFF_SCREEN_R, y = FLOAT_H, batch = main_batch)
+characters.append(big_boo)
+floating_characters.append(big_boo)
 
 #green_koopa
-green_koopa = objects.GreenKoopa(img = objects.GreenKoopa.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch) 
+green_koopa = players.GreenKoopa(img = players.GreenKoopa.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch) 
 green_koopa.scale = 2
-players.append(green_koopa)
-walking_players.append(green_koopa)
+characters.append(green_koopa)
+walking_characters.append(green_koopa)
 
 #big_mole
-big_mole = objects.BigMole(img = objects.BigMole.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
+big_mole = players.BigMole(img = players.BigMole.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
 big_mole.scale = 1.5 
-players.append(big_mole)
-walking_players.append(big_mole)
+characters.append(big_mole)
+walking_characters.append(big_mole)
 
 #mario
-mario = objects.Mario(img = objects.Mario.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
+mario = players.Mario(img = players.Mario.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
 mario.scale = 2
-players.append(mario)
-walking_players.append(mario)
+characters.append(mario)
+walking_characters.append(mario)
 
 #add luigi, peach 
 
+
 def randomize_players():
     """Randomizes the starting order of the player line up. Returns None."""
-    if objects.Player.randomized == False:
-        objects.Player.randomized = True
+    if players.Player.randomized == False:
+        players.Player.randomized = True
         random_players = []
-        copy = players[:]
+        copy = characters[:]
         for x in range(NUM_PLAYERS):
             player_choice = random.choice(copy)
             random_players.append(player_choice)
@@ -102,7 +103,7 @@ item_choices = [    "green mushroom",
                     "pirahna plant",
                     "bombomb",]
 
-#probability distribution of item choices
+#item probability
 #replace the call to random below and the item assignments with this block function
 #for x in range(NUM_ITEMS):
 #    choice = random.choice(1, 100)
@@ -146,31 +147,34 @@ def new_item():
 for item in range(NUM_ITEMS):
     new_item()
 
-#create the spots for player positions on the screen
-player_spots = util.Line(screen_w = SCREEN_W, num_players=NUM_PLAYERS)
-player_spots.line_up()
-
-#line up the items
-item_spots = util.Line(screen_w = SCREEN_W, num_items = NUM_ITEMS)
-item_spots.item_line_up(all_items)
+#line setups
+lines = util.Line(screen_w = SCREEN_W, num_players = NUM_PLAYERS, num_items = NUM_ITEMS)
+lines.line_up()
+lines.item_line_up(all_items)
+lines.top_row_line_up()
+top_row_spots = lines.top_row_spots #dont need, just for debug now.
+player_spots = lines.player_spots
+item_spots = lines.item_spots
+score_spots = lines.score_spots
+inventory_spot = lines.inventory_spot
 
 #debug
-print("player spots = ", player_spots.player_spots)
-print("item spots = ", item_spots.item_spots)
+print("player spots = ", player_spots)
+print("item spots = ", item_spots)
+print("top_row_spots = ", top_row_spots)
+print("score_spots = ", score_spots)
+print("inventory_spot = ", inventory_spot)
 
 @game_window.event
 def on_draw():
     game_window.clear()
     main_batch.draw()
-   
     player = all_players[0]
-
  
     #show the problem
     if problems.showing_black_box: 
         problems.Problem.vocab_black_box.draw()#mixing the different ways methods from different classes are called...           
         all_players[0].inventory[0].problem.question.draw() #change so that it doesnt go through the item instance, but goes directly to the class attribute
-
 
         #question guides
         if player.has_item() and problems.showing_black_box: 
@@ -183,6 +187,8 @@ def on_draw():
                 problems.Problem.english_sentence_guide.draw() #same for japanese to english translation, for now.
             if isinstance(players_item, items.YoshiCoin):
                 problems.Problem.pronunciation_guide.draw()
+            if isinstance(players_item, items.SpinyBeetle):
+                problems.Problem.pronunciation_guide.draw()
 
 def update(dt):
     """Game update loop. Returns None."""
@@ -193,7 +199,7 @@ def update(dt):
         item_clean_up()
     if items.pow_button_effect:
         for player in all_players:
-            player.points -= 1
+            player.score -= 1
         items.pow_button_effect = False
         item_clean_up()
 
@@ -206,7 +212,7 @@ def update(dt):
             players_item = all_players[0].inventory[0]
             player.use_item() 
                  
-    for player in floating_players:
+    for player in floating_characters:
         player.float()
 
     for item in all_items:             #update items 
@@ -245,12 +251,13 @@ def update(dt):
         mix_players()
 
     if key_handler[key.O] and all_players[0].item and problems.showing_black_box:
-        #right answer, one point given
+        #right answer, one score point given
         right_answer()
         item_clean_up()
 
     if key_handler[key.X] and all_players[0].item and problems.showing_black_box:
-        #wrong answer, no points given, no points taken
+        #wrong answer, no score point given, one point taken
+        wrong_answer()
         item_clean_up()
 
     if key_handler[key.A] and not item_movement():
@@ -273,11 +280,15 @@ def item_clean_up():
 
     #show points in terminal (move to the update/draw blocks)
     for player in all_players:
-        print(player.__class__, " has ", player.points, " points.")
+        print(player.__class__, " has ", player.score, " points.")
 
 def right_answer():
-    """Gives the player in the ready position a point. Returns None."""
-    all_players[0].points += 1
+    """Gives a point to the player in the ready position. Returns None."""
+    all_players[0].score += 1
+
+def wrong_answer():
+    """Takes away a point from the player in the ready position. Returns None."""
+    all_players[0].score -= 1
 
 def any_movement(): #dont change this, creates a weird bug if you do.
     """Checks if anything is moving. Returns Boolean."""

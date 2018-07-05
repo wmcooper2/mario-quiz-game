@@ -28,6 +28,9 @@ def falling_object(time):
 
 class Line():
 
+    top_row_spots = []
+    score_spots = []
+    inventory_spot = []
     player_spots = [] #filled by Line.line_up() 
     item_spots = []
     mixing_player_spots = False
@@ -36,6 +39,14 @@ class Line():
         self.num_players = num_players
         self.screen_w = screen_w
         self.num_items = num_items
+
+    def top_row_line_up(self):
+        """Sets the positions of the top row on the screen (scores and item inventory). Returns None."""
+        for spot in range(7):
+            self.top_row_spots.append((self.screen_w // 8) * spot + 125) 
+        if self.num_players >= 4:
+            self.inventory_spot.append(self.top_row_spots[3])
+        self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
 
     def line_up(self):
         """Sets the available player positions on the screen.
