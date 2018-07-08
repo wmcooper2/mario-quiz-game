@@ -2,6 +2,7 @@ import pyglet
 import math
 import util
 import problems
+from constants import *
 
 main_time = 0
 bombomb_effect = False
@@ -244,7 +245,7 @@ class SpinyBeetle(Item):
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
         problems.showing_black_box = True
-        self.problem.text = "Translate to English."
+        self.problem.random_japanese_target_sentence()
         #unfinished
 
     def delete(self):

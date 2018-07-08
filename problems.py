@@ -61,13 +61,13 @@ class Problem(pyglet.text.Label):
         """Chooses a random verb's past form. Returns None."""
         self.question.text = self.data.random_past_verb() 
     
-#    def continuous_verb(self):
-#        """Chooses a random verb's continuous form. Returns None."""
-#        self.question.text = self.data.random_continuous_verb() 
-
     def random_target_sentence(self):
         """Chooses a random target sentence. Returns None."""
         self.question.text = self.data.random_target_sentence() 
+
+    def random_japanese_target_sentence(self):
+        """Chooses a random Japanese target sentence. Returns None."""
+        self.question.text = "Get Japanese sentences."
 
     def random_pronunciation(self):
         """Chooses a random word that is difficult to pronuounce. Returns None."""

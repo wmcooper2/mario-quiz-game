@@ -1,6 +1,7 @@
 import math
 import pyglet
 import random
+from constants import *
 
 def center_image(image):
     """Centers the anchor point in the image."""
@@ -29,10 +30,14 @@ def falling_object(time):
 class Line():
 
     top_row_spots = []
-    score_spots = []
     inventory_spot = []
-    player_spots = [] #filled by Line.line_up() 
-    item_spots = []
+    player_spots = []           #filled by Line.line_up() 
+    item_spots = []             #filled by Line.item_line_up()
+    score_spots = []            #the foundational x-coordinate of the score-objects
+    score_spot_y = 530
+#    top_row_coins = []          #relative to the score-position
+#    bottom_row_coins = []       #relative to the score-position
+
     mixing_player_spots = False
 
     def __init__(self, num_players = 0, screen_w = 0, num_items = 0, *args, **kwargs):
@@ -47,6 +52,10 @@ class Line():
         if self.num_players >= 4:
             self.inventory_spot.append(self.top_row_spots[3])
         self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
+
+#    def coins_line_up(self):
+#        """Sets the positions of the coins respresenting player score. Returns None."""
+        
 
     def line_up(self):
         """Sets the available player positions on the screen.

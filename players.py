@@ -1,6 +1,8 @@
 import math
 import util
 import pyglet
+from constants import *
+#import scores
 from pyglet import clock
 
 #setup image directory
@@ -31,7 +33,8 @@ class Player(pyglet.sprite.Sprite):
         self.rotating_players = False
         self.inventory = []
         self.score = 0
-            
+        self.score_position = 0
+
     def update(self, dt):
         self.delta_x = self.x - self.spot
         if Player.game_just_started:
