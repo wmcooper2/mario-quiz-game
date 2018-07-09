@@ -3,7 +3,7 @@ words = [
     "drums",
     "Matthew",
     "really",
-    "red"
+    "red",
     "thank",
     "think",
     "through",

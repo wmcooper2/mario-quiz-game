@@ -55,7 +55,6 @@ class Line():
 
 #    def coins_line_up(self):
 #        """Sets the positions of the coins respresenting player score. Returns None."""
-        
 
     def line_up(self):
         """Sets the available player positions on the screen.

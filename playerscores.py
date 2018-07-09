@@ -21,6 +21,13 @@ class Score(pyglet.sprite.Sprite):
         for x in range(5):
             columns.append(column_start + (x * 12)) #coin sprite width = 12
 
+    def update(self, player):
+        """Update the player's score. Returns None."""
+        print(player, " score = ", player.score)
+
+    def minus_one_point(self):
+        """Remove one point from the player's score. Returns None."""
+        print("removing one point")
 
 
 

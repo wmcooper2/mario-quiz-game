@@ -1,19 +1,20 @@
 import util
 import pyglet
 import random
-import players
+import players #not needed?
 import problems
-import items #must come after players (resource mod is defined in players... move to main?)
-import scores
+import items #must come after players (resource mod is defined in players... move to main?) #not needed?
+import playerscores
 from constants import *
 import playersetup
+from itemsetup import *
 from pyglet import clock
 
 #setup player containers 
 #player_order determines the players' score positions at the top, fix the order based on menu screen selections.
 all_players = []            #the initial order of players hard-coded below, and the order of scores at the top.
 playing_players = []        #global #players added in randomize_players(), change this order to change the players on the screen
-score_display = []          #initially the same as playing_players, does not change, is a list of references to the player objects.
+score_display = []          #initially the same as playing_players, does not change, the player sprites at the top of the screen 
 walking_players = []
 floating_players = []
 
@@ -47,7 +48,6 @@ walking_players.append(big_mole)
 walking_players.append(mario)
 walking_players.append(luigi)
 
-
 #this random player selection assumes that the players dont want to choose their characters.
 def randomize_players():
     """Randomizes the starting order of the player line up. Returns None."""
@@ -62,55 +62,12 @@ def randomize_players():
         for player in random_players:
             playing_players.append(player) 
 randomize_players()
-#all_players = playing_players[:]
 
-#setup item containers
+#setup items 
 all_items = []                  #global #new items added with new_item() and the for-loop below it. 
 falling_item = []
-item_choices = [    "green mushroom", 
-                    "red mushroom", 
-                    "pow button", 
-                    "yoshi coin", 
-                    "spiny beetle", 
-                    "pirahna plant",
-                    "bombomb",]
-
-#item probability
-#replace the call to random below and the item assignments with this block function
-#for x in range(NUM_ITEMS):
-#    choice = random.choice(1, 100)
-#    if choice <= 5:                             #  5%
-#        item = "pow button"
-#    if choice > 5 and choice <= 20:             # 15%
-#        item = "yoshi coin"
-#    if choice > 20 and choice <= 35:            # 15%
-#        item = "bombomb"
-#    if choice > 35 and choice <= 55:            # 20%
-#        item = "red mushroom"
-     
-def new_item():
-    """Adds new item to all_items. Returns None."""
-    item = random.choice(item_choices)
-    if item == "green mushroom": 
-        item = (items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "red mushroom": 
-        item = (items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "pow button": 
-        item = (items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "yoshi coin": 
-        item = (items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "spiny beetle": 
-        item = (items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "pirahna plant":
-        item = (items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    if item == "bombomb":
-        item = (items.Bombomb(img = items.Bombomb.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-    item.scale = 1.5
-    all_items.append(item)
-
-#initial loading of items to all_items
 for item in range(NUM_ITEMS):
-    new_item()
+    all_items.append(new_item())
 
 #line setups
 lines = util.Line(screen_w = SCREEN_W, num_players = NUM_PLAYERS, num_items = NUM_ITEMS)
@@ -122,19 +79,15 @@ item_spots = lines.item_spots                   #at item platform
 score_spots = lines.score_spots                 #at top of game_window
 inventory_spot = lines.inventory_spot           #at top center of game_window
 
-print("player spots = ", player_spots)
-print("item spots = ", item_spots)
-print("top_row_spots = ", top_row_spots)
-print("score_spots = ", score_spots)
-print("inventory_spot = ", inventory_spot)
-
 #setup players' score sprites at top of screen
 for player in playing_players:
     score_x = score_spots[playing_players.index(player)]
     score_y = 530
     score_sprite = playersetup.make_score_sprite(player, score_x, score_y)
     score_display.append(score_sprite) 
-    player.score_position = score_display.index(score_sprite) 
+    player.point_index = score_display.index(score_sprite) 
+#for score_sprite in score_display:
+#    score_sprite.score = playerscores.Score(img = playerscores.Score.coin_img, score_sprite = score_sprite)
     
 @game_window.event
 def on_draw():
@@ -150,31 +103,29 @@ def on_draw():
         #question guides
         if player.has_item() and problems.showing_black_box: 
             players_item = player.inventory[0]
-            if isinstance(players_item, items.RedMushroom):
+            if isinstance(players_item, items.RedMushroom):             #simple vocab
                 problems.Problem.english_vocab_guide.draw()
-            if isinstance(players_item, items.GreenMushroom):
+            if isinstance(players_item, items.GreenMushroom):           #verbs
                 problems.Problem.present_verb_guide.draw()
-            if isinstance(players_item, items.PirahnaPlant):
-                problems.Problem.english_sentence_guide.draw() #same for japanese to english translation, for now.
-            if isinstance(players_item, items.YoshiCoin):
+            if isinstance(players_item, items.PirahnaPlant):            #J -> E translation
+                problems.Problem.english_sentence_guide.draw() 
+            if isinstance(players_item, items.YoshiCoin):               #pronunciation
                 problems.Problem.pronunciation_guide.draw()
-            if isinstance(players_item, items.SpinyBeetle):
-                problems.Problem.pronunciation_guide.draw()
+            if isinstance(players_item, items.SpinyBeetle):             #E -> J translation
+                problems.Problem.japanese_sentence_guide.draw()
 
 def update(dt):
     """Game update loop. Returns None."""
     #non-question effects go below this comment.
-    if items.bombomb_effect:
+    if items.bombomb_effect:                                            #mix items
         mix_items()
-        items.bombomb_effect = False                    #reset the flag
+        items.bombomb_effect = False                                    #reset flag
         item_clean_up()
-    if items.pow_button_effect:
+    if items.pow_button_effect:                                         #all, minus one point
         for player in playing_players:
-            player.score -= 1
-        items.pow_button_effect = False
+            player.points -= 1
+        items.pow_button_effect = False                                 #reset flag
         item_clean_up()
-
-    #update player scores and inventory item
 
     ready_player = playing_players[0]
     for player in playing_players:                      #update players 
@@ -185,7 +136,20 @@ def update(dt):
         if player.has_item() and problems.showing_black_box == False: 
             players_item = ready_player.inventory[0]
             player.use_item() 
-                 
+   
+        #update player scores 
+        score_points = score_display[player.point_index].points         #the integer value
+        player_score = score_display[player.point_index]                #the score object
+#        if player.points != score_points: 
+#            print("score_display[player.point_index].update(player) = ", score_display[player.point_index].update)
+#            score_display[player.point_index].update(dt)
+#            if player.points > score_points:
+#                player_score.minus_one_point()
+#                print("player_score object, greater = ", player_score)
+#            if player.points == score.points:
+#                print("player_score object, equal = ", player_score)
+#            if player.points < score_points: 
+#                print("player_score object, less = ", player_score)
     for player in floating_players:
         player.float()
 
@@ -211,7 +175,7 @@ def update(dt):
         all_items.remove(yammys_item)
         yammys_item.spot_y = ITEM_DISAPPEAR_H            #make the item rise
         yammys_item.transitioning = True                 #make item disappear
-        new_item()                                       #add new item to lineup
+        all_items.append(new_item())                     #add new item to lineup
         yammy.victim = ready_player                      #victim player in ready position
 
     if key_handler[key.LEFT] and not player_movement():
@@ -251,16 +215,16 @@ def item_clean_up():
 
     #show points in terminal (move to the update/draw blocks)
     for player in playing_players:
-        print(player.__class__, " has ", player.score, " points.")
-        print("score_position = ", player.score_position)
+        print(player.__class__, " has ", player.points, " points.")
+        print("point_index = ", player.point_index)
 
 def right_answer():
     """Gives a point to the player in the ready position. Returns None."""
-    playing_players[0].score += 1
+    playing_players[0].points += 1
 
 def wrong_answer():
     """Takes away a point from the player in the ready position. Returns None."""
-    playing_players[0].score -= 1
+    playing_players[0].points -= 1
 
 def any_movement(): #dont change this, creates a weird bug if you do.
     """Checks if anything is moving. Returns Boolean."""
@@ -340,6 +304,11 @@ def mix_players():
         mixed_players.append(player_choice)
         copy.remove(player_choice)
     playing_players = mixed_players[:]
+
+print("player spots = ", player_spots)
+print("item spots = ", item_spots)
+print("score_spots = ", score_spots)
+print("inventory_spot = ", inventory_spot)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)
