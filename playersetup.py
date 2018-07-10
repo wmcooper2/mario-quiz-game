@@ -1,7 +1,6 @@
 import pyglet
 import players
 from constants import *
-from playerscores import Score
 
 def make_yammy():       #not a playing character
     yammy = players.Yammy(img = players.Yammy.stand_right, x = 30, y = ITEM_PLATFORM_H, batch = main_batch)
@@ -43,30 +42,4 @@ def make_luigi():
     luigi.scale = 2
     return luigi
 
-def make_score_sprite(player, score_x, score_y):
-    
-    if isinstance(player, players.FireLight):
-        score_sprite = players.FireLight(img = players.FireLight.stand_left_seq[0], x = score_x, y = score_y, batch = main_batch)
-        score_sprite.y -= 5                             #readjusted for score_display only
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.Dragon):
-        score_sprite = players.Dragon(img = players.Dragon.stand_left, x = score_x, y = score_y, batch = main_batch)
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.BigBoo):
-        score_sprite = players.BigBoo(img = players.BigBoo.stand_left, x = score_x, y = score_y, batch = main_batch)
-        score_sprite.y += 15                            #readjusted for score_display only
-        score_sprite.scale = 0.5
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.GreenKoopa):
-        score_sprite = players.GreenKoopa(img = players.GreenKoopa.stand_left, x = score_x, y = score_y, batch = main_batch)
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.BigMole):
-        score_sprite = players.BigMole(img = players.BigMole.stand_left, x = score_x, y = score_y, batch = main_batch)
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.Mario):
-        score_sprite = players.Mario(img = players.Mario.stand_left, x = score_x, y = score_y, batch = main_batch)
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    elif isinstance(player, players.Luigi):
-        score_sprite = players.Luigi(img = players.Luigi.stand_left, x = score_x, y = score_y, batch = main_batch)
-#        score_sprite.score = Score(img = Score.coin_img, score_sprite = score_sprite)
-    return score_sprite
+

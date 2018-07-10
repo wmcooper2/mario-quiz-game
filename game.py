@@ -4,9 +4,9 @@ import random
 import players #not needed?
 import problems
 import items #must come after players (resource mod is defined in players... move to main?) #not needed?
+import playersetup
 import playerscores
 from constants import *
-import playersetup
 from itemsetup import *
 from pyglet import clock
 
@@ -79,15 +79,13 @@ item_spots = lines.item_spots                   #at item platform
 score_spots = lines.score_spots                 #at top of game_window
 inventory_spot = lines.inventory_spot           #at top center of game_window
 
-#setup players' score sprites at top of screen
+#score setup, relies on playerscores.py
 for player in playing_players:
     score_x = score_spots[playing_players.index(player)]
-    score_y = 530
-    score_sprite = playersetup.make_score_sprite(player, score_x, score_y)
+    score_sprite = playerscores.make_sprite(player, score_x)
     score_display.append(score_sprite) 
     player.point_index = score_display.index(score_sprite) 
-#for score_sprite in score_display:
-#    score_sprite.score = playerscores.Score(img = playerscores.Score.coin_img, score_sprite = score_sprite)
+
     
 @game_window.event
 def on_draw():
@@ -114,6 +112,16 @@ def on_draw():
             if isinstance(players_item, items.SpinyBeetle):             #E -> J translation
                 problems.Problem.japanese_sentence_guide.draw()
 
+    for score in score_display:
+        if score.big_score:
+            for thing in score.big_score:
+                thing.draw()
+            print("len(big_score) = ", len(score.big_score))
+        elif score.small_score:
+            print("len(small_score) = ", len(score.small_score))
+        elif score.points == 0:
+            score.zero.draw()
+
 def update(dt):
     """Game update loop. Returns None."""
     #non-question effects go below this comment.
@@ -139,17 +147,10 @@ def update(dt):
    
         #update player scores 
         score_points = score_display[player.point_index].points         #the integer value
-        player_score = score_display[player.point_index]                #the score object
-#        if player.points != score_points: 
-#            print("score_display[player.point_index].update(player) = ", score_display[player.point_index].update)
-#            score_display[player.point_index].update(dt)
-#            if player.points > score_points:
-#                player_score.minus_one_point()
-#                print("player_score object, greater = ", player_score)
-#            if player.points == score.points:
-#                print("player_score object, equal = ", player_score)
-#            if player.points < score_points: 
-#                print("player_score object, less = ", player_score)
+        score_object = score_display[player.point_index]                #the score object
+        if player.points != score_points: 
+            score_object.update(score_object, player)                                 #player_score is in a different instance than player
+
     for player in floating_players:
         player.float()
 
@@ -168,7 +169,7 @@ def update(dt):
         yammy.toggle_transition_direction()
     
     #player gets one item
-    if key_handler[key._1] and not any_movement(): 
+    if key_handler[key._1] and not any_movement() and not problems.showing_black_box: 
         yammys_item = all_items[0]
         yammy.wave_wand()
         yammy.take_item(yammys_item)
@@ -178,13 +179,20 @@ def update(dt):
         all_items.append(new_item())                     #add new item to lineup
         yammy.victim = ready_player                      #victim player in ready position
 
-    if key_handler[key.LEFT] and not player_movement():
+    if key_handler[key.LEFT] and not player_movement() and not problems.showing_black_box:
         rotate_players_left()
+    
+        #debug
+        for score_object in score_display:
+            print("score_object points = ", score_object.points)
+        for player in playing_players:
+            print("player.points = ", player.points)
 
-    if key_handler[key.RIGHT] and not player_movement():
+
+    if key_handler[key.RIGHT] and not player_movement() and not problems.showing_black_box:
         rotate_players_right()
 
-    if key_handler[key.UP] and not player_movement():
+    if key_handler[key.UP] and not player_movement() and not problems.showing_black_box:
         mix_players()
 
     if key_handler[key.O] and ready_player.item and problems.showing_black_box:
@@ -305,10 +313,10 @@ def mix_players():
         copy.remove(player_choice)
     playing_players = mixed_players[:]
 
-print("player spots = ", player_spots)
-print("item spots = ", item_spots)
-print("score_spots = ", score_spots)
-print("inventory_spot = ", inventory_spot)
+#print("player spots = ", player_spots)
+#print("item spots = ", item_spots)
+#print("score_spots = ", score_spots)
+#print("inventory_spot = ", inventory_spot)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/120)

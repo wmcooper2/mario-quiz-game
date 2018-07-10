@@ -2,7 +2,6 @@ import math
 import util
 import pyglet
 from constants import *
-from pyglet import clock
 
 #setup image directory
 resource_dir = "./resources"
@@ -212,7 +211,7 @@ class Yammy(pyglet.sprite.Sprite):
             if yammys_item.y <= self.victim.y:
                 yammys_item.falling = False                 #reset flag
                 self.victim.inventory.append(yammys_item)   #give item to game_objects[0]
-                print("game_objects[0].inventory = ", self.victim.inventory)    
+#                print("game_objects[0].inventory = ", self.victim.inventory)    
                 self.inventory.remove(yammys_item)          #remove reference to item
 
 class FireLight(FloatingPlayer):

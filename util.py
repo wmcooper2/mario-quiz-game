@@ -29,21 +29,18 @@ def falling_object(time):
 
 class Line():
 
-    top_row_spots = []
-    inventory_spot = []
+    top_row_spots = []          #all positions at top of game_window
+    inventory_spot = []         #center top of game_window
     player_spots = []           #filled by Line.line_up() 
     item_spots = []             #filled by Line.item_line_up()
-    score_spots = []            #the foundational x-coordinate of the score-objects
-    score_spot_y = 530
-#    top_row_coins = []          #relative to the score-position
-#    bottom_row_coins = []       #relative to the score-position
-
+    score_spots = []            #the xpos of the players' score sprites 
     mixing_player_spots = False
 
     def __init__(self, num_players = 0, screen_w = 0, num_items = 0, *args, **kwargs):
         self.num_players = num_players
         self.screen_w = screen_w
         self.num_items = num_items
+        self.columns = []
 
     def top_row_line_up(self):
         """Sets the positions of the top row on the screen (scores and item inventory). Returns None."""
@@ -52,9 +49,12 @@ class Line():
         if self.num_players >= 4:
             self.inventory_spot.append(self.top_row_spots[3])
         self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
-
-#    def coins_line_up(self):
-#        """Sets the positions of the coins respresenting player score. Returns None."""
+#
+#    def score_columns(self, score_sprite_x):
+#        """Sets the columns for the scores relative to the score sprite. Returns None."""
+#        column_start = score_sprite_x - 36
+#        for x in range(5):
+#            self.columns.append(column_start + (x * 12)) #coin sprite width = 12
 
     def line_up(self):
         """Sets the available player positions on the screen.
