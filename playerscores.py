@@ -1,3 +1,4 @@
+#import gc
 import util
 import pyglet
 import players                  #needed for the players' images
@@ -12,6 +13,12 @@ class Coin(pyglet.sprite.Sprite):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def delete(self):
+#        super(pyglet.sprite.Sprite, self).delete()
+#        super(self).delete()
+#        super(Sprite, self).delete()
+        super().delete()
+
 class Skull(pyglet.sprite.Sprite):
 
     skull_img = pyglet.resource.image("skull.png") 
@@ -20,6 +27,12 @@ class Skull(pyglet.sprite.Sprite):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def delete(self):
+#        super(pyglet.sprite.Sprite, self).delete()
+#        super(self).delete()
+#        super(Sprite, self).delete()
+        super().delete()
 
 class ScoreSprite(pyglet.sprite.Sprite):
     
@@ -61,6 +74,11 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.delete_score()                     
             self.change_points(player)              #adjusting the points based on the player instance's points, all point changes work
             self.set_score_images()
+#        gc.collect()
+#        print("garbage = ", gc.garbage)
+        print("len(small_scores) = ", len(self.small_score))
+        print("small_score contents = ", self.small_score)
+        print("len(big_scores) = ", len(self.big_score))
 
     def make_small_score_spots_coins(self, score_object):
         """Sets spots for self.small_score_spots_coins. Returns None."""
@@ -84,64 +102,23 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Deletes the sprites that are the displayed score. Returns None."""
         points = self.points                #ScoreSprite.points
         if points > 5:
-            self.delete_big_score_coin()
+            self.delete_big_score()
         elif points <= 5 and points > 0:
-            self.delete_small_score_coins()
+            self.delete_small_score()
         elif points == 0:
             pass                            #taken care of in game.py, on_draw()
         elif points < 0 and points >= -5:
-            self.delete_small_score_skulls()
+            self.delete_small_score()
         elif points < -5:
-            self.delete_big_score_skull()
+            self.delete_big_score()
    
-    def delete_big_score_coin(self):
-        """Deletes contents of big_score with coin instance in it. Returns None."""
-        for x in self.big_score:
-            self.big_score.pop()
+    def delete_big_score(self):
+        """Deletes contents of big_score. Returns None."""
+        self.big_score = []
 
-    def delete_small_score_coins(self):
-        """Deletes coins from small_score. Returns None."""
-        for x in self.small_score:
-            self.small_score.pop()
-
-    def delete_small_score_skulls(self):
-        """Deletes skulls from small_score. Returns None."""
-        for x in self.small_score:
-            self.small_score.pop()
-       
-    def delete_big_score_skull(self):
-        """Deletes contents of big_score with skull instance in it. Returns None."""
-        for x in self.big_score:
-            self.big_score.pop()
-
-#
-#    def delete_score2(self):
-#        """Deletes the sprites that are the displayed score. Returns None."""
-##        print("delete_score")
-#        if self.points == 0:
-#            super(pyglet.text.Label, self.zero).delete()                    #works
-#        elif self.points > 5:
-#            print("points > 5")
-##            super(Coin, self.big_score[0]).delete()
-#        elif self.points <= 5 and self.points > 0:
-#            print("points <= 5 and >0")
-##            for thing in self.small_score:
-##                super(Coin, thing).delete()  
-##            while len(self.small_score) > 0:
-##            temp = self.small_score[:]
-#            for x in range(len(self.small_score)):
-##            for thing in temp:
-#                print("self.small_score = ", self.small_score)
-##                super(Coin, self.small_score[-1]).delete()
-##                super(Coin, self.small_score[0]).delete()
-##                self.small_score[x].delete()
-##        elif self.points < -5:
-#            super(Skull, self.big_score[0]).delete()
-#        elif self.points < 0 and self.points >= -5:
-##            for thing in self.small_score:
-#            for x in range(len(self.small_score)):
-#                print("deleting small_score element")
-##                super(Skull, thing).delete()
+    def delete_small_score(self):
+        """Deletes small_score. Returns None."""
+        self.small_score = []
 
     def change_points(self, player):
         """Changes score's points to match the associated player's points. Returns None."""
