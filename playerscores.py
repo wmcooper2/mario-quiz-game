@@ -158,6 +158,8 @@ class ScoreSprite(pyglet.sprite.Sprite):
 #            print("score is big coins")
             self.big_score.append(Coin(img = Coin.coin, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
             self.big_score[0].scale = 1.5
+            self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+            self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
         elif points <= 5 and points > 0:
 #            print("score is small coins")
             for x in range(self.points):
@@ -174,6 +176,8 @@ class ScoreSprite(pyglet.sprite.Sprite):
 #            print("score is big skulls")
             self.big_score.append(Skull(img = Skull.skull, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
             self.big_score[0].scale = 1.5 
+            self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+            self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
 
 def make_sprite(player, score_x):
     if isinstance(player, players.FireLight):
