@@ -113,7 +113,7 @@ def on_draw():
 
     for score in score_display:
         if len(score.big_score) > 0:
-            print("len(big_score) = ", len(score.big_score))
+#            print("len(big_score) = ", len(score.big_score))
             for thing in score.big_score:
                 thing.draw()
 #        elif len(score.small_score) > 0:

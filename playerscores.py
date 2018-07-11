@@ -4,51 +4,81 @@ import players                  #needed for the players' images
 from constants import *
 
 class Coin(pyglet.sprite.Sprite):
+
+    coin_img = pyglet.resource.image("yellow_coin.png")
+    coin_seq = pyglet.image.ImageGrid(coin_img, 1, 3)
+    coin = coin_seq[0]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Skull(pyglet.sprite.Sprite):
+
+    skull_img = pyglet.resource.image("skull.png") 
+    skull_seq = pyglet.image.ImageGrid(skull_img, 1, 1)
+    skull = skull_seq[0]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class ScoreSprite(pyglet.sprite.Sprite):
     
-    coin_img = pyglet.resource.image("yellow_coin.png")
-    coin_seq = pyglet.image.ImageGrid(coin_img, 1, 3)
-    coin = coin_seq[0]
-    skull = pyglet.resource.image("skull.png") 
+#    skull = pyglet.resource.image("skull.png") 
 
     def __init__(self, score_sprite = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.score_sprite = score_sprite
-        self.columns = []
         self.points = 0
-        self.score_y = SCORE_SPRITE_Y - 30        
+        self.score_y = SCORE_SPRITE_Y - 30
+
         self.big_score = []
-        self.small_score = []
         self.big_score_spots = []
-        self.small_score_spots = []
+
+        self.small_score = []
+        self.small_score_spots_coins = []
+        self.small_score_spots_skulls = []
         
         self.zero = pyglet.text.Label(text = "0", x = self.x, y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch)
-        self.score_img = ""                     #change this between skull, coin and zero
 
     def update(self, score_object, player):
         """Update the player's score. Returns None."""
-        if not self.columns:                    #if self.columns is empty
-            self.score_columns(score_object)    #making x spots for coins and skulls (small score)
-            print(", score_columns = ", self.columns)            
+        #populate self.small_score_spots_coins
+        if not self.small_score_spots_coins:                  
+            self.make_small_score_spots_coins(score_object)    
+            print("small_score_spots_coins = ", self.small_score_spots_coins)            
+
+        #populate self.small_score_spots_skulls
+        if not self.small_score_spots_skulls:                   
+            self.make_small_score_spots_skulls(score_object)     
+            print("small_score_spots_skulls = ", self.small_score_spots_skulls)            
+
+        #populate self.big_score_spots
+        if not self.big_score_spots:                     
+            self.make_big_score_spots(score_object)
+            print("big_score_spots = ", self.big_score_spots)
 
         if self.points != player.points:
-            self.delete_score()                     #all deletes up to print statements works at the right point ranges
+            self.delete_score()                     
             self.change_points(player)              #adjusting the points based on the player instance's points, all point changes work
             self.set_score_images()
-#            self.assemble_score()
 
-    def score_columns(self, score_object):
-        """Sets the columns for the score's images, not the score_sprite. Returns None."""
-        column_start = score_object.x - 36
+    def make_small_score_spots_coins(self, score_object):
+        """Sets spots for self.small_score_spots_coins. Returns None."""
+        start = score_object.x - 36
         for x in range(5):
-            self.columns.append(column_start + (x * 12)) #coin width = 12
+            self.small_score_spots_coins.append(start + (x * 12)) #coin width = 12
+
+    def make_small_score_spots_skulls(self, score_object):
+        """Sets spots for self.small_score_spots_skulls. Returns None."""
+        start = score_object.x - 36
+        for x in range(5):
+            self.small_score_spots_skulls.append(start + (x * 16)) #skull width = 16
+
+    def make_big_score_spots(self, score_object):
+        """Sets spots for self.big_score_spots. Returns None."""
+        start = score_object.x - 36
+        for x in range(3):
+            self.big_score_spots.append(start + (x * 30))
 
     def delete_score(self):
         """Deletes the sprites that are the displayed score. Returns None."""
@@ -58,7 +88,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
         elif points <= 5 and points > 0:
             self.delete_small_score_coins()
         elif points == 0:
-            self.delete_zero()
+            pass                            #taken care of in game.py, on_draw()
         elif points < 0 and points >= -5:
             self.delete_small_score_skulls()
         elif points < -5:
@@ -66,23 +96,23 @@ class ScoreSprite(pyglet.sprite.Sprite):
    
     def delete_big_score_coin(self):
         """Deletes contents of big_score with coin instance in it. Returns None."""
-        print("deleting big_score coin list.")
+        for x in self.big_score:
+            self.big_score.pop()
 
     def delete_small_score_coins(self):
         """Deletes coins from small_score. Returns None."""
-        print("deleting small score, coins.")
-
-    def delete_zero(self):
-        """Deletes the zero label. Returns None."""
-        print("deleting zero label.")
+        for x in self.small_score:
+            self.small_score.pop()
 
     def delete_small_score_skulls(self):
         """Deletes skulls from small_score. Returns None."""
-        print("deleting small score, skulls.")
+        for x in self.small_score:
+            self.small_score.pop()
        
     def delete_big_score_skull(self):
         """Deletes contents of big_score with skull instance in it. Returns None."""
-        print("deleting big_score skull list.") 
+        for x in self.big_score:
+            self.big_score.pop()
 
 #
 #    def delete_score2(self):
@@ -121,54 +151,29 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.points -= 1
         print(self, ", points = ", self.points)
 
-
-    def set_score_images2(self):
-        """Adds the proper score sprites for the given point range. Returns None."""
-        if self.points == 0:                    #maybe dont need the zero assignment, drawn in on_draw() anyway
-#            print("score is zero")
-            self.score_img = self.zero
-        elif self.points > 0:
-#            pass
-            print("score is coins")
-#            self.score_img = self.coin
-#            self.score_img = Coin(img = self.coin, x = self.columns[x], y = self.score_y, batch = main_batch)  
-        elif self.points < 0:
-            print("score is skulls")
-            self.score_img = self.skull
-
     def set_score_images(self):
         """Adds the proper score sprites for the given point range. Returns None."""
-        if self.points == 0:                    #maybe dont need the zero assignment, drawn in on_draw() anyway
-            print("score image is  zero")
-#            self.score_img = self.zero
-        elif self.points > 0:
-            print("score image is coins")
-#            self.score_img = self.coin
-#            self.score_img = Coin(img = self.coin, x = self.columns[x], y = self.score_y, batch = main_batch)  
-        elif self.points < 0:
-            print("score image is skulls")
-#            self.score_img = self.skull
-
-    def assemble_score(self):
-        """Assembles the final score display. Returns None."""
-        if abs(self.points) > 5:
-            self.make_big_score_coin()
-        elif abs(self.points) <= 5 and abs(self.points) > 0:
-            self.make_small_score_coins()    
-    
-    def make_big_score_coin(self):
-        """Assembles the pieces for the big score display. Returns None."""
-        print("make_big_score")
-        self.big_score.append(1)                    #debug appended value
-        
-    def make_small_score_coins(self):
-        """Assembles the pieces for the small score display. Returns None."""
-        print("make_small_score")
-
-        for x in range(abs(self.points)):
-            self.small_score.append(Coin(img = self.coin, x = self.columns[x], y = self.score_y, batch = main_batch))   #debug appended value
-#        for spot in self.small_score.spots:
-#            self.small_score.append(self.coin, x = self.small_score_spots[spot], y = self.score_y, batch = main_batch)
+        points = self.points                #ScoreSprite.points
+        if points > 5:
+#            print("score is big coins")
+            self.big_score.append(Coin(img = Coin.coin, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
+            self.big_score[0].scale = 1.5
+        elif points <= 5 and points > 0:
+#            print("score is small coins")
+            for x in range(self.points):
+                self.small_score.append(Coin(img = Coin.coin, x = self.small_score_spots_coins[x], y = self.score_y, batch = main_batch))
+        elif points == 0:
+            print("score is zero")
+#            do nothing
+            pass
+        elif points < 0 and points >= -5:
+#            print("score is small skulls")
+            for x in range(abs(self.points)):
+                self.small_score.append(Skull(img = Skull.skull, x = self.small_score_spots_skulls[x], y = self.score_y, batch = main_batch))
+        elif points < -5:
+#            print("score is big skulls")
+            self.big_score.append(Skull(img = Skull.skull, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
+            self.big_score[0].scale = 1.5 
 
 def make_sprite(player, score_x):
     if isinstance(player, players.FireLight):
