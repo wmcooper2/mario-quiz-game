@@ -319,6 +319,6 @@ def mix_players():
 #print("inventory_spot = ", inventory_spot)
 
 if __name__ == "__main__":
-    pyglet.clock.schedule_interval(update, 1/120)
+    pyglet.clock.schedule_interval(update, 1/90)
     pyglet.app.run()
 

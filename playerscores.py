@@ -1,4 +1,3 @@
-#import gc
 import util
 import pyglet
 import players                  #needed for the players' images
@@ -14,9 +13,6 @@ class Coin(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
 
     def delete(self):
-#        super(pyglet.sprite.Sprite, self).delete()
-#        super(self).delete()
-#        super(Sprite, self).delete()
         super().delete()
 
 class Skull(pyglet.sprite.Sprite):
@@ -29,15 +25,10 @@ class Skull(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
 
     def delete(self):
-#        super(pyglet.sprite.Sprite, self).delete()
-#        super(self).delete()
-#        super(Sprite, self).delete()
         super().delete()
 
 class ScoreSprite(pyglet.sprite.Sprite):
     
-#    skull = pyglet.resource.image("skull.png") 
-
     def __init__(self, score_sprite = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.score_sprite = score_sprite
@@ -74,11 +65,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.delete_score()                     
             self.change_points(player)              #adjusting the points based on the player instance's points, all point changes work
             self.set_score_images()
-#        gc.collect()
-#        print("garbage = ", gc.garbage)
-        print("len(small_scores) = ", len(self.small_score))
-        print("small_score contents = ", self.small_score)
-        print("len(big_scores) = ", len(self.big_score))
 
     def make_small_score_spots_coins(self, score_object):
         """Sets spots for self.small_score_spots_coins. Returns None."""
@@ -132,29 +118,23 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Adds the proper score sprites for the given point range. Returns None."""
         points = self.points                #ScoreSprite.points
         if points > 5:
-#            print("score is big coins")
             self.big_score.append(Coin(img = Coin.coin, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
             self.big_score[0].scale = 1.5
             self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
             self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
         elif points <= 5 and points > 0:
-#            print("score is small coins")
             for x in range(self.points):
                 self.small_score.append(Coin(img = Coin.coin, x = self.small_score_spots_coins[x], y = self.score_y, batch = main_batch))
         elif points == 0:
-            print("score is zero")
-#            do nothing
             pass
         elif points < 0 and points >= -5:
-#            print("score is small skulls")
             for x in range(abs(self.points)):
                 self.small_score.append(Skull(img = Skull.skull, x = self.small_score_spots_skulls[x], y = self.score_y, batch = main_batch))
         elif points < -5:
-#            print("score is big skulls")
             self.big_score.append(Skull(img = Skull.skull, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
             self.big_score[0].scale = 1.5 
             self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
-            self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+            self.big_score.append(pyglet.text.Label(text = str(abs(self.points)), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
 
 def make_sprite(player, score_x):
     if isinstance(player, players.FireLight):
