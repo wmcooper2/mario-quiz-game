@@ -180,14 +180,6 @@ def update(dt):
 
     if key_handler[key.LEFT] and not player_movement() and not problems.showing_black_box:
         rotate_players_left()
-    
-        #debug
-#        for score_object in score_display:
-#            print("score_object points = ", score_object.points)
-#            print("score.columns = ", score_object.columns)
-#        for player in playing_players:
-#            print("player.points = ", player.points)
-#
 
     if key_handler[key.RIGHT] and not player_movement() and not problems.showing_black_box:
         rotate_players_right()
@@ -313,10 +305,11 @@ def mix_players():
         copy.remove(player_choice)
     playing_players = mixed_players[:]
 
-#print("player spots = ", player_spots)
-#print("item spots = ", item_spots)
-#print("score_spots = ", score_spots)
-#print("inventory_spot = ", inventory_spot)
+if DEBUG == True:
+    print("player spots = ", player_spots)
+    print("item spots = ", item_spots)
+    print("score_spots = ", score_spots)
+    print("inventory_spot = ", inventory_spot)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, 1/90)

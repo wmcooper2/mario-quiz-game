@@ -17,6 +17,10 @@ from constants import *
 #    if choice > 35 and choice <= 55:            # 20%
 #        item = "red mushroom"
 
+# 2,3,6,12,27,27,12,6,3,2 == 100
+
+
+
 item_choices = [    "green mushroom", 
                     "red mushroom", 
                     "pow button", 

@@ -1,6 +1,9 @@
 import pyglet
 from pyglet.window import key
 
+DEBUG == False
+
+
 game_window = pyglet.window.Window(1000, 563)
 main_batch = pyglet.graphics.Batch()
 key_handler = key.KeyStateHandler()
