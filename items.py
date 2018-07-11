@@ -279,3 +279,89 @@ class Bombomb(Item):
 
     def delete(self):
         super(Item, self).delete()
+
+class QuestionBlock(Item):
+    """Question block chooses a random effect. Returns None."""
+
+    stand_right = pyglet.resource.image("question_block.png")
+    util.center_ground_sprite(stand_right)
+    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 4)
+    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+
+    walk_left = pyglet.resource.image("question_block.png")
+    util.center_ground_sprite(walk_left)
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 4)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+
+    walk_right = pyglet.resource.image("question_block.png")
+    util.center_ground_sprite(walk_right)
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 4)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Choose a random effect from all of the available effects. Returns None."""
+        print("question block effect")
+
+    def delete(self):
+        super(Item, self).delete()
+
+class Feather(Item):
+    """Feather allows the player to skip their turn when the item is used. Returns None."""
+
+    stand_right = pyglet.resource.image("feather.png")
+    util.center_ground_sprite(stand_right)
+    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
+    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+
+    walk_left = pyglet.resource.image("feather.png")
+    util.center_ground_sprite(walk_left)
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+
+    walk_right = pyglet.resource.image("feather.png")
+    util.center_ground_sprite(walk_right)
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Allows the player to skip a turn when the item is used. Returns None."""
+        print("feather effect")
+
+    def delete(self):
+        super(Item, self).delete()
+
+class Star(Item):
+    """Star allows the player to avoid the negative affects of other items. Returns None."""
+
+    stand_right = pyglet.resource.image("star.png")
+    util.center_ground_sprite(stand_right)
+    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
+    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+
+    walk_left = pyglet.resource.image("star.png")
+    util.center_ground_sprite(walk_left)
+    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
+    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+
+    walk_right = pyglet.resource.image("star.png")
+    util.center_ground_sprite(walk_right)
+    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
+    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Star allows the player to avoid the negative affects of other items. Returns None."""
+        print("star effect")
+
+    def delete(self):
+        super(Item, self).delete()
+    
+    #need to set flags and call item clean up
