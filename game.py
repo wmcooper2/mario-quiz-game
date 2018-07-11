@@ -86,7 +86,6 @@ for player in playing_players:
     score_display.append(score_sprite) 
     player.point_index = score_display.index(score_sprite) 
 
-    
 @game_window.event
 def on_draw():
     game_window.clear()
@@ -113,12 +112,12 @@ def on_draw():
                 problems.Problem.japanese_sentence_guide.draw()
 
     for score in score_display:
-        if score.big_score:
+        if len(score.big_score) > 0:
+            print("len(big_score) = ", len(score.big_score))
             for thing in score.big_score:
                 thing.draw()
-            print("len(big_score) = ", len(score.big_score))
-        elif score.small_score:
-            print("len(small_score) = ", len(score.small_score))
+#        elif len(score.small_score) > 0:
+#            print("len(small_score) = ", len(score.small_score))
         elif score.points == 0:
             score.zero.draw()
 
@@ -149,7 +148,7 @@ def update(dt):
         score_points = score_display[player.point_index].points         #the integer value
         score_object = score_display[player.point_index]                #the score object
         if player.points != score_points: 
-            score_object.update(score_object, player)                                 #player_score is in a different instance than player
+            score_object.update(score_object, player)                   #player_score is in a different instance than player
 
     for player in floating_players:
         player.float()
@@ -183,11 +182,12 @@ def update(dt):
         rotate_players_left()
     
         #debug
-        for score_object in score_display:
-            print("score_object points = ", score_object.points)
-        for player in playing_players:
-            print("player.points = ", player.points)
-
+#        for score_object in score_display:
+#            print("score_object points = ", score_object.points)
+#            print("score.columns = ", score_object.columns)
+#        for player in playing_players:
+#            print("player.points = ", player.points)
+#
 
     if key_handler[key.RIGHT] and not player_movement() and not problems.showing_black_box:
         rotate_players_right()

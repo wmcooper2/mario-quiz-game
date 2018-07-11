@@ -49,12 +49,6 @@ class Line():
         if self.num_players >= 4:
             self.inventory_spot.append(self.top_row_spots[3])
         self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
-#
-#    def score_columns(self, score_sprite_x):
-#        """Sets the columns for the scores relative to the score sprite. Returns None."""
-#        column_start = score_sprite_x - 36
-#        for x in range(5):
-#            self.columns.append(column_start + (x * 12)) #coin sprite width = 12
 
     def line_up(self):
         """Sets the available player positions on the screen.
