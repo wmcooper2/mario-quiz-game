@@ -4,13 +4,20 @@ from pyglet.window import key
 #DEBUG = False
 DEBUG = True
 
-EASY_DIFFICULTY = True
+
+
+SUPER_EASY_DIFFICULTY = True
+EASY_DIFFICULTY = False
 MEDIUM_DIFFICULTY = False
 HARD_DIFFICULTY = False
 
 #for 7 items, waiting to debug the 3 new ones
-#EASY = [35, 30, 15, 10, 5, 3, 2]
-EASY = [2, 5, 10, 20, 35, 65, 100]
+# <-- hard items --- easy items -->
+#actual ranges                              #probabilities (% of appearance)
+SUPER_EASY = [1, 2, 3, 8, 18, 55, 100]      # 1,  1,  1,  5, 10, 37, 45
+EASY = [2, 5, 10, 20, 35, 65, 100]          # 2,  3,  5, 10, 15, 30, 35
+MEDIUM = [5, 10, 20, 35, 50, 75, 100]       # 5,  5, 10, 15, 15, 25, 25
+HARD = [10, 20, 30, 40, 50, 60, 100]        #10, 10, 10, 10, 10, 10, 40
 
 game_window = pyglet.window.Window(1000, 563)
 main_batch = pyglet.graphics.Batch()
@@ -30,7 +37,9 @@ NUM_PLAYERS = 6
 NUM_ITEMS = 6
 SCORE_SPRITE_Y = SCREEN_H - 36
 
-ITEM_X_SPEED = 3
+ITEM_X_SPEED = 2                            #set to 1 or 2 when not in debug mode
+ITEM_Y_SPEED = 1
+
 
 #QUESTION_BLOCK_EFFECT = False
 #BOMBOMB_EFFECT = False
@@ -41,4 +50,4 @@ ITEM_X_SPEED = 3
 #PIRAHNA_PLANT_EFFECT = False
 #YOSHI_COIN_EFFECT = False
 FEATHER_EFFECT = False
-#STAR_EFFECT = False
+STAR_EFFECT = False

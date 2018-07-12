@@ -68,6 +68,7 @@ class Problem(pyglet.text.Label):
     def random_japanese_target_sentence(self):
         """Chooses a random Japanese target sentence. Returns None."""
         self.question.text = "Get Japanese sentences."
+        self.question.text = self.data.random_target_sentence_japanese()
 
     def random_pronunciation(self):
         """Chooses a random word that is difficult to pronuounce. Returns None."""

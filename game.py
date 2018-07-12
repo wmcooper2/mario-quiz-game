@@ -137,6 +137,10 @@ def update(dt):
         rotate_players_left()
         FEATHER_EFFECT = False                                    #reset flag
         item_clean_up()
+    if constants.STAR_EFFECT:
+        print("change star effect to something more interesting.")
+        STAR_EFFECT = False                                    #reset flag
+        item_clean_up()
 
     ready_player = playing_players[0]
     for player in playing_players:                      #update players 

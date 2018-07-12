@@ -8,6 +8,7 @@ import string
 import random
 import verbforms
 import targetsentences 
+import targetsentencesjapanese
 import pronunciation #custom made for this game
 
 class Data():
@@ -20,6 +21,10 @@ class Data():
     book_1_target_sentences = targetsentences.book_1
     book_2_target_sentences = targetsentences.book_2
     book_3_target_sentences = targetsentences.book_3
+    
+    book_1_japanese_target_sentences = targetsentencesjapanese.book_1
+    book_2_japanese_target_sentences = targetsentencesjapanese.book_2
+    book_3_japanese_target_sentences = targetsentencesjapanese.book_3
 
     verb_forms = verbforms.verb_forms    
 
@@ -28,6 +33,7 @@ class Data():
     pronouns = []
     adjectives = []   
     target_sentences = []
+    japanese_target_sentences = []
 
     pronunciation_words = pronunciation.words
     
@@ -111,6 +117,15 @@ class Data():
             self.target_sentences.append(sentence)
         for sentence in self.book_3_target_sentences:
             self.target_sentences.append(sentence)
+
+    def initialize_japanese_target_sentences(self):
+        """Gets a random target sentence from all 3 grades. Returns String."""
+        for sentence in self.book_1_japanese_target_sentences:
+            self.japanese_target_sentences.append(sentence)
+        for sentence in self.book_2_japanese_target_sentences:
+            self.japanese_target_sentences.append(sentence)
+        for sentence in self.book_3_japanese_target_sentences:
+            self.japanese_target_sentences.append(sentence)
         
     def japanese_word(self, word):
         """Gets the Japanese definition. Returns String."""
@@ -151,6 +166,10 @@ class Data():
     def random_target_sentence(self):
         """Gets a random target sentence. Returns String."""
         return random.choice(self.target_sentences)
+
+    def random_target_sentence_japanese(self):
+        """Gets a random japanese target sentence. Returns String."""
+        return random.choice(self.japanese_target_sentences)
 
     def random_image(self):
         """Gets a random image. Returns Image ojbect."""

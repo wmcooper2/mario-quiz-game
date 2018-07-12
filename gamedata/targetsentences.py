@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 book_1= (
     "I like soccer",
     "I like ...",

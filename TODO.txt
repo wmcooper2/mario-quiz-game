@@ -1,27 +1,21 @@
-TODO
-----
 
 
-game.py
--------
-* move the functions that control line behavior to the util.Line class.
-* players are always running because Player.game_just_started is not reset to False. 
+* set flags for feather item
+* set flags for question block item
+* set flags for star item
+
+* give feather item a good effect
+* give question block a good effect
+* give star item a good effect
+
+* translate target sentences to Japanese for spiny beetle and uncomment its effect 
+* fix the width issue of long sentences not fitting in the problem box (maybe word wrap in pyglet.text?)
 
 
-
-objects.py
-----------
-* if a player's index is 3 or more away from its new index, then it should run there.
-* I think there is a problem with "if self.inventory" block in the update loop.
+* write a manual for the source code
+* write a class diagram
+* write an acitivity diagram
 
 
-items.py
---------
+* align the players' scores better
 
-
-
-
-
-other
------
-* copied data/ and other "*.py" from Clean_Code/ to marioquiz/ as a temporary solution to get the game working for the July 17th deadline for school. Created a "temporarydatasolution.py" file made of bits and pieces of dictionaries.py, lists.py, and words.py to get the nouns, verbs, and target sentences that I need to move the game to the next step.

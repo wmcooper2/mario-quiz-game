@@ -16,7 +16,7 @@ class Item(pyglet.sprite.Sprite):
         self.spot_y = self.y
         self.delta_x = 0        
         self.delta_y = 0
-        self.y_speed = 1
+        self.y_speed = ITEM_Y_SPEED
         self.x_speed = ITEM_X_SPEED
         self.transition_direction = "out"
         self.transition_rate = 9
@@ -245,7 +245,7 @@ class SpinyBeetle(Item):
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
         problems.showing_black_box = True
-        self.problem.random_japanese_target_sentence()
+#        self.problem.random_japanese_target_sentence()
         #unfinished
 
     def delete(self):
