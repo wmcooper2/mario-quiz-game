@@ -17,7 +17,7 @@ class Item(pyglet.sprite.Sprite):
         self.delta_x = 0        
         self.delta_y = 0
         self.y_speed = 1
-        self.x_speed = 1
+        self.x_speed = ITEM_X_SPEED
         self.transition_direction = "out"
         self.transition_rate = 9
         self.moving = False
@@ -331,7 +331,7 @@ class Feather(Item):
 
     def effect(self):
         """Allows the player to skip a turn when the item is used. Returns None."""
-        print("feather effect")
+        FEATHER_EFFECT = True
 
     def delete(self):
         super(Item, self).delete()

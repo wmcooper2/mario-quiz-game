@@ -6,6 +6,7 @@ import problems
 import items #must come after players (resource mod is defined in players... move to main?) #not needed?
 import playersetup
 import playerscores
+import constants
 from constants import *
 from itemsetup import *
 from pyglet import clock
@@ -111,13 +112,11 @@ def on_draw():
             if isinstance(players_item, items.SpinyBeetle):             #E -> J translation
                 problems.Problem.japanese_sentence_guide.draw()
 
+    #I dont know what this block does
     for score in score_display:
         if len(score.big_score) > 0:
-#            print("len(big_score) = ", len(score.big_score))
             for thing in score.big_score:
                 thing.draw()
-#        elif len(score.small_score) > 0:
-#            print("len(small_score) = ", len(score.small_score))
         elif score.points == 0:
             score.zero.draw()
 
@@ -132,6 +131,11 @@ def update(dt):
         for player in playing_players:
             player.points -= 1
         items.pow_button_effect = False                                 #reset flag
+        item_clean_up()
+    if constants.FEATHER_EFFECT:
+        print("change feather effect to something more interesting.")
+        rotate_players_left()
+        FEATHER_EFFECT = False                                    #reset flag
         item_clean_up()
 
     ready_player = playing_players[0]
@@ -157,6 +161,7 @@ def update(dt):
         item.spot_x = util.Line.item_spots[all_items.index(item)]
         item.update(dt)
 
+    #item transfer is automatically controlled by Yammy
     yammy.update()
     if yammy.inventory:                                 #only if len() > 0
         yammy.inventory[0].update(dt)
