@@ -12,7 +12,6 @@ from itemsetup import *
 from pyglet import clock
 
 #setup player containers 
-#player_order determines the players' score positions at the top, fix the order based on menu screen selections.
 all_players = []            #the initial order of players hard-coded below, and the order of scores at the top.
 playing_players = []        #global #players added in randomize_players(), change this order to change the players on the screen
 score_display = []          #initially the same as playing_players, does not change, the player sprites at the top of the screen 
@@ -109,8 +108,8 @@ def on_draw():
                 problems.Problem.english_sentence_guide.draw() 
             if isinstance(players_item, items.YoshiCoin):      #pronunciation
                 problems.Problem.pronunciation_guide.draw()
-            if isinstance(players_item, items.SpinyBeetle):    #E -> J translation
-                problems.Problem.japanese_sentence_guide.draw()
+            if isinstance(players_item, items.SpinyBeetle):    #answer the question
+                problems.Problem.answer_my_question_guide.draw()
 
     #I dont know what this block does
     for score in score_display:
@@ -319,13 +318,7 @@ def mix_players():
         copy.remove(player_choice)
     playing_players = mixed_players[:]
 
-if DEBUG == True:
-    print("player spots = ", player_spots)
-    print("item spots = ", item_spots)
-    print("score_spots = ", score_spots)
-    print("inventory_spot = ", inventory_spot)
-
 if __name__ == "__main__":
-    pyglet.clock.schedule_interval(update, 1/90)
+    pyglet.clock.schedule_interval(update, FRAME_SPEED)
     pyglet.app.run()
 

@@ -46,6 +46,16 @@ class ScoreSprite(pyglet.sprite.Sprite):
 
     def update(self, score_object, player):
         """Update the player's score. Returns None."""
+        self.populate_score_spots(score_object)
+
+        #adjusting the points based on the player instance's points, all point changes work
+        if self.points != player.points:
+            self.delete_score()                     
+            self.change_points(player)              
+            self.set_score_images()
+
+    def populate_score_spots(self, score_object):
+        """Setup of the score spots. Returns None."""
         #populate self.small_score_spots_coins
         if not self.small_score_spots_coins:                  
             self.make_small_score_spots_coins(score_object)    
@@ -60,12 +70,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
         if not self.big_score_spots:                     
             self.make_big_score_spots(score_object)
             print("big_score_spots = ", self.big_score_spots)
-
-        #adjusting the points based on the player instance's points, all point changes work
-        if self.points != player.points:
-            self.delete_score()                     
-            self.change_points(player)              
-            self.set_score_images()
 
     def make_small_score_spots_coins(self, score_object):
         """Sets spots for self.small_score_spots_coins. Returns None."""

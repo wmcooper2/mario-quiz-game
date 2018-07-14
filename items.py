@@ -90,29 +90,6 @@ class Item(pyglet.sprite.Sprite):
                 self.opacity = 0
                 self.transitioning = False
 
-class GreenMushroom(Item):
-    """Green Mushroom is a random verb form question. Returns None."""
-
-    stand_left = pyglet.resource.image("green_mushroom.png")
-    util.center_ground_sprite(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
-
-    stand_right_anim = stand_left_anim
-    walk_left_anim = stand_left_anim
-    walk_right_anim = stand_left_anim
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def effect(self):
-        """Presents a verb form problem. Returns None"""
-        problems.showing_black_box = True
-        self.problem.random_present_verb()
-        
-    def delete(self):
-        super(Item, self).delete()
-
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""
     
@@ -136,13 +113,13 @@ class RedMushroom(Item):
     def delete(self):
         super(Item, self).delete()
 
-class PowButton(Item):
-    """Pow Button takes away one point from everyone. Returns None."""
-        
-    stand_left = pyglet.resource.image("pow_button.png")
+class GreenMushroom(Item):
+    """Green Mushroom is a random verb form question. Returns None."""
+
+    stand_left = pyglet.resource.image("green_mushroom.png")
     util.center_ground_sprite(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, False)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
 
     stand_right_anim = stand_left_anim
     walk_left_anim = stand_left_anim
@@ -152,10 +129,10 @@ class PowButton(Item):
         super().__init__(*args, **kwargs)
 
     def effect(self):
-        """Pow Button takes one point away from everyone. Returns None"""
-        global pow_button_effect
-        pow_button_effect = True 
-
+        """Presents a verb form problem. Returns None"""
+        problems.showing_black_box = True
+        self.problem.random_present_verb()
+        
     def delete(self):
         super(Item, self).delete()
 
@@ -221,8 +198,8 @@ class PirahnaPlant(Item):
     def delete(self):
         super(Item, self).delete()
 
-class SpinyBeetle(Item):
-    """Spiny Beetle is a sentence translation problem (Japanese to English). Returns None."""
+class SpinyBeetle(Item): 
+    """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu. Returns None."""
 
     stand_right = pyglet.resource.image("spiny_beetle_stand_right.png")
     util.center_ground_sprite(stand_right)
@@ -243,10 +220,32 @@ class SpinyBeetle(Item):
         super().__init__(*args, **kwargs)
 
     def effect(self):
-        """Presents a sentence translation problem (Japanese to English). Returns None"""
+        """Presents a question from yomitore, qa 100, and custom questions. Returns None"""
         problems.showing_black_box = True
-        self.problem.random_japanese_target_sentence()
-        #unfinished
+        self.problem.random_question()
+
+    def delete(self):
+        super(Item, self).delete()
+
+class PowButton(Item):
+    """Pow Button takes away one point from everyone. Returns None."""
+        
+    stand_left = pyglet.resource.image("pow_button.png")
+    util.center_ground_sprite(stand_left)
+    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
+    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, False)
+
+    stand_right_anim = stand_left_anim
+    walk_left_anim = stand_left_anim
+    walk_right_anim = stand_left_anim
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def effect(self):
+        """Pow Button takes one point away from everyone. Returns None"""
+        global pow_button_effect
+        pow_button_effect = True 
 
     def delete(self):
         super(Item, self).delete()
@@ -280,7 +279,7 @@ class Bombomb(Item):
     def delete(self):
         super(Item, self).delete()
 
-class QuestionBlock(Item):
+class QuestionBlock(Item): #unfinished
     """Question block chooses a random effect. Returns None."""
 
     stand_right = pyglet.resource.image("question_block.png")
@@ -308,7 +307,7 @@ class QuestionBlock(Item):
     def delete(self):
         super(Item, self).delete()
 
-class Feather(Item):
+class Feather(Item): #unfinished
     """Feather allows the player to skip their turn when the item is used. Returns None."""
 
     stand_right = pyglet.resource.image("feather.png")
@@ -336,7 +335,7 @@ class Feather(Item):
     def delete(self):
         super(Item, self).delete()
 
-class Star(Item):
+class Star(Item): #unfinished
     """Star allows the player to avoid the negative affects of other items. Returns None."""
 
     stand_right = pyglet.resource.image("star.png")

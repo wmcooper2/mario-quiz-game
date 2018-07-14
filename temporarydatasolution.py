@@ -8,8 +8,9 @@ import string
 import random
 import verbforms
 import targetsentences 
+import customquestions          #custom made for this game
 import targetsentencesjapanese
-import pronunciation #custom made for this game
+import pronunciation            #custom made for this game
 
 class Data():
     """Creates an instance of the chosen dictionary, returns none."""
@@ -27,6 +28,8 @@ class Data():
     book_3_japanese_target_sentences = targetsentencesjapanese.book_3
 
     verb_forms = verbforms.verb_forms    
+    
+    questions = customquestions.questions
 
     nouns = []
     verbs = []
@@ -171,10 +174,14 @@ class Data():
         """Gets a random japanese target sentence. Returns String."""
         return random.choice(self.japanese_target_sentences)
 
-    def random_image(self):
-        """Gets a random image. Returns Image ojbect."""
-        pass 
+#    def random_image(self):
+#        """Gets a random image. Returns Image ojbect."""
+#        pass 
 
     def random_pronunciation(self):
         """Gets a random word that is difficult to pronounce. Returns String."""
         return random.choice(self.pronunciation_words)
+
+    def random_question(self):
+        """Gets a random question. Returns String."""
+        return random.choice(self.questions)

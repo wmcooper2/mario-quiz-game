@@ -17,6 +17,7 @@ class Problem(pyglet.text.Label):
     japanese_vocab_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
     pronunciation_guide = pyglet.text.Label(text = "Speak", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
     japanese_sentence_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    answer_my_question_guide= pyglet.text.Label(text = "Answer the question", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
 
     def __init__(self, x = 345, y = 300, text = "blank",  *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -76,3 +77,7 @@ class Problem(pyglet.text.Label):
     def random_pronunciation(self):
         """Chooses a random word that is difficult to pronuounce. Returns None."""
         self.question.text = self.data.random_pronunciation() 
+
+    def random_question(self):
+        """Chooses a random question. Returns None."""
+        self.question.text = self.data.random_question()

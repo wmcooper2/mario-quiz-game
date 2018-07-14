@@ -24,11 +24,11 @@ def center_ground_sprite(obj):
 def falling_object(time):
     """Calculates y position of falling object. Returns Integer."""
     #calculates "-(1/2) * g * t^2" where g == 9.8 and time is the accumulated time for falling
-    #changed gravity to 6 from 9.8
-    return math.floor(-(0.5 * 6) * (time ** 2))
+    #changed gravity to 5 from 9.8
+    return math.floor(-(0.5 * 5) * (time ** 2))
 
 class Line():
-
+    """Line setup for items, players, scores, etc."""
     top_row_spots = []          #all positions at top of game_window
     inventory_spot = []         #center top of game_window
     player_spots = []           #filled by Line.line_up() 
@@ -51,8 +51,7 @@ class Line():
         self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
 
     def line_up(self):
-        """Sets the available player positions on the screen.
-            Returns None."""
+        """Sets the available player positions on the screen. Returns None."""
         for place in range(self.num_players):
             if len(self.player_spots) == 0:
                 first_spot = (self.screen_w // 2) - 150
@@ -62,21 +61,11 @@ class Line():
                 self.player_spots.append(next_spot)
 
     def item_line_up(self, items):
-        """Sets the available item positions on the screen.
-            Returns None."""
+        """Sets the available item positions on the screen. Returns None."""
         for item in range(self.num_items):
             if len(self.item_spots) == 0:
-                first_spot = (self.screen_w // 2) - 216
+                first_spot = (self.screen_w // 2) - ITEM_START_LEFT
                 self.item_spots.append(first_spot)
             else:
-                next_spot = (self.screen_w // 2) - 216 - (24 * item) 
+                next_spot = (self.screen_w // 2) - ITEM_START_LEFT - (24 * item) 
                 self.item_spots.append(next_spot)
-
-    def falling(self):
-        """Calculates y_position of falling item. Returns Integer."""
-        pass
-        
-        time += timestep;
-        position += timestep * (velocity + timestep * acceleration / 2);
-        velocity += timestep * acceleration;
-    
