@@ -245,7 +245,7 @@ class SpinyBeetle(Item):
     def effect(self):
         """Presents a sentence translation problem (Japanese to English). Returns None"""
         problems.showing_black_box = True
-#        self.problem.random_japanese_target_sentence()
+        self.problem.random_japanese_target_sentence()
         #unfinished
 
     def delete(self):

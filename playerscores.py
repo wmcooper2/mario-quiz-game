@@ -61,9 +61,10 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.make_big_score_spots(score_object)
             print("big_score_spots = ", self.big_score_spots)
 
+        #adjusting the points based on the player instance's points, all point changes work
         if self.points != player.points:
             self.delete_score()                     
-            self.change_points(player)              #adjusting the points based on the player instance's points, all point changes work
+            self.change_points(player)              
             self.set_score_images()
 
     def make_small_score_spots_coins(self, score_object):
@@ -91,8 +92,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.delete_big_score()
         elif points <= 5 and points > 0:
             self.delete_small_score()
-        elif points == 0:
-            pass                            #taken care of in game.py, on_draw()
+        # points == 0 is taken care of in game.py's draw/update loops
         elif points < 0 and points >= -5:
             self.delete_small_score()
         elif points < -5:
@@ -118,25 +118,41 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Adds the proper score sprites for the given point range. Returns None."""
         points = self.points                #ScoreSprite.points
         if points > 5:
-            self.big_score.append(Coin(img = Coin.coin, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
-            self.big_score[0].scale = 1.5
-            self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
-            self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+            self.make_big_score_coin()
         elif points <= 5 and points > 0:
-            for x in range(self.points):
-                self.small_score.append(Coin(img = Coin.coin, x = self.small_score_spots_coins[x], y = self.score_y, batch = main_batch))
-        elif points == 0:
-            pass
+            self.make_small_score_coins()
+        #points == 0 taken care of in game.py's draw/update loops 
         elif points < 0 and points >= -5:
-            for x in range(abs(self.points)):
-                self.small_score.append(Skull(img = Skull.skull, x = self.small_score_spots_skulls[x], y = self.score_y, batch = main_batch))
+            self.make_small_score_skulls()
         elif points < -5:
-            self.big_score.append(Skull(img = Skull.skull, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
-            self.big_score[0].scale = 1.5 
-            self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
-            self.big_score.append(pyglet.text.Label(text = str(abs(self.points)), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+            self.make_big_score_skull()
 
+    def make_big_score_coin(self):
+        """Assembles the big score of coins. Returns None."""
+        self.big_score.append(Coin(img = Coin.coin, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
+        self.big_score[0].scale = 1.5
+        self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+        self.big_score.append(pyglet.text.Label(text = str(self.points), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+
+    def make_small_score_coins(self):
+        """Assembles the small score of coins. Returns None."""
+        for x in range(self.points):
+            self.small_score.append(Coin(img = Coin.coin, x = self.small_score_spots_coins[x], y = self.score_y, batch = main_batch))
+        
+    def make_small_score_skulls(self):
+        """Assembles the small score of skulls. Returns None."""
+        for x in range(abs(self.points)):
+            self.small_score.append(Skull(img = Skull.skull, x = self.small_score_spots_skulls[x], y = self.score_y, batch = main_batch))
+
+    def make_big_score_skull(self):
+        """Assembles the big score of skulls. Returns None."""
+        self.big_score.append(Skull(img = Skull.skull, x = self.big_score_spots[0], y = self.score_y, batch = main_batch))
+        self.big_score[0].scale = 1.5 
+        self.big_score.append(pyglet.text.Label(text = "x", x = self.big_score_spots[1], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+        self.big_score.append(pyglet.text.Label(text = str(abs(self.points)), x = self.big_score_spots[2], y = self.score_y, font_name = "Comic Sans MS", font_size = 24, batch = main_batch))
+        
 def make_sprite(player, score_x):
+    """Makes a score sprite same as the player, but a separate instance. Returns Sprite object."""
     if isinstance(player, players.FireLight):
         score_sprite = ScoreSprite(img = players.FireLight.stand_left_seq[0], x = score_x, y = SCORE_SPRITE_Y, batch = main_batch)
         score_sprite.y -= 5                             #readjusted for score_display only

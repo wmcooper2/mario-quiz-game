@@ -30,23 +30,23 @@ from constants import *
     
 
 
-def easy_difficulty(): #intro version
+def super_easy_difficulty(): #intro version
     """Game is set to 'easy' and more simple questions and helpful items are used. Returns String."""
     choice = random.randrange(1, 100, 1)
     if choice >= EASY[5] and choice <= EASY[6]:                  
-        item = "bombomb"
-    elif choice >= EASY[4] and choice < EASY[5]:               
-        item = "yoshi coin"
-    elif choice >= EASY[3] and choice < EASY[4]:                
-        item = "pow button"
-    elif choice >= EASY[2] and choice < EASY[3]:               
-        item = "spiney beetle"
-    elif choice >= EASY[1] and choice < EASY[2]:              
-        item = "pirahna plant"
-    elif choice >= EASY[0] and choice < EASY[1]:             
-        item = "green mushroom"
-    elif choice > 0 and choice < EASY[0]:            
         item = "red mushroom"
+    elif choice >= EASY[4] and choice < EASY[5]:               
+        item = "green mushroom"
+    elif choice >= EASY[3] and choice < EASY[4]:                
+        item = "yoshi coin"
+    elif choice >= EASY[2] and choice < EASY[3]:               
+        item = "pirahna plant"
+    elif choice >= EASY[1] and choice < EASY[2]:              
+        item = "spiney beetle"
+    elif choice >= EASY[0] and choice < EASY[1]:             
+        item = "pow button"
+    elif choice > 0 and choice < EASY[0]:            
+        item = "bombomb"
     print("random choice integer = ", str(choice))
     print("easy_difficulty(), item choice = ", item)
     return item
@@ -93,23 +93,46 @@ item_choices = [
 #                    "star",                         # non-question
 ]
 
+def item_probability(probabilities):
+    """returns a choice of item based on the passed in probability list. Returns String."""
+    list_ = probabilities
+    choice = random.randrange(1, 100, 1)
+    if choice >= list_[5] and choice <= list_[6]:                  
+        item = "red mushroom"
+    elif choice >= list_[4] and choice < list_[5]:               
+        item = "green mushroom"
+    elif choice >= list_[3] and choice < list_[4]:                
+        item = "yoshi coin"
+    elif choice >= list_[2] and choice < list_[3]:               
+        item = "pirahna plant"
+    elif choice >= list_[1] and choice < list_[2]:              
+        item = "spiney beetle"
+    elif choice >= list_[0] and choice < list_[1]:             
+        item = "pow button"
+    elif choice > 0 and choice < list_[0]:            
+        item = "bombomb"
+    print("random choice integer = ", str(choice))
+    print("easy_difficulty(), item choice = ", item)
+    return item
+    
 def new_item():
     """Adds new item to all_items. Returns Sprite object."""
-#    def get_item():
-#        """Gets item. Returns String."""
-#        if DEBUG == True:
-#            item_choice = random.choice(item_choices)
-#            difficulty = EASY_DIFFICULTY
-#        else:
-#            item_choice = medium_difficulty()
-#        return item_choice
+    #default item is RedMushroom
+    item = (items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    item.scale = 1.5
+    item_choice = "red mushroom"
 
-#    item_choice = get_item()
-    #change if to elif on bombomb, uncomment lines above and below to leave "simple mode"    
-#    if item_choice == "question block":
-#        item = (items.QuestionBlock(img = items.QuestionBlock.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
-#    item_choice = easy_difficulty()
-    item_choice = random.choice(item_choices)
+    if SUPER_EASY:
+        item_choice = item_probability(SUPER_EASY_RANGE)
+    elif EASY:
+        item_choice = item_probability(EASY_RANGE)
+    elif MEDIUM:
+        item_choice = item_probability(MEDIUM_RANGE)
+    elif HARD:
+        item_choice = item_probability(HARD_RANGE)
+    elif SUPER_HARD:
+        item_choice = item_probability(SUPER_HARD_RANGE)
+    
     if item_choice == "bombomb":
         item = (items.Bombomb(img = items.Bombomb.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
         item.scale = 1.5
@@ -131,6 +154,8 @@ def new_item():
     elif item_choice == "yoshi coin": 
         item = (items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
         item.scale = 1.5
+#    elif item_choice == "question block": 
+#        item = (items.QuestionBlock(img = items.QuestionBlock.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
 #    elif item_choice == "feather": 
 #        item = (items.Feather(img = items.Feather.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
 #    elif item_choice == "star": 

@@ -41,5 +41,3 @@ def make_luigi():
     luigi = players.Luigi(img = players.Luigi.stand_left, x = OFF_SCREEN_R, y = WALK_H, batch = main_batch)
     luigi.scale = 2
     return luigi
-
-

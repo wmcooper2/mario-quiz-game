@@ -72,13 +72,13 @@ for item in range(NUM_ITEMS):
 
 #line setups
 lines = util.Line(screen_w = SCREEN_W, num_players = NUM_PLAYERS, num_items = NUM_ITEMS)
-lines.line_up()                                 #player line up
-lines.item_line_up(all_items)                   #item line up
-lines.top_row_line_up()                         #for scores and item at top of game_window
-player_spots = lines.player_spots               #at players platform
-item_spots = lines.item_spots                   #at item platform
-score_spots = lines.score_spots                 #at top of game_window
-inventory_spot = lines.inventory_spot           #at top center of game_window
+lines.line_up()                                             #player line up
+lines.item_line_up(all_items)                               #item line up
+lines.top_row_line_up()                                     #for scores and item at top of game_window
+player_spots = lines.player_spots                           #at players platform
+item_spots = lines.item_spots                               #at item platform
+score_spots = lines.score_spots                             #at top of game_window
+inventory_spot = lines.inventory_spot                       #at top center of game_window
 
 #score setup, relies on playerscores.py
 for player in playing_players:
@@ -101,15 +101,15 @@ def on_draw():
         #question guides
         if player.has_item() and problems.showing_black_box: 
             players_item = player.inventory[0]
-            if isinstance(players_item, items.RedMushroom):             #simple vocab
+            if isinstance(players_item, items.RedMushroom):    #simple vocab
                 problems.Problem.english_vocab_guide.draw()
-            if isinstance(players_item, items.GreenMushroom):           #verbs
+            if isinstance(players_item, items.GreenMushroom):  #verbs
                 problems.Problem.present_verb_guide.draw()
-            if isinstance(players_item, items.PirahnaPlant):            #J -> E translation
+            if isinstance(players_item, items.PirahnaPlant):   #J -> E translation
                 problems.Problem.english_sentence_guide.draw() 
-            if isinstance(players_item, items.YoshiCoin):               #pronunciation
+            if isinstance(players_item, items.YoshiCoin):      #pronunciation
                 problems.Problem.pronunciation_guide.draw()
-            if isinstance(players_item, items.SpinyBeetle):             #E -> J translation
+            if isinstance(players_item, items.SpinyBeetle):    #E -> J translation
                 problems.Problem.japanese_sentence_guide.draw()
 
     #I dont know what this block does
@@ -123,27 +123,32 @@ def on_draw():
 def update(dt):
     """Game update loop. Returns None."""
     #non-question effects go below this comment.
-    if items.bombomb_effect:                                            #mix items
+    if items.bombomb_effect:                                    #mix items
         mix_items()
-        items.bombomb_effect = False                                    #reset flag
+        items.bombomb_effect = False                            #reset flag
         item_clean_up()
-    if items.pow_button_effect:                                         #all, minus one point
+    if items.pow_button_effect:                                 #all, minus one point
         for player in playing_players:
             player.points -= 1
-        items.pow_button_effect = False                                 #reset flag
-        item_clean_up()
-    if constants.FEATHER_EFFECT:
-        print("change feather effect to something more interesting.")
-        rotate_players_left()
-        FEATHER_EFFECT = False                                    #reset flag
-        item_clean_up()
-    if constants.STAR_EFFECT:
-        print("change star effect to something more interesting.")
-        STAR_EFFECT = False                                    #reset flag
+        items.pow_button_effect = False                         #reset flag
         item_clean_up()
 
+#    if constants.FEATHER_EFFECT:
+#        print("change feather effect to something more interesting.")
+#        rotate_players_left()
+#        FEATHER_EFFECT = False                                 #reset flag
+#        item_clean_up()
+#    if constants.STAR_EFFECT:
+#        print("change star effect to something more interesting.")
+#        STAR_EFFECT = False                                    #reset flag
+#        item_clean_up()
+#    if constants.QUESTION_BLOCK_EFFECT:
+#        print("change star effect to something more interesting.")
+#        QUESTION_BLOCK_EFFECT = False                          #reset flag
+#        item_clean_up()
+
     ready_player = playing_players[0]
-    for player in playing_players:                      #update players 
+    for player in playing_players:                              #update players 
         player.spot = util.Line.player_spots[playing_players.index(player)]
         player.update(dt)
 
@@ -153,21 +158,21 @@ def update(dt):
             player.use_item() 
    
         #update player scores 
-        score_points = score_display[player.point_index].points         #the integer value
-        score_object = score_display[player.point_index]                #the score object
+        score_points = score_display[player.point_index].points #the integer value
+        score_object = score_display[player.point_index]        #the score object
         if player.points != score_points: 
-            score_object.update(score_object, player)                   #player_score is in a different instance than player
+            score_object.update(score_object, player)           #player_score is in a different instance than player
 
     for player in floating_players:
         player.float()
 
-    for item in all_items:                              #update items 
+    for item in all_items:                                      #update items 
         item.spot_x = util.Line.item_spots[all_items.index(item)]
         item.update(dt)
 
     #item transfer is automatically controlled by Yammy
     yammy.update()
-    if yammy.inventory:                                 #only if len() > 0
+    if yammy.inventory:                                         #only if len() > 0
         yammy.inventory[0].update(dt)
         yammy.inventory[0].transition() 
 
@@ -182,10 +187,10 @@ def update(dt):
         yammy.wave_wand()
         yammy.take_item(yammys_item)
         all_items.remove(yammys_item)
-        yammys_item.spot_y = ITEM_DISAPPEAR_H            #make the item rise
-        yammys_item.transitioning = True                 #make item disappear
-        all_items.append(new_item())                     #add new item to lineup
-        yammy.victim = ready_player                      #victim player in ready position
+        yammys_item.spot_y = ITEM_DISAPPEAR_H                   #make the item rise
+        yammys_item.transitioning = True                        #make item disappear
+        all_items.append(new_item())                            #add new item to lineup
+        yammy.victim = ready_player                             #victim player in ready position
 
     if key_handler[key.LEFT] and not player_movement() and not problems.showing_black_box:
         rotate_players_left()
@@ -197,11 +202,11 @@ def update(dt):
         mix_players()
 
     if key_handler[key.O] and ready_player.item and problems.showing_black_box:
-        right_answer()                                  #plus one point
+        right_answer()                                          #plus one point
         item_clean_up()
 
     if key_handler[key.X] and ready_player.item and problems.showing_black_box:
-        wrong_answer()                                  #minus one point
+        wrong_answer()                                          #minus one point
         item_clean_up()
 
     if key_handler[key.A] and not item_movement():
@@ -217,10 +222,10 @@ def item_clean_up():
     """Performs item clean up. Returns None."""
     player = playing_players[0]
     players_item = player.inventory[0]
-    problems.showing_black_box = False                   #reset flag, stop showing box
-    player.item = False                                  #reset flag
-    player.inventory.remove(players_item)                #remove the item from player's inventory
-    players_item.delete()                                #item's instance is deleted
+    problems.showing_black_box = False                          #reset flag, stop showing box
+    player.item = False                                         #reset flag
+    player.inventory.remove(players_item)                       #remove the item from player's inventory
+    players_item.delete()                                       #item's instance is deleted
 
     #show points in terminal (move to the update/draw blocks)
     for player in playing_players:

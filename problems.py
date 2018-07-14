@@ -22,7 +22,7 @@ class Problem(pyglet.text.Label):
         super().__init__(*args, **kwargs)
         self.q_x = Problem.question_center_x
         self.q_y = Problem.question_center_y
-        self.question = pyglet.text.Label(text = "blank", font_name = "Comic Sans MS", x = self.q_x, y = self.q_y, font_size = 24)
+        self.question = pyglet.text.Label(text = "blank", font_name = "Comic Sans MS", x = self.q_x, y = self.q_y, font_size = 24, width = self.vocab_black_box_img.width)
         self.question.anchor_x = "center"
         self.question.anchor_y = "center"
         self.data = tds.Data()
@@ -68,7 +68,10 @@ class Problem(pyglet.text.Label):
     def random_japanese_target_sentence(self):
         """Chooses a random Japanese target sentence. Returns None."""
         self.question.text = "Get Japanese sentences."
-        self.question.text = self.data.random_target_sentence_japanese()
+#        self.question.text = "日本"  #produces unexpected text
+#        self.question.text = "\u65e5" + "u\672c"
+#        self.question.text = "{&#26085}"
+#        self.question.text = self.data.random_target_sentence_japanese()
 
     def random_pronunciation(self):
         """Chooses a random word that is difficult to pronuounce. Returns None."""
