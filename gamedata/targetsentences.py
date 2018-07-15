@@ -22,7 +22,8 @@ book_1= (
     "Are you a rock fan?",
     "Yes, I am.",
     "No, I'm not.",
-    "I'm not a regular player.")
+    "I'm not a regular player.",
+)
 book_2 = (
     "I was happy.",
     "Miku and Hiro were tired.",
@@ -37,7 +38,7 @@ book_2 = (
     "No, I wasn't.",
     "When we say 'no,' we shake our head.",
     "We shake our head when we say 'no.'",
-#    "I think (that) gestures are important for communication.",
+    "I think (that) gestures are important for communication.",
     "There is a picture on the wall.",
     "There are two pictures on the wall.",
     "Is there a picture on the wall?",
@@ -53,7 +54,8 @@ book_2 = (
     "I'm not going to stay at a hotel.",
     "Are you going to stay in London?",
     "Yes, I am.",
-    "No, I'm not.")
+    "No, I'm not.",
+)
 book_3 = (
     "My friends call me Hiro.",
     "This book is written in English.",

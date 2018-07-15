@@ -1,5 +1,4 @@
 #need to import stuff from Total English Assistant to get vocab words
-#create separate list of questions to randomly choose from too.
 import pyglet
 import temporarydatasolution as tds
 

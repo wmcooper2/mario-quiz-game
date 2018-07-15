@@ -1,4 +1,5 @@
 #temporary solution for mario quiz game
+from constants import *
 import sys
 if "./gamedata" not in sys.path:
     sys.path.append("./gamedata")
@@ -28,8 +29,9 @@ class Data():
     book_3_japanese_target_sentences = targetsentencesjapanese.book_3
 
     verb_forms = verbforms.verb_forms    
-    
     questions = customquestions.questions
+    pronunciation_words = pronunciation.words
+    lowercase = string.ascii_lowercase
 
     nouns = []
     verbs = []
@@ -38,42 +40,56 @@ class Data():
     target_sentences = []
     japanese_target_sentences = []
 
-    pronunciation_words = pronunciation.words
-    
-    lowercase = string.ascii_lowercase
-
     def __init__(self):
         """Prepares word list of the dictionary, returns None."""
         self.dictionary = {}
         self.load_dictionary()
         self.words = []
-        self.sort_words()
+#        self.sort_words()                   #this also loads words into self.words
+        self.load_words()
+
+        #these are filtered in stages as shown
+#        self.grade_filtered = []            #words filtered by grade level
+#        self.page_range_filtered = []       #words filtered by page_range
+
         self.size = len(self.words)
         self.initialize_nouns()
         self.initialize_verbs()
         self.initialize_pronouns()
         self.initialize_adjectives()
         self.initialize_target_sentences()
+#        print("length of game dictionary = ", self.size)
 
     def load_dictionary(self):
         """Loads the dictionary from the path set in the instance, returns None."""
         with open(self.default_dict_path) as file_object:
             self.dictionary = json.load(file_object)
 
-    def sort_words(self):
-        """Sorts the 'words' list, returns None."""
-        for key in self.dictionary.keys():
-            self.words.append(key)
-        self.words = sorted(self.words)
-
-    def filter_words_by_grade(self, grade):
-        """Filters the 'words' list by user-specified student grade level,
-            returns String."""
-        words = []
-        for word in self.words:
+    def load_words(self):
+        """Loads words into self.words based on grade levels and page ranges. Returns None."""
+        for grade in GRADES:
+            self.add_words_from_grade(grade)
+        
+    def add_words_from_grade(self, grade):
+        """Adds to self.words based on grade level. Returns None."""
+        for word in self.dictionary.keys():
             if grade == int(self.dictionary[word]["grade"]):
-                words.append(word)
-        return len(words)
+                self.words.append(word)
+#
+#    def sort_words(self):
+#        """Sorts the 'words' list, returns None."""
+#        for key in self.dictionary.keys():
+#            self.words.append(key)
+#        self.words = sorted(self.words)
+#
+#    def filter_words_by_grade(self, grade):
+#        """Filters the 'words' list by user-specified student grade level. Returns String."""
+#        words = []
+#        for word in self.words:
+#            if grade == int(self.dictionary[word]["grade"]):
+#                words.append(word)
+##        return len(words)
+#        return words
 
     def filter_words_by_punctuation(self):
         """Filters the 'words' list of words with punctutation, returns List."""

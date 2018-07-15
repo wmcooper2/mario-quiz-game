@@ -112,12 +112,12 @@ def on_draw():
                 problems.Problem.answer_my_question_guide.draw()
 
     #I dont know what this block does
-    for score in score_display:
-        if len(score.big_score) > 0:
-            for thing in score.big_score:
-                thing.draw()
-        elif score.points == 0:
-            score.zero.draw()
+#    for score in score_display:
+#        if len(score.big_score) > 0:
+#            for thing in score.big_score:
+#                thing.draw()
+#        elif score.points == 0:
+#            score.zero.draw()
 
 def update(dt):
     """Game update loop. Returns None."""

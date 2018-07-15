@@ -48,7 +48,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Update the player's score. Returns None."""
         self.populate_score_spots(score_object)
 
-        #adjusting the points based on the player instance's points, all point changes work
         if self.points != player.points:
             self.delete_score()                     
             self.change_points(player)              
@@ -59,12 +58,12 @@ class ScoreSprite(pyglet.sprite.Sprite):
         #populate self.small_score_spots_coins
         if not self.small_score_spots_coins:                  
             self.make_small_score_spots_coins(score_object)    
-            print("small_score_spots_coins = ", self.small_score_spots_coins)            
+            print("small_score_spots_coins = ", self.small_score_spots_coins) 
 
         #populate self.small_score_spots_skulls
         if not self.small_score_spots_skulls:                   
             self.make_small_score_spots_skulls(score_object)     
-            print("small_score_spots_skulls = ", self.small_score_spots_skulls)            
+            print("small_score_spots_skulls = ", self.small_score_spots_skulls) 
 
         #populate self.big_score_spots
         if not self.big_score_spots:                     
@@ -96,7 +95,8 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.delete_big_score()
         elif points <= 5 and points > 0:
             self.delete_small_score()
-        # points == 0 is taken care of in game.py's draw/update loops
+        elif points == 0:
+            self.delete_zero_score()
         elif points < 0 and points >= -5:
             self.delete_small_score()
         elif points < -5:
@@ -109,6 +109,10 @@ class ScoreSprite(pyglet.sprite.Sprite):
     def delete_small_score(self):
         """Deletes small_score. Returns None."""
         self.small_score = []
+
+    def delete_zero_score(self):
+        """Deletes the zero score. Returns None."""
+        self.zero.text = ""
 
     def change_points(self, player):
         """Changes score's points to match the associated player's points. Returns None."""
@@ -125,7 +129,8 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.make_big_score_coin()
         elif points <= 5 and points > 0:
             self.make_small_score_coins()
-        #points == 0 taken care of in game.py's draw/update loops 
+        elif points == 0:
+            self.make_zero_score()
         elif points < 0 and points >= -5:
             self.make_small_score_skulls()
         elif points < -5:
@@ -143,6 +148,10 @@ class ScoreSprite(pyglet.sprite.Sprite):
         for x in range(self.points):
             self.small_score.append(Coin(img = Coin.coin, x = self.small_score_spots_coins[x], y = self.score_y, batch = main_batch))
         
+    def make_zero_score(self):
+        """Assembles the zero score. Returns None."""
+        self.zero.text = "0"
+
     def make_small_score_skulls(self):
         """Assembles the small score of skulls. Returns None."""
         for x in range(abs(self.points)):
