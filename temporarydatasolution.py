@@ -59,7 +59,8 @@ class Data():
         self.initialize_adjectives()
         self.initialize_target_sentences()
 #        print("length of game dictionary = ", self.size)
-
+#        print("length of actual dictionary = ", len(self.dictionary))
+    
     def load_dictionary(self):
         """Loads the dictionary from the path set in the instance, returns None."""
         with open(self.default_dict_path) as file_object:
@@ -104,12 +105,6 @@ class Data():
         for word in self.dictionary.keys():
             if self.dictionary[word]["part of speech"] == "noun":
                 self.nouns.append(word)
-                
-    def initialize_verbs2(self):
-        """Filters the verbs into an easy to access list, returns None."""
-        for word in self.dictionary.keys():
-            if self.dictionary[word]["part of speech"] == "verb":
-                self.verbs.append(word)
 
     def initialize_verbs(self):
         """Pre-loads list of verbs' normal forms that appear in the verb form table in the back of the Total English books. Returns None."""
@@ -175,13 +170,6 @@ class Data():
             return self.verb_forms[choice]["past"][0]
         return self.verb_forms[choice]["past"]        
 
-#    def random_continuous_verb(self):
-#        """Gets random, continuous verb. Returns String."""
-#        choice = random.choice(self.verbs)
-#        if type(self.verb_forms[choice]["continuous"]== list:
-#            return self.verb_forms[choice]["past"][0]
-#        return self.verb_forms[choice]["past"]        
-
     def random_target_sentence(self):
         """Gets a random target sentence. Returns String."""
         return random.choice(self.target_sentences)
@@ -189,10 +177,6 @@ class Data():
     def random_target_sentence_japanese(self):
         """Gets a random japanese target sentence. Returns String."""
         return random.choice(self.japanese_target_sentences)
-
-#    def random_image(self):
-#        """Gets a random image. Returns Image ojbect."""
-#        pass 
 
     def random_pronunciation(self):
         """Gets a random word that is difficult to pronounce. Returns String."""

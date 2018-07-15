@@ -22,7 +22,7 @@ BOMBOMB = "bombomb"
 
 #settings
 NUM_PLAYERS = 6
-NUM_ITEMS = 6
+NUM_ITEMS = 9
 GRADES = [1, 2, 3]
 PAGE_RANGE = [0, 500]
 
@@ -40,7 +40,7 @@ SUPER_EASY_RANGE =  [1, 2, 3, 8, 18, 55, 100]               # 1,  1,  1,  5, 10,
 EASY_RANGE =        [2, 5, 10, 20, 35, 65, 100]             # 2,  3,  5, 10, 15, 30, 35
 MEDIUM_RANGE =      [5, 10, 20, 35, 50, 75, 100]            # 5,  5, 10, 15, 15, 25, 25
 HARD_RANGE =        [15, 30, 45, 60, 75, 90, 100]           #15, 15, 15, 15, 15, 15, 10
-SUPER_HARD_RANGE =  []
+SUPER_HARD_RANGE =  [10, 20, 40, 60, 80, 90, 100]           #10, 10, 20, 20, 20, 10, 10
 
 ITEM_START_LEFT = 216                   #be careful changing this value
 ITEM_PLATFORM_H = 264
