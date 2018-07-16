@@ -1,5 +1,6 @@
 words = [
     "bird",
+    "C",
     "drums",
     "had",
     "hat",
@@ -7,6 +8,7 @@ words = [
     "hot",
     "Matthew",
     "planning",
+    "play",
     "really",
     "red",
     "she",

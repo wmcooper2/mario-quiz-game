@@ -28,9 +28,9 @@ PAGE_RANGE = [0, 500]
 
 #difficulty level
 SUPER_EASY = False
-EASY = False
+EASY = True
 MEDIUM = False
-HARD = True
+HARD = False
 SUPER_HARD = False
 
 #for 7 items, waiting to debug the 3 new ones (star, feather, question block)
