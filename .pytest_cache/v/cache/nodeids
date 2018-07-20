@@ -16,5 +16,9 @@
   "temporarydatasolution_test.py::test_data_instance_has_words",
   "temporarydatasolution_test.py::test_total_word_count",
   "temporarydatasolution_test.py::test_dictionary_loaded_into_data_instance",
-  "temporarydatasolution_test.py::test_total_dictionary_word_count"
+  "temporarydatasolution_test.py::test_total_dictionary_word_count",
+  "util_test.py::test_top_row_spots",
+  "util_test.py::test_inventory_spot",
+  "util_test.py::test_player_spots",
+  "util_test.py::test_item_spots"
 ]

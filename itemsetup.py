@@ -1,7 +1,35 @@
 import pyglet
 import random
 import items
-from constants import *
+
+from constants import MAIN_BATCH
+
+#items
+from constants import RED_MUSHROOM
+from constants import GREEN_MUSHROOM
+from constants import YOSHI_COIN
+from constants import PIRAHNA_PLANT
+from constants import SPINY_BEETLE
+from constants import POW_BUTTON
+from constants import BOMBOMB
+
+#difficulties
+from constants import SUPER_EASY
+from constants import EASY
+from constants import MEDIUM
+from constants import HARD
+from constants import SUPER_HARD
+
+#item probabilities
+from constants import SUPER_EASY_RANGE
+from constants import EASY_RANGE
+from constants import MEDIUM_RANGE
+from constants import HARD_RANGE
+from constants import SUPER_HARD_RANGE
+
+#screen locations
+from constants import ITEM_PLATFORM_HEIGHT
+from constants import OFF_SCREEN_LEFT
 
 item_choices = [  
                     RED_MUSHROOM, 
@@ -39,7 +67,7 @@ def item_probability(probabilities):
 def new_item():
     """Adds new item to all_items. Returns Sprite object."""
     #default item is RedMushroom
-    item = (items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+    item = (items.RedMushroom(img=items.RedMushroom.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
     item.scale = 1.5
     item_choice = RED_MUSHROOM
 
@@ -55,30 +83,30 @@ def new_item():
         item_choice = item_probability(SUPER_HARD_RANGE)
     
     if item_choice == RED_MUSHROOM: 
-        item = (items.RedMushroom(img = items.RedMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.RedMushroom(img=items.RedMushroom.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice ==  GREEN_MUSHROOM:
-        item = (items.GreenMushroom(img = items.GreenMushroom.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.GreenMushroom(img=items.GreenMushroom.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == YOSHI_COIN: 
-        item = (items.YoshiCoin(img = items.YoshiCoin.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.YoshiCoin(img=items.YoshiCoin.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == PIRAHNA_PLANT:
-        item = (items.PirahnaPlant(img = items.PirahnaPlant.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.PirahnaPlant(img=items.PirahnaPlant.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == SPINY_BEETLE: 
-        item = (items.SpinyBeetle(img = items.SpinyBeetle.walk_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.SpinyBeetle(img=items.SpinyBeetle.walk_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == POW_BUTTON: 
-        item = (items.PowButton(img = items.PowButton.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.PowButton(img=items.PowButton.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == BOMBOMB:
-        item = (items.Bombomb(img = items.Bombomb.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+        item = (items.Bombomb(img=items.Bombomb.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
         item.scale = 1.5
 #    elif item_choice == "feather": 
-#        item = (items.Feather(img = items.Feather.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+#        item = (items.Feather(img=items.Feather.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
 #    elif item_choice == "star": 
-#        item = (items.Star(img = items.Star.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+#        item = (items.Star(img=items.Star.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
 #    elif item_choice == "question block": 
-#        item = (items.QuestionBlock(img = items.QuestionBlock.stand_right_anim, x = OFF_SCREEN_L, y = ITEM_PLATFORM_H, batch = main_batch))
+#        item = (items.QuestionBlock(img=items.QuestionBlock.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
     return item

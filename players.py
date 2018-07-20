@@ -1,7 +1,6 @@
 import math
-import util
+import constants
 import pyglet
-from constants import *
 
 #setup image directory
 resource_dir = "./resources"
@@ -17,10 +16,6 @@ class Background(pyglet.sprite.Sprite):
 
 class Player(pyglet.sprite.Sprite):
 
-    randomized = False
-    game_just_started = True 
-    debug = False
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spot = self.x      #initially off screen, changed immediately
@@ -35,11 +30,13 @@ class Player(pyglet.sprite.Sprite):
 
     def update(self, dt):
         self.delta_x = self.x - self.spot
-        if Player.game_just_started:
+        if constants.GAME_JUST_STARTED:
             self.speed = "run"
-        if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
+        if self.spot is constants.PLAYER_SPOTS[-1]: #if the player is in the ready position
             self.speed = "run"
         self.move()
+        if self.has_item():
+            self.inventory[0].y = self.height
 
     def has_item(self):
         """Checks if the player has an item in their inventory. Returns None."""
@@ -52,13 +49,14 @@ class Player(pyglet.sprite.Sprite):
         """Player uses the item in their inventory. Returns None."""
         self.item = True
         item = self.inventory[0]
-        if item.item_not_used == True:
+        print("item = ", item)
+        print("item.item_used = ", item.item_used)
+        if not item.item_used:
             item.effect()                       
-            item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
 
     def game_in_play(self):
         """Sets self.game_just_started to False. Returns None."""
-        Player.game_just_started = False
+        constants.GAME_JUST_STARTED = False
 
     def move(self):
         """Moves the player. Returns None."""
@@ -161,6 +159,20 @@ class Yammy(pyglet.sprite.Sprite):
         self.transition()
         self.give_item()
     
+    def transition(self):
+        """Toggles fading animation. Returns None."""
+        if self.transitioning:
+            if self.transition_direction == "in":
+                self.opacity += self.transition_rate
+            if self.transition_direction == "out":
+                self.opacity -= self.transition_rate
+            if self.opacity >= 255:
+                self.opacity = 255 
+                self.transitioning = False                  #reset flag
+            if self.opacity <= 0:
+                self.opacity = 0
+                self.transitioning = False                  #reset flag
+
     def transition_out(self):
         """Fades first inventory item out. Returns None."""
         self.inventory[0].opacity -=1
@@ -175,20 +187,6 @@ class Yammy(pyglet.sprite.Sprite):
             self.transition_direction = "out"
         elif self.transition_direction == "out":
             self.transition_direction = "in"
-
-    def transition(self):
-        """Toggles fading animation. Returns None."""
-        if self.transitioning:
-            if self.transition_direction == "in":
-                self.opacity += self.transition_rate
-            if self.transition_direction == "out":
-                self.opacity -= self.transition_rate
-            if self.opacity >= 255:
-                self.opacity = 255 
-                self.transitioning = False
-            if self.opacity <= 0:
-                self.opacity = 0
-                self.transitioning = False
 
     def wave_wand(self):
         """Yammy waves his magic wand. Returns None."""
@@ -206,18 +204,17 @@ class Yammy(pyglet.sprite.Sprite):
                 yammys_item.spot_x = self.victim.spot
                 yammys_item.x = self.victim.spot
                 yammys_item.falling = True                  #reset flag 
-                yammys_item.toggle_transition_direction()
-                yammys_item.transitioning = True            #change flag
+                yammys_item.toggle_transition_direction()   #fade out
+                yammys_item.transitioning = True            #set flag
             if yammys_item.y <= self.victim.y:
                 yammys_item.falling = False                 #reset flag
-                self.victim.inventory.append(yammys_item)   #give item to game_objects[0]
-#                print("game_objects[0].inventory = ", self.victim.inventory)    
-                self.inventory.remove(yammys_item)          #remove reference to item
+                self.victim.inventory.append(yammys_item)   #give item to the victim in the ready position
+                self.inventory.remove(yammys_item)          #remove item from yammy's inventory
 
 class FireLight(FloatingPlayer):
     
     stand_left = pyglet.resource.image("fire_light_walk_left.png")
-    util.center_floating_player(stand_left)
+    constants.center_floater(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 2)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
     walk_right = pyglet.resource.image("fire_light_walk_right.png")
@@ -235,7 +232,7 @@ class FireLight(FloatingPlayer):
 class Dragon(WalkingPlayer):
     
     stand_left = pyglet.resource.image("dragon_stand_left.png")
-    util.center_walking_player(stand_left)
+    constants.center_walker(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
     walk_right = pyglet.resource.image("dragon_walk_right.png")
@@ -253,7 +250,7 @@ class Dragon(WalkingPlayer):
 class BigBoo(FloatingPlayer):
     
     stand_left = pyglet.resource.image("big_boo_stand_left.png")
-    util.center_floating_player(stand_left)
+    constants.center_floater(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
     walk_right = pyglet.resource.image("big_boo_walk_right.png")
@@ -271,7 +268,7 @@ class BigBoo(FloatingPlayer):
 class GreenKoopa(WalkingPlayer):
     
     stand_left = pyglet.resource.image("green_koopa_stand_left.png")
-    util.center_walking_player(stand_left)
+    constants.center_walker(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
     walk_right = pyglet.resource.image("green_koopa_walk_right.png")
@@ -289,7 +286,7 @@ class GreenKoopa(WalkingPlayer):
 class BigMole(WalkingPlayer):
     
     stand_left = pyglet.resource.image("big_mole_stand_left.png")
-    util.center_walking_player(stand_left)
+    constants.center_walker(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
     walk_right = pyglet.resource.image("big_mole_walk_right.png")
@@ -307,7 +304,7 @@ class BigMole(WalkingPlayer):
 class Mario(WalkingPlayer):
 
     stand_left = pyglet.resource.image("big_mario_stand_left.png")
-    util.center_walking_player(stand_left)
+    constants.center_walker(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
     walk_right_img = pyglet.resource.image("big_mario_walk_right.png")
@@ -325,7 +322,7 @@ class Mario(WalkingPlayer):
 class Luigi(WalkingPlayer):
     
     stand_left = pyglet.resource.image("big_luigi_stand_left.png")
-    util.center_walking_player(stand_left)
+    constants.center_walker(stand_left)
     stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
     walk_right_img = pyglet.resource.image("big_luigi_walk_right.png")

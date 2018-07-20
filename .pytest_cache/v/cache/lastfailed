@@ -1,3 +1,8 @@
 {
-  "game_test.py": true
+  "constants_test.py::test_debug_is_off": true,
+  "game_test.py": true,
+  "util_test.py::test_inventory_spot": true,
+  "util_test.py::test_item_spots": true,
+  "util_test.py::test_player_spots": true,
+  "util_test.py::test_top_row_spots": true
 }

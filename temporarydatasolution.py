@@ -1,5 +1,4 @@
-#temporary solution for mario quiz game
-from constants import *
+import constants
 import sys
 if "./gamedata" not in sys.path:
     sys.path.append("./gamedata")
@@ -60,7 +59,16 @@ class Data():
         self.initialize_target_sentences()
 #        print("length of game dictionary = ", self.size)
 #        print("length of actual dictionary = ", len(self.dictionary))
-    
+
+        if constants.DEBUG:
+            print("DEBUG:: Length of word list = ", len(self.words))
+            for word in sorted(self.words[:20]):
+                print(word)
+#            print("DEBUG:: First 20 words of self.words = ", sorted(self.words[:20]))
+            print("DEBUG:: Grade levels words are taken from = ", constants.GRADES)
+            print("DEBUG:: Page range for highest level = ", constants.PAGE_RANGE)
+
+# initializing/loading data
     def load_dictionary(self):
         """Loads the dictionary from the path set in the instance, returns None."""
         with open(self.default_dict_path) as file_object:
@@ -68,8 +76,25 @@ class Data():
 
     def load_words(self):
         """Loads words into self.words based on grade levels and page ranges. Returns None."""
-        for grade in GRADES:
-            self.add_words_from_grade(grade)
+        self.words = []                     #reset the list
+        max_grade = max(constants.GRADES)
+        for grade in constants.GRADES:
+            if grade != max_grade:
+                self.add_words_from_grade(grade)
+            else:
+                # get all the words in the max grade
+                words_in_max_grade = []
+                for word in self.dictionary.keys():
+                    if max_grade == int(self.dictionary[word]["grade"]):
+                        words_in_max_grade.append(word)
+
+                # filter the words in the max grade based on page range 
+                from_page = constants.PAGE_RANGE[0]
+                until_page = constants.PAGE_RANGE[1] 
+                for word in words_in_max_grade:
+                    page_of_word = int(self.dictionary[word]["page"])
+                    if page_of_word >= from_page and page_of_word <= until_page:
+                        self.words.append(word)
         
     def add_words_from_grade(self, grade):
         """Adds to self.words based on grade level. Returns None."""
@@ -140,7 +165,8 @@ class Data():
             self.japanese_target_sentences.append(sentence)
         for sentence in self.book_3_japanese_target_sentences:
             self.japanese_target_sentences.append(sentence)
-        
+
+# single words
     def japanese_word(self, word):
         """Gets the Japanese definition. Returns String."""
         return self.dictionary[word]["japanese"]
@@ -170,6 +196,11 @@ class Data():
             return self.verb_forms[choice]["past"][0]
         return self.verb_forms[choice]["past"]        
 
+    def random_pronunciation(self):
+        """Gets a random word that is difficult to pronounce. Returns String."""
+        return random.choice(self.pronunciation_words)
+
+# sentences
     def random_target_sentence(self):
         """Gets a random target sentence. Returns String."""
         return random.choice(self.target_sentences)
@@ -177,10 +208,6 @@ class Data():
     def random_target_sentence_japanese(self):
         """Gets a random japanese target sentence. Returns String."""
         return random.choice(self.japanese_target_sentences)
-
-    def random_pronunciation(self):
-        """Gets a random word that is difficult to pronounce. Returns String."""
-        return random.choice(self.pronunciation_words)
 
     def random_question(self):
         """Gets a random question. Returns String."""
