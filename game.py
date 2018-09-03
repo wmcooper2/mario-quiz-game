@@ -1,34 +1,44 @@
+#!/usr/bin/env python3
 """Main file for the Mario quiz game."""
-import random
-
 import pyglet
 from pyglet import clock
 from pyglet.window import key
+import sys
+sys.path.append("./src/")
 
+# setup resources
+pyglet.resource.path = ["./resources"] 
+pyglet.resource.reindex()
+
+import random
 import players #not needed?
 import playersetup
 import playerscores
 import problems
-
 import items #must come after players
 from itemsetup import new_item
-
 import constants
 
 #setup player containers
 ALL_PLAYERS = []            #initial player order hard-coded below
 
-#change this order to change the players on the screen
-PLAYING_PLAYERS = []        #global #players added in randomize_players()
+# change this order to change the players on the screen
+PLAYING_PLAYERS = []        #players added in randomize_players()
 
-#initially the same as PLAYING_PLAYERS, player sprites at the top
-SCORE_DISPLAY = []
+SCORE_DISPLAY = []          #score display sprites
 WALKING_PLAYERS = []
 FLOATING_PLAYERS = []
 
 #background
 BACKGROUND = players.Background(img=players.Background.background_img, batch=constants.MAIN_BATCH)
+#background_img = pyglet.resource.image("quiz1.png")
+#BACKGROUND = pyglet.sprite.Sprite(background_img, batch=constants.MAIN_BATCH)
+#class Background(pyglet.sprite.Sprite):
 
+#    background_img = pyglet.resource.image("quiz1.png")
+
+#    def __init__(self, *args, **kwargs):
+#        super().__init__(*args, **kwargs)
 #player setup
 YAMMY = playersetup.make_yammy()
 FIRE_LIGHT = playersetup.make_firelight()
@@ -74,12 +84,12 @@ def randomize_players():
 randomize_players()
 
 #setup items
-ALL_ITEMS = []                  #global #new items added with new_item() and the for-loop below it.
+ALL_ITEMS = []                  #new items added with new_item() and the for-loop below it.
 for item in range(constants.NUM_ITEMS):
     ALL_ITEMS.append(new_item())
 
 #line setups
-constants.player_line_up()                                             #player line up
+constants.player_line_up()                                      #player line up
 constants.item_line_up(ALL_ITEMS)                               #item line up
 constants.top_row_line_up()                                     #at top of screen
 
@@ -90,46 +100,60 @@ for element in PLAYING_PLAYERS:
     SCORE_DISPLAY.append(score_sprite)
     element.point_index = SCORE_DISPLAY.index(score_sprite)
 
+# main problem instance
+problem = problems.Problem()
+
 @constants.GAME_WINDOW.event
 def on_draw():
-#    global SHOW_BLACK_BOX
+    """Draw MAIN_BATCH which is all the visual elements. Returns None."""
     constants.GAME_WINDOW.clear()
     constants.MAIN_BATCH.draw()
     player = PLAYING_PLAYERS[0]
 
-    print("on_draw(), SHOW_BLACK_BOX = ", constants.SHOW_BLACK_BOX, "id = ", id(constants.SHOW_BLACK_BOX))
-    #show the problem
-    if constants.SHOW_BLACK_BOX:
+    if player.has_item():
+        # basic pattern:
+            # draw the black box
+            # change the guide
+            # change the question in the problem
+            # draw the guide
+            # draw the question        
+        players_item = player.inventory[0]
+        problem.black_box.draw()
+        constants.SHOW_BLACK_BOX = True                        #set flag
 
-        problems.Problem.vocab_black_box.draw()
-        player.inventory[0].problem.question.draw()
-
-        #change these to be triggered by flags?
-
-        #question guides
-        if player.has_item() and constants.SHOW_BLACK_BOX:
-            players_item = player.inventory[0]
+        if constants.NEW_QUESTION:
+            constants.NEW_QUESTION = False                     #reset flag
             if isinstance(players_item, items.RedMushroom):    #simple vocab
-                problems.Problem.english_vocab_guide.draw()
+                problem.random_english_word()
             if isinstance(players_item, items.GreenMushroom):  #verbs
-                problems.Problem.present_verb_guide.draw()
+                problem.random_present_verb()
             if isinstance(players_item, items.PirahnaPlant):   #J -> E translation
-                problems.Problem.english_sentence_guide.draw()
+                problem.random_target_sentence()
             if isinstance(players_item, items.YoshiCoin):      #pronunciation
-                problems.Problem.pronunciation_guide.draw()
+                problem.random_pronunciation()
             if isinstance(players_item, items.SpinyBeetle):    #answer the question
-                problems.Problem.answer_my_question_guide.draw()
+                problem.random_question()
+        problem.guide.draw()
+        problem.question.draw()
 
-def update(dt):
+    for score in SCORE_DISPLAY:
+        if score.points is 0:
+            score.zero.draw()
+        elif abs(score.points) > 0 and abs(score.points) <= 5:
+            for element in score.small_score:
+                element.draw()
+        elif abs(score.points) > 5:
+            for element in score.big_score:
+                element.draw()
+
+def update(DT):
     """Game update loop. Returns None."""
     #non-question effects go below this comment.
-#    global BOMBOMB_EFFECT
-#    global POW_BUTTON_EFFECT
-    if constants.BOMBOMB_EFFECT:                                    #mix items
+    if constants.BOMBOMB_EFFECT:                          #mix items
         mix_items()
         constants.BOMBOMB_EFFECT = False                  #reset flag
         item_clean_up()
-    if constants.POW_BUTTON_EFFECT:                                 #all, minus one point
+    if constants.POW_BUTTON_EFFECT:                       #all, minus one point
         for player in PLAYING_PLAYERS:
             player.points -= 1
         constants.POW_BUTTON_EFFECT = False               #reset flag
@@ -151,16 +175,8 @@ def update(dt):
 
     ready_player = PLAYING_PLAYERS[0]
     for player in PLAYING_PLAYERS:                              #update players
-#        player.spot = util.Line.player_spots[PLAYING_PLAYERS.index(player)]
         player.spot = constants.PLAYER_SPOTS[PLAYING_PLAYERS.index(player)]
-        player.update(dt)
-
-        #player automatically uses item
-        if player.has_item() and constants.SHOW_BLACK_BOX is False:
-#            if DEBUG:
-#                print("player has item, constants.SHOW_BLACK_BOX == TRUE")
-#            players_item = ready_player.inventory[0]
-            player.use_item()
+        player.update(DT)
 
         #update player scores
         score_points = SCORE_DISPLAY[player.point_index].points #the integer value
@@ -172,14 +188,13 @@ def update(dt):
         player.float()
 
     for item in ALL_ITEMS:                                      #update items
-#        item.spot_x = util.Line.item_spots[ALL_ITEMS.index(item)]
         item.spot_x = constants.ITEM_SPOTS[ALL_ITEMS.index(item)]
-        item.update(dt)
+        item.update(DT)
 
     #item transfer is automatically controlled by Yammy
     YAMMY.update()
     if YAMMY.inventory:                                         #only if len() > 0
-        YAMMY.inventory[0].update(dt)                           #update the item
+        YAMMY.inventory[0].update(DT)                           #update the item
         YAMMY.inventory[0].transition()                         #transition the item
 
     #fade YAMMY in and out
@@ -189,11 +204,12 @@ def update(dt):
 
     #player gets one item
     if constants.KEY_HANDLER[key._1] and not any_movement() and not constants.SHOW_BLACK_BOX:
+        constants.NEW_QUESTION = True                           #reset flag
         yammys_item = ALL_ITEMS[0]                              #YAMMY wants the first item
         YAMMY.wave_wand()                                       #wave magic wand
         YAMMY.take_item(yammys_item)                            #takes the item
         ALL_ITEMS.remove(yammys_item)                           #item taken from platform
-        yammys_item.spot_y = constants.ITEM_DISAPPEAR_HEIGHT              #make the item rise
+        yammys_item.spot_y = constants.ITEM_DISAPPEAR_HEIGHT    #make the item rise
         yammys_item.transitioning = True                        #make item disappear
         ALL_ITEMS.append(new_item())                            #add new item to lineup
         YAMMY.victim = ready_player                             #PLAYING_PLAYERS[0]
@@ -208,11 +224,11 @@ def update(dt):
     if constants.KEY_HANDLER[key.UP] and not player_movement() and not constants.SHOW_BLACK_BOX:
         mix_players()
 
-    if constants.KEY_HANDLER[key.O] and ready_player.item and constants.SHOW_BLACK_BOX:
+    if constants.KEY_HANDLER[key.O] and ready_player.has_item() and constants.SHOW_BLACK_BOX:
         right_answer()                                          #plus one point
         item_clean_up()
 
-    if constants.KEY_HANDLER[key.X] and ready_player.item and constants.SHOW_BLACK_BOX:
+    if constants.KEY_HANDLER[key.X] and ready_player.has_item() and constants.SHOW_BLACK_BOX:
         wrong_answer()                                          #minus one point
         item_clean_up()
 
@@ -229,13 +245,10 @@ def item_clean_up():
     """Performs item clean up. Returns None."""
     player = PLAYING_PLAYERS[0]
     players_item = player.inventory[0]
-    player.item = False                             #reset flag
     player.inventory.remove(players_item)           #remove the item from player's inventory
     players_item.delete()                           #item's instance is deleted
-    del players_item                                #clean up
-    constants.SHOW_BLACK_BOX = False
-#    constants.SHOW_BLACK_BOX = False                          #reset flag, stop showing box
-    # reset the item.item_used flag?
+    player.item = False                             #reset flag
+    constants.SHOW_BLACK_BOX = False                #reset flag
 
     #show points in terminal (move to the update/draw blocks)
     for player in PLAYING_PLAYERS:
