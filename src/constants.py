@@ -3,8 +3,8 @@ from pyglet.window import key
 import math
 
 #debugging values
-#DEBUG = False
-DEBUG = True
+DEBUG = False
+#DEBUG = True
 ALL_RED_MUSHROOMS = False
 ALL_GREEN_MUSHROOMS = False
 ALL_YOSHI_COINS = False
