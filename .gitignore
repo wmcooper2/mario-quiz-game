@@ -1,6 +1,0 @@
-.gitignore
-.DS_Store
-TODO.txt
-.pytest_cache/v/cache
-__pycache__/
-scraps/
