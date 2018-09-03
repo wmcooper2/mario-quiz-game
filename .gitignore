@@ -1,7 +1,6 @@
-
+.gitignore
 .DS_Store
-.pycache_cache
 TODO.txt
-
+.pytest_cache/v/cache
 __pycache__/
 scraps/
