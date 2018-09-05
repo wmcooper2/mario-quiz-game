@@ -29,7 +29,7 @@ From the root directory, run `game.py`
 * o ::            when a problem is showing, player gets point
 * x ::            when a problem is showing, player loses point
 
-
+To quit the game, press "esc" or close the window.
 
 # Developer Notes
 ### Known Bugs
@@ -42,7 +42,7 @@ From the root directory, run `game.py`
 * Bombomb does not have a set up question, defaults to "default question"
 
 ### File Info
-* Game constants/settings are in "constants.py"
+* Game constants/settings are in "src/constants.py"
 * Questions/problems are found in "root/gamedata/"
 
 
