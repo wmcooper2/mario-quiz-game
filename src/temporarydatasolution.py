@@ -1,8 +1,5 @@
 import constants
 import sys
-if "../gamedata" not in sys.path:
-    sys.path.append("../gamedata")
-
 import json
 import string
 import random
@@ -14,7 +11,7 @@ import pronunciation            #custom made for this game
 
 class Data():
     """Creates an instance of the chosen dictionary, returns none."""
-    default_dict_path = "../gamedata/totalenglish123.json" 
+    default_dict_path = "gamedata/totalenglish123.json" 
     default_dict_name = "totalenglish123"
     default_dict = "totalenglish123.json"
     default_entry = {"not found":"not found"}

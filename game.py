@@ -4,8 +4,10 @@ import pyglet
 from pyglet import clock
 from pyglet.window import key
 import sys
-sys.path.append("./src/")
-
+sys.path.append("src/")
+sys.path.append("gamedata/")
+from pprint import pprint
+pprint(sys.path)
 # setup resources
 pyglet.resource.path = ["./resources"] 
 pyglet.resource.reindex()
