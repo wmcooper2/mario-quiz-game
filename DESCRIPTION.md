@@ -6,6 +6,10 @@ Up to 6 players compete in an English review game for points. Players take turns
 * It is intended to be a review of the content in the Total English book series ([Rakuten][Book2]).
 * Some custom questions/problems have been added (will be modified later)
 
+# Installation
+
+Clone repo and run `pipenv install`
+
 
 # Instructions
 ### Run the game
@@ -13,17 +17,17 @@ From the root directory, run `game.py`
 
 
 ### Keyboard Controls
-* up arrow      randomly mixes players
-* down arrow    (none)
-* left arrow    rotates players left
-* right arrow   rotates players right
-* 1             gives item to player in "ready position" (next player)
-* f             fade Yammy character
-* a             rotates items left
-* s             randomly mixes items
-* d             rotates items right
-* o             when a problem is showing, player gets point
-* x             when a problem is showing, player loses point
+* up arrow ::     randomly mixes players
+* down arrow ::   (none)
+* left arrow ::   rotates players left
+* right arrow ::  rotates players right
+* 1 ::            gives item to player in "ready position" (next player)
+* f ::            fade Yammy character
+* a ::            rotates items left
+* s ::            randomly mixes items
+* d ::            rotates items right
+* o ::            when a problem is showing, player gets point
+* x ::            when a problem is showing, player loses point
 
 
 
@@ -39,7 +43,7 @@ From the root directory, run `game.py`
 
 ### File Info
 * Game constants/settings are in "constants.py"
-* Questions/problems are found in "marioquiz/gamedata/"
+* Questions/problems are found in "root/gamedata/"
 
 
 ### Tests
