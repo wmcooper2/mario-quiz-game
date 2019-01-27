@@ -1,0 +1,40 @@
+food
+sport
+view
+culture
+history
+place
+event
+festival
+can
+eat
+buy
+go
+visit
+get
+see
+learn
+nature
+ice
+sculpture
+building
+dome
+hot spring
+firework
+weather
+famous
+popular
+local
+delicous
+rich
+traditional
+old
+best
+near
+next to
+far from
+site
+city
+main street
+station
+pamphlet

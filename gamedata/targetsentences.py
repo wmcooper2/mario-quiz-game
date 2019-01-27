@@ -1,4 +1,4 @@
-book_1= (
+eng_book_1= (
     "I like soccer",
     "I like ...",
     "Do you play soccer?",
@@ -24,7 +24,7 @@ book_1= (
     "No, I'm not.",
     "I'm not a regular player.",
 )
-book_2 = (
+eng_book_2 = (
     "I was happy.",
     "Miku and Hiro were tired.",
     "Were you sleepy?",
@@ -56,7 +56,7 @@ book_2 = (
     "Yes, I am.",
     "No, I'm not.",
 )
-book_3 = (
+eng_book_3 = (
     "My friends call me Hiro.",
     "This book is written in English.",
     "This table was made by my father.",

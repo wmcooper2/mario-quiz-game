@@ -1,12 +1,12 @@
-book_1 = (
+jap_book_1 = (
     "",
 
 )
-book_2 = (
+jap_book_2 = (
     "",
 
 )
-book_3 = (
+jap_book_3 = (
     "",
 
 )

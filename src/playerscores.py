@@ -1,8 +1,19 @@
+#stand lib
+
+#3rd party
 import pyglet
-import players                  #needed for the players' images
-import constants
-from constants import SCORE_SPRITE_Y
-from constants import ENGLISH_FONT
+
+#custom
+from src.constants import *
+from src.players import *
+
+def right_answer():
+    """Plus point to player in ready position. Returns None."""
+    PLAYING_PLAYERS[0].points += 1
+
+def wrong_answer():
+    """Minus point from player in ready position. Returns None."""
+    PLAYING_PLAYERS[0].points -= 1
 
 class Coin(pyglet.sprite.Sprite):
 
@@ -43,7 +54,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
         self.small_score_spots_coins = []
         self.small_score_spots_skulls = []
         
-        self.zero = pyglet.text.Label(text="0", x=self.x, y=self.score_y, font_name=ENGLISH_FONT, font_size=24, batch=constants.MAIN_BATCH)
+        self.zero = pyglet.text.Label(text="0", x=self.x, y=self.score_y, font_name=ENGLISH_FONT, font_size=24, batch=MAIN_BATCH)
 
     def update(self, score_object, player):
         """Update the player's score. Returns None."""
@@ -60,19 +71,19 @@ class ScoreSprite(pyglet.sprite.Sprite):
         #populate self.small_score_spots_coins
         if not self.small_score_spots_coins:                  
             self.make_small_score_spots_coins(score_object)    
-#            if constants.DEBUG:
+#            if DEBUG:
 #                print("small_score_spots_coins = ", self.small_score_spots_coins) 
 
         #populate self.small_score_spots_skulls
         if not self.small_score_spots_skulls:                   
             self.make_small_score_spots_skulls(score_object)     
-#            if constants.DEBUG:
+#            if DEBUG:
 #                print("small_score_spots_skulls = ", self.small_score_spots_skulls) 
 
         #populate self.big_score_spots
         if not self.big_score_spots:                     
             self.make_big_score_spots(score_object)
-#            if constants.DEBUG:
+#            if DEBUG:
 #                print("big_score_spots = ", self.big_score_spots)
 
     def make_small_score_spots_coins(self, score_object):
@@ -143,15 +154,15 @@ class ScoreSprite(pyglet.sprite.Sprite):
 
     def make_big_score_coin(self):
         """Assembles the big score of coins. Returns None."""
-        self.big_score.append(Coin(img=Coin.coin, x=self.big_score_spots[0], y=self.score_y, batch=constants.MAIN_BATCH))
+        self.big_score.append(Coin(img=Coin.coin, x=self.big_score_spots[0], y=self.score_y, batch=MAIN_BATCH))
         self.big_score[0].scale = 1.5
-        self.big_score.append(pyglet.text.Label(text="x", x=self.big_score_spots[1], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=constants.MAIN_BATCH))
-        self.big_score.append(pyglet.text.Label(text=str(self.points), x=self.big_score_spots[2], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=constants.MAIN_BATCH))
+        self.big_score.append(pyglet.text.Label(text="x", x=self.big_score_spots[1], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=MAIN_BATCH))
+        self.big_score.append(pyglet.text.Label(text=str(self.points), x=self.big_score_spots[2], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=MAIN_BATCH))
 
     def make_small_score_coins(self):
         """Assembles the small score of coins. Returns None."""
         for x in range(self.points):
-            self.small_score.append(Coin(img=Coin.coin, x=self.small_score_spots_coins[x], y=self.score_y, batch=constants.MAIN_BATCH))
+            self.small_score.append(Coin(img=Coin.coin, x=self.small_score_spots_coins[x], y=self.score_y, batch=MAIN_BATCH))
         
     def make_zero_score(self):
         """Assembles the zero score. Returns None."""
@@ -160,7 +171,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
     def make_small_score_skulls(self):
         """Assembles the small score of skulls. Returns None."""
         for x in range(abs(self.points)):
-            self.small_score.append(Skull(img=Skull.skull, x=self.small_score_spots_skulls[x], y=self.score_y, batch=constants.MAIN_BATCH))
+            self.small_score.append(Skull(img=Skull.skull, x=self.small_score_spots_skulls[x], y=self.score_y, batch=MAIN_BATCH))
 
     def make_big_score_skull(self):
         """Assembles the big score of skulls. Returns None."""
@@ -171,21 +182,21 @@ class ScoreSprite(pyglet.sprite.Sprite):
         
 def make_sprite(player, score_x):
     """Makes a score sprite same as the player, but a separate instance. Returns Sprite object."""
-    if isinstance(player, players.FireLight):
-        score_sprite = ScoreSprite(img=players.FireLight.stand_left_seq[0], x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
+    if isinstance(player, FireLight):
+        score_sprite = ScoreSprite(img=FireLight.stand_left_seq[0], x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
         score_sprite.y -= 5                             #readjusted for score_display only
-    elif isinstance(player, players.Dragon):
-        score_sprite = ScoreSprite(img=players.Dragon.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
-    elif isinstance(player, players.BigBoo):
-        score_sprite = ScoreSprite(img=players.BigBoo.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
+    elif isinstance(player, Dragon):
+        score_sprite = ScoreSprite(img=Dragon.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+    elif isinstance(player, BigBoo):
+        score_sprite = ScoreSprite(img=BigBoo.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
         score_sprite.y += 15                            #readjusted for score_display only
         score_sprite.scale = 0.5
-    elif isinstance(player, players.GreenKoopa):
-        score_sprite = ScoreSprite(img=players.GreenKoopa.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
-    elif isinstance(player, players.BigMole):
-        score_sprite = ScoreSprite(img=players.BigMole.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
-    elif isinstance(player, players.Mario):
-        score_sprite = ScoreSprite(img=players.Mario.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
-    elif isinstance(player, players.Luigi):
-        score_sprite = ScoreSprite(img=players.Luigi.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=constants.MAIN_BATCH)
+    elif isinstance(player, GreenKoopa):
+        score_sprite = ScoreSprite(img=GreenKoopa.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+    elif isinstance(player, BigMole):
+        score_sprite = ScoreSprite(img=BigMole.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+    elif isinstance(player, Mario):
+        score_sprite = ScoreSprite(img=Mario.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+    elif isinstance(player, Luigi):
+        score_sprite = ScoreSprite(img=Luigi.stand_left, x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
     return score_sprite

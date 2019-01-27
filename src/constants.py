@@ -80,15 +80,16 @@ FEATHER_EFFECT = False
 STAR_EFFECT = False
 PLAYERS_RANDOMIZED = False
 GAME_JUST_STARTED = True
-SHOW_BLACK_BOX = False
+S_BB = False                    #show black box
 MIXING_PLAYER_SPOTS = False
 NEW_QUESTION = True
 
 FRAME_SPEED = 1/90
 GAME_WINDOW = pyglet.window.Window(1000, 563)
 MAIN_BATCH = pyglet.graphics.Batch()
-KEY_HANDLER = key.KeyStateHandler()
-GAME_WINDOW.push_handlers(KEY_HANDLER)
+MAIN_TIME = 0
+KH = key.KeyStateHandler()
+GAME_WINDOW.push_handlers(KH)
 ENGLISH_FONT = "Comic Sans MS"
 JAPANESE_FONT = "Yu Mincho Regular"
 GUIDE_SIZE = 24

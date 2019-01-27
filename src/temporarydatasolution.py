@@ -1,13 +1,18 @@
-import constants
-import sys
+#stand lib
 import json
-import string
 import random
-import verbforms
-import targetsentences 
-import customquestions          #custom made for this game
-import targetsentencesjapanese
-import pronunciation            #custom made for this game
+import string
+import sys
+
+#3rd party
+
+#custom
+from gamedata.customquestions import * 
+from gamedata.pronunciation import *
+from gamedata.targetsentences import *
+from gamedata.targetsentencesjapanese import *
+from gamedata.verbforms import *
+from src.constants import *
 
 class Data():
     """Creates an instance of the chosen dictionary, returns none."""
@@ -16,17 +21,17 @@ class Data():
     default_dict = "totalenglish123.json"
     default_entry = {"not found":"not found"}
     
-    book_1_target_sentences = targetsentences.book_1
-    book_2_target_sentences = targetsentences.book_2
-    book_3_target_sentences = targetsentences.book_3
+    book_1_target_sentences = eng_book_1
+    book_2_target_sentences = eng_book_2
+    book_3_target_sentences = eng_book_3
     
-    book_1_japanese_target_sentences = targetsentencesjapanese.book_1
-    book_2_japanese_target_sentences = targetsentencesjapanese.book_2
-    book_3_japanese_target_sentences = targetsentencesjapanese.book_3
+    book_1_japanese_target_sentences = jap_book_1
+    book_2_japanese_target_sentences = jap_book_2
+    book_3_japanese_target_sentences = jap_book_3
 
-    verb_forms = verbforms.verb_forms    
-    questions = customquestions.questions
-    pronunciation_words = pronunciation.words
+    verb_forms = verb_forms    
+    questions = questions
+    pronunciation_words = words
     lowercase = string.ascii_lowercase
 
     nouns = []
@@ -49,9 +54,9 @@ class Data():
         self.initialize_adjectives()
         self.initialize_target_sentences()
 
-#        if constants.DEBUG:
-#            print("DEBUG:: Grade levels words are taken from = ", constants.GRADES)
-#            print("DEBUG:: Page range for highest level = ", constants.PAGE_RANGE)
+#        if DEBUG:
+#            print("DEBUG:: Grade levels words are taken from = ", GRADES)
+#            print("DEBUG:: Page range for highest level = ", PAGE_RANGE)
 
 # initializing/loading data
     def load_dictionary(self):
@@ -62,8 +67,8 @@ class Data():
     def load_words(self):
         """Loads words into self.words based on grade levels and page ranges. Returns None."""
         self.words = []                     #reset the list
-        max_grade = max(constants.GRADES)
-        for grade in constants.GRADES:
+        max_grade = max(GRADES)
+        for grade in GRADES:
             if grade != max_grade:
                 self.add_words_from_grade(grade)
             else:
@@ -74,8 +79,8 @@ class Data():
                         words_in_max_grade.append(word)
 
                 # filter the words in the max grade based on page range 
-                from_page = constants.PAGE_RANGE[0]
-                until_page = constants.PAGE_RANGE[1] 
+                from_page = PAGE_RANGE[0]
+                until_page = PAGE_RANGE[1] 
                 for word in words_in_max_grade:
                     page_of_word = int(self.dictionary[word]["page"])
                     if page_of_word >= from_page and page_of_word <= until_page:

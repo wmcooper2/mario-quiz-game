@@ -1,0 +1,40 @@
+first
+second
+third
+up
+down
+straight
+right
+left
+we
+our
+they
+their
+he
+his
+she
+her
+where
+here
+near
+turn left
+turn right
+look at
+Excuse me.
+I see.
+building
+floor
+stairs
+corner
+art room
+music room
+classroom
+restroom
+sixteen
+seventeen
+eighteen
+nineteen
+twenty
+thirty
+forty
+fifty
