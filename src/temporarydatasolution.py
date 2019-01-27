@@ -43,12 +43,8 @@ class Data():
 
     def __init__(self):
         """Prepares word list of the dictionary, returns None."""
-        self.dictionary = {}
-        self.load_dictionary()
-        
-        self.words      = self.load_words2()
-#        self.load_words()
-        
+        self.dictionary = self.load_dictionary()
+        self.words      = self.get_words()
         self.size       = len(self.words)
         self.initialize_nouns()
         self.initialize_verbs()
@@ -58,32 +54,10 @@ class Data():
 
     #LOAD DATA
     def load_dictionary(self):
-        """Loads dictionary. Returns None."""
+        """Loads dictionary. Returns Dictionary.""" 
         with open(self.default_dict_path) as file_object:
-            self.dictionary = json.load(file_object)
-
-    def load_words(self):
-        """Loads words words based on grade levels/page ranges.
-            Returns None."""
-        self.words = []                     #reset the list
-        max_grade = max(GRADES)
-        for grade in GRADES:
-            if grade != max_grade:
-                self.add_words_from_grade(grade)
-            else:
-                # get all the words in the max grade
-                words_in_max_grade = []
-                for word in self.dictionary.keys():
-                    if max_grade == int(self.dictionary[word]["grade"]):
-                        words_in_max_grade.append(word)
-
-                #filter words in the max grade based on page range 
-                from_page = PAGE_RANGE[0]
-                until_page = PAGE_RANGE[1] 
-                for word in words_in_max_grade:
-                    page_of_word = int(self.dictionary[word]["page"])
-                    if page_of_word >= from_page and page_of_word <= until_page:
-                        self.words.append(word)
+#            self.dictionary = json.load(file_object)
+            return json.load(file_object)
         
     def add_words_from_grade(self, grade):
         """Adds words based on grade level. Returns None."""
@@ -91,12 +65,12 @@ class Data():
             if grade == int(self.dictionary[word]["grade"]):
                 self.words.append(word)
 
-    def load_words2(self):
-        """cleaner version of load_words. Returns List."""
+    def get_words(self):
+        """Gets words. Returns List."""
         words = []
         dict_ = self.dictionary
         for grade in GRADES:
-            words += self.add_words(grade, dict_)
+            words += self.grade_words(grade, dict_)
 
         #filter words in the max grade based on page range 
         from_ = PAGE_RANGE[0]
@@ -112,8 +86,8 @@ class Data():
         """Checks page is within range. Returns Boolean."""
         return page >= f and page <= u
 
-    def add_words(self, grade, dict_):
-        """cleaner add_words_from_grade. Returns List."""
+    def grade_words(self, grade, dict_):
+        """Gets words in a grade. Returns List."""
         words = []
         for word in self.dictionary.keys():
             if grade == int(self.dictionary[word]["grade"]):
