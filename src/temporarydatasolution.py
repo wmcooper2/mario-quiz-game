@@ -15,11 +15,11 @@ from gamedata.verbforms import *
 from src.constants import *
 
 class Data():
-    """Creates an instance of the chosen dictionary, returns none."""
-    default_dict_path = "gamedata/totalenglish123.json" 
-    default_dict_name = "totalenglish123"
-    default_dict = "totalenglish123.json"
-    default_entry = {"not found":"not found"}
+    """Creates instance of chosen dictionary. Returns none."""
+    default_dict_path   = "gamedata/totalenglish123.json" 
+    default_dict_name   = "totalenglish123"
+    default_dict        = "totalenglish123.json"
+    default_entry       = {"not found":"not found"}
     
     book_1_target_sentences = eng_book_1
     book_2_target_sentences = eng_book_2
@@ -29,43 +29,42 @@ class Data():
     book_2_japanese_target_sentences = jap_book_2
     book_3_japanese_target_sentences = jap_book_3
 
-    verb_forms = verb_forms    
-    questions = questions
+    verb_forms          = verb_forms    
+    questions           = questions
     pronunciation_words = words
-    lowercase = string.ascii_lowercase
+    lowercase           = string.ascii_lowercase
 
-    nouns = []
-    verbs = []
-    pronouns = []
-    adjectives = []   
-    target_sentences = []
-    japanese_target_sentences = []
+    nouns           = []
+    verbs           = []
+    pronouns        = []
+    adjectives      = []   
+    e_target_sents  = []
+    j_target_sents  = []
 
     def __init__(self):
         """Prepares word list of the dictionary, returns None."""
         self.dictionary = {}
         self.load_dictionary()
-        self.words = []
-        self.load_words()
-        self.size = len(self.words)
+        
+        self.words      = self.load_words2()
+#        self.load_words()
+        
+        self.size       = len(self.words)
         self.initialize_nouns()
         self.initialize_verbs()
         self.initialize_pronouns()
         self.initialize_adjectives()
         self.initialize_target_sentences()
 
-#        if DEBUG:
-#            print("DEBUG:: Grade levels words are taken from = ", GRADES)
-#            print("DEBUG:: Page range for highest level = ", PAGE_RANGE)
-
-# initializing/loading data
+    #LOAD DATA
     def load_dictionary(self):
-        """Loads the dictionary from the path set in the instance, returns None."""
+        """Loads dictionary. Returns None."""
         with open(self.default_dict_path) as file_object:
             self.dictionary = json.load(file_object)
 
     def load_words(self):
-        """Loads words into self.words based on grade levels and page ranges. Returns None."""
+        """Loads words words based on grade levels/page ranges.
+            Returns None."""
         self.words = []                     #reset the list
         max_grade = max(GRADES)
         for grade in GRADES:
@@ -78,7 +77,7 @@ class Data():
                     if max_grade == int(self.dictionary[word]["grade"]):
                         words_in_max_grade.append(word)
 
-                # filter the words in the max grade based on page range 
+                #filter words in the max grade based on page range 
                 from_page = PAGE_RANGE[0]
                 until_page = PAGE_RANGE[1] 
                 for word in words_in_max_grade:
@@ -87,28 +86,42 @@ class Data():
                         self.words.append(word)
         
     def add_words_from_grade(self, grade):
-        """Adds to self.words based on grade level. Returns None."""
+        """Adds words based on grade level. Returns None."""
         for word in self.dictionary.keys():
             if grade == int(self.dictionary[word]["grade"]):
                 self.words.append(word)
-#
-#    def sort_words(self):
-#        """Sorts the 'words' list, returns None."""
-#        for key in self.dictionary.keys():
-#            self.words.append(key)
-#        self.words = sorted(self.words)
-#
-#    def filter_words_by_grade(self, grade):
-#        """Filters the 'words' list by user-specified student grade level. Returns String."""
-#        words = []
-#        for word in self.words:
-#            if grade == int(self.dictionary[word]["grade"]):
-#                words.append(word)
-##        return len(words)
-#        return words
+
+    def load_words2(self):
+        """cleaner version of load_words. Returns List."""
+        words = []
+        dict_ = self.dictionary
+        for grade in GRADES:
+            words += self.add_words(grade, dict_)
+
+        #filter words in the max grade based on page range 
+        from_ = PAGE_RANGE[0]
+        until = PAGE_RANGE[1] 
+        filteredwords = []
+        for word in words:
+            page = int(self.dictionary[word]["page"])
+            if self.within(page, from_, until):
+                filteredwords.append(word)
+        return filteredwords
+    
+    def within(self, page, f, u):
+        """Checks page is within range. Returns Boolean."""
+        return page >= f and page <= u
+
+    def add_words(self, grade, dict_):
+        """cleaner add_words_from_grade. Returns List."""
+        words = []
+        for word in self.dictionary.keys():
+            if grade == int(self.dictionary[word]["grade"]):
+                words.append(word)
+        return words
 
     def filter_words_by_punctuation(self):
-        """Filters the 'words' list of words with punctutation, returns List."""
+        """Filters out words with punctutation. Returns List."""
         list_ = []
         for word in self.words:
             if "'" in word:
@@ -116,47 +129,47 @@ class Data():
         return list_
 
     def initialize_nouns(self):
-        """Filters the nouns into an easy to access list, returns None."""
+        """Filters nouns to a list. Returns None."""
         for word in self.dictionary.keys():
             if self.dictionary[word]["part of speech"] == "noun":
                 self.nouns.append(word)
 
     def initialize_verbs(self):
-        """Pre-loads list of verbs' normal forms that appear in the verb form table in the back of the Total English books. Returns None."""
+        """Loads verbs normal forms. Returns None."""
         for key in self.verb_forms.keys():
             self.verbs.append(key)
 
     def initialize_pronouns(self):
-        """Filters the pronouns into an easy to access list, returns None."""
+        """Filters pronouns to a list. Returns None."""
         for word in self.dictionary.keys():
-            if self.dictionary[word]["part of speech"] == "pronoun":
+            if self.dictionary[word]["part of speech"]=="pronoun":
                 self.pronouns.append(word)
 
     def initialize_adjectives(self):
-        """Filters the adjectives into an easy to access list, returns None."""
+        """Filters adjectives to a list. Returns None."""
         for word in self.dictionary.keys():
-            if self.dictionary[word]["part of speech"] == "adjective":
+            if self.dictionary[word]["part of speech"]=="adjective":
                 self.adjectives.append(word)
 
     def initialize_target_sentences(self):
-        """Gets a random target sentence from all 3 grades. Returns String."""
+        """Loads English target sentences. Returns None."""
         for sentence in self.book_1_target_sentences:
-            self.target_sentences.append(sentence)
+            self.e_target_sents.append(sentence)
         for sentence in self.book_2_target_sentences:
-            self.target_sentences.append(sentence)
+            self.e_target_sents.append(sentence)
         for sentence in self.book_3_target_sentences:
-            self.target_sentences.append(sentence)
+            self.e_target_sents.append(sentence)
 
     def initialize_japanese_target_sentences(self):
-        """Gets a random target sentence from all 3 grades. Returns String."""
+        """Loads Japanese target sentences. Returns None."""
         for sentence in self.book_1_japanese_target_sentences:
-            self.japanese_target_sentences.append(sentence)
+            self.j_target_sents.append(sentence)
         for sentence in self.book_2_japanese_target_sentences:
-            self.japanese_target_sentences.append(sentence)
+            self.j_target_sents.append(sentence)
         for sentence in self.book_3_japanese_target_sentences:
-            self.japanese_target_sentences.append(sentence)
+            self.j_target_sents.append(sentence)
 
-# single words
+    #WORDS
     def japanese_word(self, word):
         """Gets the Japanese definition. Returns String."""
         return self.dictionary[word]["japanese"]
@@ -169,7 +182,6 @@ class Data():
         """Gets a random verb in a random form. Returns String."""
         choice = random.choice(self.verbs)
         verb_forms = self.verb_forms[choice].keys()
-        verb_forms = ["normal", "present", "past", "past participle", "gerund"]
         form_choice = random.choice(verb_forms)
         if type(self.verb_forms[choice][form_choice]) == list:
             return self.verb_forms[choice][form_choice][0]
@@ -187,18 +199,18 @@ class Data():
         return self.verb_forms[choice]["past"]        
 
     def random_pronunciation(self):
-        """Gets a random word that is difficult to pronounce. Returns String."""
+        """Gets difficult to pronounce word. Returns String."""
         return random.choice(self.pronunciation_words)
 
-# sentences
+    #SENTENCES
     def random_target_sentence(self):
-        """Gets a random target sentence. Returns String."""
-        return random.choice(self.target_sentences)
+        """Gets random target sentence. Returns String."""
+        return random.choice(self.e_target_sents)
 
     def random_target_sentence_japanese(self):
-        """Gets a random japanese target sentence. Returns String."""
-        return random.choice(self.japanese_target_sentences)
+        """Gets random japanese target sentence. Returns String."""
+        return random.choice(self.j_target_sents)
 
     def random_question(self):
-        """Gets a random question. Returns String."""
+        """Gets random question. Returns String."""
         return random.choice(self.questions)

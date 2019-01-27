@@ -6,6 +6,7 @@ import pyglet
 
 #custom
 from src.constants import *
+from src.gameutil import *
 
 class Item(pyglet.sprite.Sprite):
     

@@ -7,13 +7,21 @@ import pyglet
 from src.constants import *
 from src.players import *
 
-def right_answer():
+def right_answer(players):
     """Plus point to player in ready position. Returns None."""
-    PLAYING_PLAYERS[0].points += 1
+    players[0].points += 1
 
-def wrong_answer():
+def wrong_answer(players):
     """Minus point from player in ready position. Returns None."""
-    PLAYING_PLAYERS[0].points -= 1
+    players[0].points -= 1
+
+def score_setup(players, spots, scores):
+    """Sets up the scores in the top rows. Returns None."""
+    for element in players:
+        score_x = spots[players.index(element)]
+        score_sprite = make_sprite(element, score_x)
+        scores.append(score_sprite)
+        element.point_index = scores.index(score_sprite)
 
 class Coin(pyglet.sprite.Sprite):
 

@@ -20,6 +20,11 @@ item_choices = [
 #                    STAR,
 #                    QUESTION_BLOCK,
 ]
+
+def setup_items(num_items, all_items):
+    """Sets up the items on the platform. Returns None."""
+    for item in range(num_items):
+        all_items.append(new_item())
     
 def item_probability(probabilities):
     """returns a choice of item based on the passed in probability list. Returns String."""
