@@ -10,7 +10,7 @@ import pyglet
 from pyglet import clock
 from pyglet.window import key
 #setup resources path, don't move these two lines
-pyglet.resource.path = ["./resources", "./src"] 
+pyglet.resource.path = ["./resources"] 
 pyglet.resource.reindex()
 
 #custom
@@ -27,13 +27,12 @@ from src.items import *             #must come after players
 BACKGROUND = Background(img=Background.background_img, batch=MAIN_BATCH)
 
 #PLAYER SETUP
-CHARACTERS = []
+#characters = []
 # the order of elements with pp determines the order
 #+ of the players on the screen.
-PLAYERS = []
+players = []
 SCORE_DISPLAY = []
-WALKING_PLAYERS = []
-FLOATING_PLAYERS = []
+walkers = []
 
 YAMMY = make_yammy()
 FIRE_LIGHT = make_firelight()
@@ -44,24 +43,27 @@ BIG_MOLE = make_big_mole()
 MARIO = make_mario()
 LUIGI = make_luigi()
 
-CHARACTERS.append(FIRE_LIGHT)
-CHARACTERS.append(DRAGON)
-CHARACTERS.append(BIG_BOO)
-CHARACTERS.append(GREEN_KOOPA)
-CHARACTERS.append(BIG_MOLE)
-CHARACTERS.append(MARIO)
-CHARACTERS.append(LUIGI)
+#rethinks these lists, duplicate instances are created when they 
+#+ dont need to be.
+characters = [
+        FIRE_LIGHT,
+        DRAGON,
+        BIG_BOO,
+        GREEN_KOOPA,
+        BIG_MOLE,
+        MARIO,
+        LUIGI]
+floaters = [
+        FIRE_LIGHT,
+        BIG_BOO]
+walkers = [
+        DRAGON,
+        GREEN_KOOPA,
+        BIG_MOLE,
+        MARIO,
+        LUIGI]
 
-FLOATING_PLAYERS.append(FIRE_LIGHT)
-FLOATING_PLAYERS.append(BIG_BOO)
-
-WALKING_PLAYERS.append(DRAGON)
-WALKING_PLAYERS.append(GREEN_KOOPA)
-WALKING_PLAYERS.append(BIG_MOLE)
-WALKING_PLAYERS.append(MARIO)
-WALKING_PLAYERS.append(LUIGI)
-
-randomize_players(PLAYERS_RANDOMIZED, CHARACTERS, PLAYERS, NUM_PLAYERS)
+randomize_players(PLAYERS_RANDOMIZED, characters, players, NUM_PLAYERS)
 
 #SETUP ITEMS
 ALL_ITEMS = []                  
@@ -73,7 +75,7 @@ item_line_up(ALL_ITEMS)
 top_row_line_up()
 
 #SETUP SCORES
-score_setup(PLAYERS, SCORE_SPOTS, SCORE_DISPLAY)
+score_setup(players, SCORE_SPOTS, SCORE_DISPLAY)
 
 #MAIN PROBLEM INSTANCE
 prob = Problem()
@@ -85,7 +87,7 @@ def on_draw():
 
     GAME_WINDOW.clear()
     MAIN_BATCH.draw()
-    pp = PLAYERS[0]
+    pp = players[0]
 
     if pp.has_item():
         # basic pattern:
@@ -131,7 +133,7 @@ def on_draw():
 
 def update(DT):
     """Game update loop. Returns None."""
-    pp          = PLAYERS
+    pp          = players
     readyplayer = pp[0]
 
     #need to set effects as globals, maybe because of the game loop
@@ -163,7 +165,7 @@ def update(DT):
             score_object.update(score_object, player) 
 
     #player floating effect
-    for player in FLOATING_PLAYERS:
+    for player in floaters:
         player.float()
 
     #update items
@@ -213,7 +215,6 @@ def update(DT):
         and not player_movement(pp) \
         and not S_BB:
             mix_players(pp)
-
 
     if KH[key.O] \
         and readyplayer.has_item() \

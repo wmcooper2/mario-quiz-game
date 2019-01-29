@@ -1,14 +1,8 @@
 #stand lib
 import random
 
-#3rd party
-
 #custom
 from src.constants import *
-
-def debug_message(str1, str2):
-    """Prints a debug message to Terminal. Returns None."""
-    print(str1, str2)
 
 def image_res():
     """Gets Pyglet image resources. Returns 3 Functions."""
@@ -22,16 +16,14 @@ def randomize_players(flag, player_lineup, players_in_play, numplayers):
     """Randomizes starting order of player. Returns None."""
     if not flag:
         flag = True                             #set flag
-        random_players = []
-        copy = player_lineup[:]
+        players = []
+        lineup = player_lineup[:]
         for x in range(numplayers):
-            player_choice = random.choice(copy)
-            random_players.append(player_choice)
-            copy.remove(player_choice)
-        for player in random_players:
+            new = random.choice(lineup)
+            players.append(new)
+            lineup.remove(new)
+        for player in players:
             players_in_play.append(player)
-        del random_players                      #clean up
-        del copy                                #clean up
 
 #dont change this, creates a weird bug if you do.
 def any_movement(items, players, yammy): 
@@ -78,15 +70,11 @@ def item_clean_up(players, black_box):
 
 def rotate_items_left(items):
     """Rotates items to left by one. Returns None."""
-    temp_item = items[-1]
-    items.remove(temp_item)
-    items.insert(0, temp_item)
+    items.insert(0, items.pop())
 
 def rotate_items_right(items):
     """Rotates items to right by one. Returns None."""
-    temp_item = items[0]
-    items.remove(temp_item)
-    items.append(temp_item)
+    items.append(items.pop(0))
 
 def mix_items(items):
     """Randomly mixes items on screen. Returns None."""
@@ -100,15 +88,11 @@ def mix_items(items):
 
 def rotate_players_left(players):
     """Rotates players to left by one. Returns None."""
-    temp_player = players[0]
-    players.remove(temp_player)
-    players.append(temp_player)
+    players.append(players.pop(0))
 
 def rotate_players_right(players):
     """Rotates players to right by one. Returns None."""
-    temp_player = players[-1]
-    players.remove(temp_player)
-    players.insert(0, temp_player)
+    players.insert(0, players.pop())
 
 def mix_players(players):
     """Randomly mixes the players in the line. Returns None."""

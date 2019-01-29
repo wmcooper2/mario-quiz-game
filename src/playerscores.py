@@ -24,10 +24,10 @@ def score_setup(players, spots, scores):
         element.point_index = scores.index(score_sprite)
 
 class Coin(pyglet.sprite.Sprite):
-    pygresimg, pygrid, pyganim = image_res()
+    pi, pg, pa = image_res()
     
-    coin_img = pygresimg("yellow_coin.png")
-    coin_seq = pygrid(coin_img, 1, 3)
+    coin_img = pi("yellow_coin.png")
+    coin_seq = pg(coin_img, 1, 3)
     coin = coin_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -37,10 +37,10 @@ class Coin(pyglet.sprite.Sprite):
         super().delete()
 
 class Skull(pyglet.sprite.Sprite):
-    pygresimg, pygrid, pyganim = image_res()
+    pi, pg, pa = image_res()
 
-    skull_img = pygresimg("skull.png") 
-    skull_seq = pygrid(skull_img, 1, 1)
+    skull_img = pi("skull.png") 
+    skull_seq = pg(skull_img, 1, 1)
     skull = skull_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -50,8 +50,6 @@ class Skull(pyglet.sprite.Sprite):
         super().delete()
 
 class ScoreSprite(pyglet.sprite.Sprite):
-    label = pyglet.text.Label
-    
     def __init__(self, score_sprite = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.score_sprite = score_sprite
@@ -72,7 +70,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Update player's score. Returns None."""
         self.populate_score_spots(score_object)
 
-#        if self.points != player.points:
         if self.points is not player.points:
             self.delete_score()                     
             self.change_points(player)              
@@ -173,7 +170,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Assembles the big score of coins. Returns None."""
         scorespot   = self.big_score_spots
         score       = self.big_score
-        label       = pyglet.text.Label
         score.append(Coin(img=Coin.coin, x=scorespot[0], \
                 y=self.score_y, batch=MAIN_BATCH))
         score[0].scale = 1.5
@@ -206,7 +202,6 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Assembles score of big skulls. Returns None."""
         scorespot   = self.big_score_spots
         score       = self.big_score
-        label       = pyglet.text.Label
 
         score.append(Skull(img=Skull.skull, x=scorespot[0], \
                 y=self.score_y))

@@ -9,7 +9,8 @@ from src.constants import *
 from src.gameutil import *
 
 class Item(pyglet.sprite.Sprite):
-    
+    pi, pg, pa = image_res()    #pyglet; gameutil.py
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spot_x = self.x
@@ -71,10 +72,9 @@ class Item(pyglet.sprite.Sprite):
     
     def toggle_transition_direction(self):
         """Toggles transition_direction attribute. Returns None."""
-        if self.transition_direction == "in":
-            self.transition_direction = "out"
-        elif self.transition_direction == "out":
-            self.transition_direction = "in"
+        td = self.transition_direction
+        if td == "in":      td = "out"
+        elif td == "out":   td = "in"
 
     def transition(self):
         """Toggles item opacity. Returns None."""
@@ -92,13 +92,11 @@ class Item(pyglet.sprite.Sprite):
 
 class RedMushroom(Item):
     """Random English vocab. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_left = pygresimg("red_mushroom.png")
+    stand_left = Item.pi("red_mushroom.png")
     center_walker(stand_left)
-    stand_left_seq = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True)
+    stand_left_seq = Item.pg(stand_left, 1, 1)
+    stand_left_anim = Item.pa(stand_left_seq, 1, True)
 
     #moving
     stand_right_anim = stand_left_anim
@@ -117,13 +115,11 @@ class RedMushroom(Item):
 
 class GreenMushroom(Item):
     """Random verb form. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_left = pygresimg("green_mushroom.png")
+    stand_left = Item.pi("green_mushroom.png")
     center_walker(stand_left)
-    stand_left_seq = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True)
+    stand_left_seq = Item.pg(stand_left, 1, 1)
+    stand_left_anim = Item.pa(stand_left_seq, 1, True)
 
     #moving
     stand_right_anim = stand_left_anim
@@ -143,25 +139,23 @@ class GreenMushroom(Item):
 
 class YoshiCoin(Item):
     """Pronunciation question. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing left
-    stand_right = pygresimg("yoshi_coin_right.png")
+    stand_right = Item.pi("yoshi_coin_right.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 5)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 5)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #move left
-    walk_left = pygresimg("yoshi_coin_left.png")
+    walk_left = Item.pi("yoshi_coin_left.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 5)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 5)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #move right
-    walk_right = pygresimg("yoshi_coin_right.png")
+    walk_right = Item.pi("yoshi_coin_right.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 5)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 5)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
 
     #standing right
     stand_left_anim = walk_left_anim
@@ -178,25 +172,23 @@ class YoshiCoin(Item):
 
 class PirahnaPlant(Item):
     """Sentence translation (English to Japanese). Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing right
-    stand_right = pygresimg("pirahna_plant_small.png")
+    stand_right = Item.pi("pirahna_plant_small.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 2)
-    stand_right_anim = pyganim(stand_right_seq, 0.1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 2)
+    stand_right_anim = Item.pa(stand_right_seq, 0.1, True)
 
     #moving left
-    walk_left = pygresimg("pirahna_plant_small.png")
+    walk_left = Item.pi("pirahna_plant_small.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 2)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 2)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("pirahna_plant_small.png")
+    walk_right = Item.pi("pirahna_plant_small.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 2)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
 
     #standing left
     stand_left_anim = stand_right_anim
@@ -215,25 +207,23 @@ class PirahnaPlant(Item):
 
 class SpinyBeetle(Item): 
     """Question problem, 3rd year JHS at Bunkyo 9th. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_right = pygresimg("spiny_beetle_stand_right.png")
+    stand_right = Item.pi("spiny_beetle_stand_right.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 1)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 1)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #moving left
-    walk_left = pygresimg("spiny_beetle_walk_left.png")
+    walk_left = Item.pi("spiny_beetle_walk_left.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 2)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 2)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("spiny_beetle_walk_right.png")
+    walk_right = Item.pi("spiny_beetle_walk_right.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 2)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -247,13 +237,11 @@ class SpinyBeetle(Item):
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_left = pygresimg("pow_button.png")
+    stand_left = Item.pi("pow_button.png")
     center_walker(stand_left)
-    stand_left_seq = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, False)
+    stand_left_seq = Item.pg(stand_left, 1, 1)
+    stand_left_anim = Item.pa(stand_left_seq, 1, False)
 
     #moving
     stand_right_anim = stand_left_anim
@@ -272,25 +260,23 @@ class PowButton(Item):
 
 class Bombomb(Item):
     """Randomly mixes items. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_right = pygresimg("bombomb_stand_right.png")
+    stand_right = Item.pi("bombomb_stand_right.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 1)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 1)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #moving left
-    walk_left = pygresimg("bombomb_walk_left.png")
+    walk_left = Item.pi("bombomb_walk_left.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 2)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 2)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("bombomb_walk_right.png")
+    walk_right = Item.pi("bombomb_walk_right.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 2)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -304,25 +290,23 @@ class Bombomb(Item):
 
 class QuestionBlock(Item): #unfinished
     """Chooses a random effect. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_right = pygresimg("question_block.png")
+    stand_right = Item.pi("question_block.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 4)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 4)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #moving left
-    walk_left = pygresimg("question_block.png")
+    walk_left = Item.pi("question_block.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 4)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 4)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("question_block.png")
+    walk_right = Item.pi("question_block.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 4)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 4)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -336,25 +320,23 @@ class QuestionBlock(Item): #unfinished
 
 class Feather(Item): #unfinished
     """Allows player to skip turn. Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_right = pygresimg("feather.png")
+    stand_right = Item.pi("feather.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 1)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 1)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #moving left
-    walk_left = pygresimg("feather.png")
+    walk_left = Item.pi("feather.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 1)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 1)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("feather.png")
+    walk_right = Item.pi("feather.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 1)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 1)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -369,25 +351,23 @@ class Feather(Item): #unfinished
 class Star(Item): #unfinished
     """Allows player to avoid negative affects of other items. 
         Returns None."""
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_right = pygresimg("star.png")
+    stand_right = Item.pi("star.png")
     center_walker(stand_right)
-    stand_right_seq = pygrid(stand_right, 1, 1)
-    stand_right_anim = pyganim(stand_right_seq, 1, True)
+    stand_right_seq = Item.pg(stand_right, 1, 1)
+    stand_right_anim = Item.pa(stand_right_seq, 1, True)
 
     #moving left
-    walk_left = pygresimg("star.png")
+    walk_left = Item.pi("star.png")
     center_walker(walk_left)
-    walk_left_seq = pygrid(walk_left, 1, 1)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
+    walk_left_seq = Item.pg(walk_left, 1, 1)
+    walk_left_anim = Item.pa(walk_left_seq, 0.1, True)
 
     #moving right
-    walk_right = pygresimg("star.png")
+    walk_right = Item.pi("star.png")
     center_walker(walk_right)
-    walk_right_seq = pygrid(walk_right, 1, 1)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right_seq = Item.pg(walk_right, 1, 1)
+    walk_right_anim = Item.pa(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

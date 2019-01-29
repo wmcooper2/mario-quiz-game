@@ -121,3 +121,7 @@ OFF_SCREEN_LEFT = -100
 FLOAT_HEIGHT = 100
 WALK_HEIGHT = 63
 SCORE_SPRITE_Y = SCREEN_HEIGHT - 36
+
+#name size reductions
+label = pyglet.text.Label
+

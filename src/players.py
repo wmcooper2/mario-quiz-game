@@ -15,6 +15,8 @@ class Background(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
 
 class Player(pyglet.sprite.Sprite):
+    pi, pg, pa = image_res()    #pyglet; gameutil.py
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.delta_x    = 0
@@ -122,12 +124,10 @@ class WalkingPlayer(Player):
         super().__init__(*args, **kwargs)
         
 class Yammy(pyglet.sprite.Sprite):
-    pygresimg, pygrid, pyganim = image_res()
-
-    stand_right         = pygresimg("yammy_stand_right.png")
-    action_right_img    = pygresimg("yammy_action_right.png")
-    action_right_seq    = pygrid(action_right_img, 1, 2)
-    action_right_anim   = pyganim(action_right_seq, 0.2, False)
+    stand_right         = Player.pi("yammy_stand_right.png")
+    action_right_img    = Player.pi("yammy_action_right.png")
+    action_right_seq    = Player.pg(action_right_img, 1, 2)
+    action_right_anim   = Player.pa(action_right_seq, 0.2, False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -196,169 +196,155 @@ class Yammy(pyglet.sprite.Sprite):
                 self.inventory.remove(item)         #remove item
 
 class FireLight(FloatingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-    
     #standing
-    stand_left = pygresimg("fire_light_walk_left.png")
+    stand_left = Player.pi("fire_light_walk_left.png")
     center_floater(stand_left)
-    stand_left_seq = pygrid(stand_left, 1, 2)
-    stand_left_anim = pyganim(stand_left_seq, 0.1, True) 
+    stand_left_seq = Player.pg(stand_left, 1, 2)
+    stand_left_anim = Player.pa(stand_left_seq, 0.1, True) 
 
     #to the right
-    walk_right = pygresimg("fire_light_walk_right.png")
-    walk_right_seq = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim = pyganim(walk_right_seq, 0.05, True)
+    walk_right = Player.pi("fire_light_walk_right.png")
+    walk_right_seq = Player.pg(walk_right, 1, 2)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim = Player.pa(walk_right_seq, 0.05, True)
 
     #to the left
-    walk_left = pygresimg("fire_light_walk_left.png")
-    walk_left_seq = pygrid(walk_left, 1, 2)
-    walk_left_anim = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim = pyganim(walk_left_seq, 0.05, True)
+    walk_left = Player.pi("fire_light_walk_left.png")
+    walk_left_seq = Player.pg(walk_left, 1, 2)
+    walk_left_anim = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim = Player.pa(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Dragon(WalkingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-    
     #standing
-    stand_left      = pygresimg("dragon_stand_left.png")
+    stand_left      = Player.pi("dragon_stand_left.png")
     center_walker(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True) 
+    stand_left_seq  = Player.pg(stand_left, 1, 1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True) 
 
     #to the right
-    walk_right      = pygresimg("dragon_walk_right.png")
-    walk_right_seq  = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
+    walk_right      = Player.pi("dragon_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right, 1, 2)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
 
     #to the left
-    walk_left       = pygresimg("dragon_walk_left.png")
-    walk_left_seq   = pygrid(walk_left, 1, 2)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left       = Player.pi("dragon_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left, 1, 2)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigBoo(FloatingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-    
     #standing
-    stand_left      = pygresimg("big_boo_stand_left.png")
+    stand_left      = Player.pi("big_boo_stand_left.png")
     center_floater(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True) 
+    stand_left_seq  = Player.pg(stand_left, 1, 1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True) 
 
     #to the right
-    walk_right      = pygresimg("big_boo_walk_right.png")
-    walk_right_seq  = pygrid(walk_right, 1, 1)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
+    walk_right      = Player.pi("big_boo_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right, 1, 1)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
 
     #to the left
-    walk_left       = pygresimg("big_boo_walk_left.png")
-    walk_left_seq   = pygrid(walk_left, 1, 1)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left       = Player.pi("big_boo_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left, 1, 1)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class GreenKoopa(WalkingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_left      = pygresimg("green_koopa_stand_left.png")
+    stand_left      = Player.pi("green_koopa_stand_left.png")
     center_walker(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1, 1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True) 
+    stand_left_seq  = Player.pg(stand_left, 1, 1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True) 
 
     #to the right
-    walk_right      = pygresimg("green_koopa_walk_right.png")
-    walk_right_seq  = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
+    walk_right      = Player.pi("green_koopa_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right, 1, 2)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
 
     #to the left
-    walk_left       = pygresimg("green_koopa_walk_left.png")
-    walk_left_seq   = pygrid(walk_left, 1, 2)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left       = Player.pi("green_koopa_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left, 1, 2)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigMole(WalkingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-    
     #standing
-    stand_left      = pygresimg("big_mole_stand_left.png")
+    stand_left      = Player.pi("big_mole_stand_left.png")
     center_walker(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1,1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True) 
+    stand_left_seq  = Player.pg(stand_left, 1,1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True) 
 
     #to the right
-    walk_right      = pygresimg("big_mole_walk_right.png")
-    walk_right_seq  = pygrid(walk_right, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
+    walk_right      = Player.pi("big_mole_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right, 1, 2)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
 
     #to the left
-    walk_left       = pygresimg("big_mole_walk_left.png")
-    walk_left_seq   = pygrid(walk_left, 1, 2)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left       = Player.pi("big_mole_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left, 1, 2)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Mario(WalkingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-
     #standing
-    stand_left      = pygresimg("big_mario_stand_left.png")
+    stand_left      = Player.pi("big_mario_stand_left.png")
     center_walker(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1,1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True)
+    stand_left_seq  = Player.pg(stand_left, 1,1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True)
     
     #to the right
-    walk_right_img  = pygresimg("big_mario_walk_right.png")
-    walk_right_seq  = pygrid(walk_right_img, 1, 3)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
+    walk_right_img  = Player.pi("big_mario_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right_img, 1, 3)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
     
     #to the left
-    walk_left_img   = pygresimg("big_mario_walk_left.png")
-    walk_left_seq   = pygrid(walk_left_img, 1, 3)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left_img   = Player.pi("big_mario_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left_img, 1, 3)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Luigi(WalkingPlayer):
-    pygresimg, pygrid, pyganim = image_res()
-    
     #standing
-    stand_left      = pygresimg("big_luigi_stand_left.png")
+    stand_left      = Player.pi("big_luigi_stand_left.png")
     center_walker(stand_left)
-    stand_left_seq  = pygrid(stand_left, 1,1)
-    stand_left_anim = pyganim(stand_left_seq, 1, True)
+    stand_left_seq  = Player.pg(stand_left, 1,1)
+    stand_left_anim = Player.pa(stand_left_seq, 1, True)
 
     #to the right
-    walk_right_img  = pygresimg("big_luigi_walk_right.png")
-    walk_right_seq  = pygrid(walk_right_img, 1, 2)
-    walk_right_anim = pyganim(walk_right_seq, 0.1, True)
-    run_right_anim  = pyganim(walk_right_seq, 0.05, True)
+    walk_right_img  = Player.pi("big_luigi_walk_right.png")
+    walk_right_seq  = Player.pg(walk_right_img, 1, 2)
+    walk_right_anim = Player.pa(walk_right_seq, 0.1, True)
+    run_right_anim  = Player.pa(walk_right_seq, 0.05, True)
 
     #to the left
-    walk_left_img   = pygresimg("big_luigi_walk_left.png")
-    walk_left_seq   = pygrid(walk_left_img, 1, 2)
-    walk_left_anim  = pyganim(walk_left_seq, 0.1, True)
-    run_left_anim   = pyganim(walk_left_seq, 0.05, True)
+    walk_left_img   = Player.pi("big_luigi_walk_left.png")
+    walk_left_seq   = Player.pg(walk_left_img, 1, 2)
+    walk_left_anim  = Player.pa(walk_left_seq, 0.1, True)
+    run_left_anim   = Player.pa(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
