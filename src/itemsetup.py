@@ -61,30 +61,50 @@ def new_item():
         item_choice = item_probability(SUPER_HARD_RANGE)
     
     if item_choice == RED_MUSHROOM: 
-        item = (RedMushroom(img=RedMushroom.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (RedMushroom(img=RedMushroom.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice ==  GREEN_MUSHROOM:
-        item = (GreenMushroom(img=GreenMushroom.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (GreenMushroom(img=GreenMushroom.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == YOSHI_COIN: 
-        item = (YoshiCoin(img=YoshiCoin.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (YoshiCoin(img=YoshiCoin.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == PIRAHNA_PLANT:
-        item = (PirahnaPlant(img=PirahnaPlant.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (PirahnaPlant(img=PirahnaPlant.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == SPINY_BEETLE: 
-        item = (SpinyBeetle(img=SpinyBeetle.walk_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (SpinyBeetle(img=SpinyBeetle.walk_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == POW_BUTTON:
-        item = (PowButton(img=PowButton.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (PowButton(img=PowButton.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == BOMBOMB:
-        item = (Bombomb(img=Bombomb.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+        item = (Bombomb(img=Bombomb.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
         item.scale = 1.5
-#    elif item_choice == "feather": 
-#        item = (Feather(img=Feather.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
-#    elif item_choice == "star": 
-#        item = (Star(img=Star.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
-#    elif item_choice == "question block": 
-#        item = (QuestionBlock(img=QuestionBlock.stand_right_anim, x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+    elif item_choice == "feather": 
+        item = (Feather(img=Feather.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
+    elif item_choice == "star": 
+        item = (Star(img=Star.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
+    elif item_choice == "question block": 
+        item = (QuestionBlock(img=QuestionBlock.stand_right_anim, \
+                x=OFF_SCREEN_LEFT, y=ITEM_PLATFORM_HEIGHT, \
+                batch=MAIN_BATCH))
     return item

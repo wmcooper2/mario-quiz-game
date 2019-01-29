@@ -8,13 +8,6 @@ import pyglet
 from src.constants import *
 from src.gameutil import *
 
-def image_res():
-    """Gets Pyglet image resources. Returns 3 Functions."""
-    pygresimg   = pyglet.resource.image
-    pygrid      = pyglet.image.ImageGrid
-    pyganim     = pyglet.image.Animation.from_image_sequence
-    return pygresimg, pygrid, pyganim
-
 class Background(pyglet.sprite.Sprite):
     background_img = pyglet.resource.image("quiz1.png")
 

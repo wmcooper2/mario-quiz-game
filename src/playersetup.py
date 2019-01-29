@@ -7,7 +7,7 @@ import pyglet
 from src.constants import *
 from src.players import *
 
-def make_yammy():       #not a playing character
+def make_yammy():
     yammy = Yammy(img=Yammy.stand_right, x=30, \
             y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH)
     yammy.scale = 2

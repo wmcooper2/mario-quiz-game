@@ -11,9 +11,6 @@ def test_target_sentences_exist():
     """Target sentence file exists in the directory tree."""
     assert os.path.exists("./gamedata/targetsentences.py") == True
 
-
-
-
 #test each word to make sure they are only nouns.
 #do the same for the other lists in Data()
 def test_data_has_nouns():

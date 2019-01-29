@@ -6,7 +6,18 @@ import random
 #custom
 from src.constants import *
 
-#random player selection assumes players dont want to choose their characters.
+def debug_message(str1, str2):
+    """Prints a debug message to Terminal. Returns None."""
+    print(str1, str2)
+
+def image_res():
+    """Gets Pyglet image resources. Returns 3 Functions."""
+    pygresimg   = pyglet.resource.image
+    pygrid      = pyglet.image.ImageGrid
+    pyganim     = pyglet.image.Animation.from_image_sequence
+    return pygresimg, pygrid, pyganim
+
+#random player selection assumes players dont make character choices.
 def randomize_players(flag, player_lineup, players_in_play, numplayers):
     """Randomizes starting order of player. Returns None."""
     if not flag:
