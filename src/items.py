@@ -9,7 +9,7 @@ from src.constants import *
 from src.gameutil import *
 
 class Item(pyglet.sprite.Sprite):
-    pi, pg, pa = image_res()    #pyglet; gameutil.py
+    pi, pg, pa = image_resources()    #pyglet; gameutil.py
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

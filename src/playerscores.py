@@ -1,5 +1,3 @@
-#stand lib
-
 #3rd party
 import pyglet
 
@@ -15,20 +13,43 @@ def wrong_answer(players):
     """Minus one point. Returns None."""
     players[0].points -= 1
 
-def score_setup(players, spots, scores):
+def setup_scores(players, spots, scores):
     """Sets up the scores in the top rows. Returns None."""
     for element in players:
-        score_x = spots[players.index(element)]
-        score_sprite = make_sprite(element, score_x)
-        scores.append(score_sprite)
-        element.point_index = scores.index(score_sprite)
+        x_pos = spots[players.index(element)]
+        sprite = score_sprite(element, x_pos)
+        scores.append(sprite)
+        element.point_index = scores.index(sprite)
 
+def small(char, x_pos):
+    """Generic character score constructor. Returns Sprite Object."""
+    return ScoreSprite(img=char.stand_left, x=x_pos, \
+                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+
+def score_sprite(player, x):
+    """Makes player score sprite. Returns Sprite object."""
+    #FireLight and BigBoo have different image resources...
+    if isinstance(player, FireLight): #score-adapted
+        tiny = ScoreSprite(img=FireLight.stand_left_seq[0], \
+                x=x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+        tiny.y -= 5
+        return tiny
+    elif isinstance(player, BigBoo): #score-adapted
+        tiny = small(BigBoo, x)
+        tiny.y += 15
+        tiny.scale = 0.5
+        return tiny
+    elif isinstance(player, Dragon):        return small(Dragon, x)
+    elif isinstance(player, GreenKoopa):    return small(GreenKoopa, x)
+    elif isinstance(player, BigMole):       return small(BigMole, x)
+    elif isinstance(player, Mario):         return small(Mario, x)
+    elif isinstance(player, Luigi):         return small(Luigi, x)
+        
 class Coin(pyglet.sprite.Sprite):
-    pi, pg, pa = image_res()
-    
-    coin_img = pi("yellow_coin.png")
-    coin_seq = pg(coin_img, 1, 3)
-    coin = coin_seq[0]
+    pi, pg, pa  = image_resources()
+    coin_img    = pi("yellow_coin.png")
+    coin_seq    = pg(coin_img, 1, 3)
+    image       = coin_seq[0]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,11 +58,10 @@ class Coin(pyglet.sprite.Sprite):
         super().delete()
 
 class Skull(pyglet.sprite.Sprite):
-    pi, pg, pa = image_res()
-
-    skull_img = pi("skull.png") 
-    skull_seq = pg(skull_img, 1, 1)
-    skull = skull_seq[0]
+    pi, pg, pa  = image_resources()
+    skull_img   = pi("skull.png") 
+    skull_seq   = pg(skull_img, 1, 1)
+    image       = skull_seq[0]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,193 +70,140 @@ class Skull(pyglet.sprite.Sprite):
         super().delete()
 
 class ScoreSprite(pyglet.sprite.Sprite):
-    def __init__(self, score_sprite = None, *args, **kwargs):
+    def __init__(self, score_sprite=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.score_sprite = score_sprite
-        self.points = 0
-        self.score_y = SCORE_SPRITE_Y - 30
+        self.big            = []
+        self.big_pos        = []
+        self.points         = 0
+        self.score_sprite   = score_sprite
+        self.ypos           = SCORE_SPRITE_Y - 30
+        self.small          = []
+        self.smallcoinpos   = []
+        self.smallskullpos  = []
+        self.zero           = label(text="0", x=self.x, y=self.ypos, \
+                            font_name=ENGLISH_FONT, font_size=ZERO_SIZE,\
+                            batch=MAIN_BATCH)
 
-        self.big_score = []
-        self.big_score_spots = []
-
-        self.small_score = []
-        self.small_score_spots_coins = []
-        self.small_score_spots_skulls = []
-        
-        self.zero = label(text="0", x=self.x, y=self.score_y, \
-                font_name=ENGLISH_FONT, font_size=24, batch=MAIN_BATCH)
-
-    def update(self, score_object, player):
+    #UPDATES
+    def update(self, score_obj, player):
         """Update player's score. Returns None."""
-        self.populate_score_spots(score_object)
+        self.score_positions(score_obj)
 
-        if self.points is not player.points:
+        if self.points is not player.points: #change to != ???
             self.delete_score()                     
-            self.change_points(player)              
+            self.update_score(player)              
             self.set_score_images()
 
-    def populate_score_spots(self, score_object):
-        """Setup score spots. Returns None."""
-        #populate self.small_score_spots_coins
-        if not self.small_score_spots_coins:                  
-            self.make_small_score_spots_coins(score_object)    
-            if DEBUG:
-#                debug_message()
-                print("small_score_spots_coins = ", self.small_score_spots_coins) 
+    def update_score(self, player):
+        """Updates player's score. Returns None."""
+        if self.points < player.points:     self.points += 1
+        elif self.points > player.points:   self.points -= 1
 
-        #populate self.small_score_spots_skulls
-        if not self.small_score_spots_skulls:                   
-            self.make_small_score_spots_skulls(score_object)     
-            if DEBUG:
-                print("small_score_spots_skulls = ", self.small_score_spots_skulls) 
+    #MAKE SCORE POSITIONS
+    def score_positions(self, score_obj):
+        """Setup score positions. Returns None."""
+        if not self.smallcoins:     self.small_coin_pos(score_obj)    
+        if not self.smallskullpos:  self.small_skull_pos(score_obj)     
+        if not self.big_pos:        self.big_score_pos(score_obj)
 
-        #populate self.big_score_spots
-        if not self.big_score_spots:                     
-            self.make_big_score_spots(score_object)
-            if DEBUG:
-                print("big_score_spots = ", self.big_score_spots)
+    def small_coin_pos(self, score_obj):
+        """Sets spots for self.smallcoins. Returns None."""
+        start = score_obj.x - 36
+        score = self.smallcoins
+        [score.append(start+(x*COIN_WIDTH)) for x in range(MAXSCORE_S)]
 
-    def make_small_score_spots_coins(self, score_object):
-        """Sets spots for self.small_score_spots_coins. Returns None."""
-        start = score_object.x - 36
-        for x in range(5):
-            #coin width = 12
-            self.small_score_spots_coins.append(start + (x * 12))
+    def small_skull_pos(self, score_obj):
+        """Sets spots for self.smallskullpos. Returns None."""
+        start = score_obj.x - 36
+        score = self.smallskullpos
+        [score.append(start+(x*SKULL_WIDTH)) for x in range(MAXSCORE_S)]
 
-    def make_small_score_spots_skulls(self, score_object):
-        """Sets spots for self.small_score_spots_skulls. Returns None."""
-        start = score_object.x - 36
-        for x in range(5):
-            #skull width = 16
-            self.small_score_spots_skulls.append(start + (x * 16))
+    def big_score_pos(self, score_obj):
+        """Sets spots for self.big_pos. Returns None."""
+        start = score_obj.x - 36
+        score = self.big_pos
+        [score.append(start+(x*COIN_WIDTH_B)) for x in range(MAXSCORE_B)]
 
-    def make_big_score_spots(self, score_object):
-        """Sets spots for self.big_score_spots. Returns None."""
-        start = score_object.x - 36
-        for x in range(3):
-            self.big_score_spots.append(start + (x * 30))
-
+    #ERASE THE SCORES
     def delete_score(self):
         """Deletes sprites that display score. Returns None."""
-        #ScoreSprite.points
         points = self.points
-        if points > 5:
-            self.delete_big_score()
-        elif points <= 5 and points > 0:
-            self.delete_small_score()
-        elif points == 0:
-            self.delete_zero_score()
-        elif points < 0 and points >= -5:
-            self.delete_small_score()
-        elif points < -5:
-            self.delete_big_score()
+        if points > 5:                      self.delete_big()
+        elif points <= 5 and points > 0:    self.delete_small()
+        elif points == 0:                   self.delete_zero()
+        elif points < 0 and points >= -5:   self.delete_small()
+        elif points < -5:                   self.delete_big()
    
-    def delete_big_score(self):
-        """Deletes contents of big_score. Returns None."""
-        self.big_score = []
+    def delete_big(self):
+        """Deletes contents of self.big. Returns None."""
+        del self.big
+        self.big = []
 
-    def delete_small_score(self):
-        """Deletes small_score. Returns None."""
-        self.small_score = []
+    def delete_small(self):
+        """Deletes self.small. Returns None."""
+        del self.small
+        self.small = []
 
-    def delete_zero_score(self):
+    def delete_zero(self):
         """Deletes the zero score. Returns None."""
         self.zero.text = ""
 
-    def change_points(self, player):
-        """Changes score-points to match player-points. Returns None."""
-        if self.points < player.points:
-            self.points += 1
-        elif self.points > player.points:
-            self.points -= 1
-#        print(self, ", points = ", self.points)
-
     def set_score_images(self):
         """Adds score sprite for given point range. Returns None."""
-        #ScoreSprite.points
         points = self.points
-        if points > 5:
-            self.make_big_score_coin()
-        elif points <= 5 and points > 0:
-            self.make_small_score_coins()
-        elif points == 0:
-            self.make_zero_score()
-        elif points < 0 and points >= -5:
-            self.make_small_score_skulls()
-        elif points < -5:
-            self.make_big_score_skull()
+        if points > 5:                      self.big_coins()
+        elif points <= 5 and points > 0:    self.small_coins()
+        elif points == 0:                   self.zero.text = "0"
+        elif points < 0 and points >= -5:   self.small_skulls()
+        elif points < -5:                   self.big_skulls()
 
-    def make_big_score_coin(self):
+    #MAKING THE SCORES
+    def big_label(self, string, spot):
+        """Generic big label constructor. Returns Label object."""
+        return  label(text=string, x=spot, y=self.ypos, \
+                font_name=SCORE_FONT, font_size=BIG_SCORE_SIZE, \
+                batch=MAIN_BATCH)
+
+    def big_image(self, class_, spot):
+        """Generic big image constructor. Returns Sprite object."""
+        return score.append(class_(img=class_.image, x=spot, \
+                y=self.ypos, batch=MAIN_BATCH))
+
+    def small_image(self, class_, list_, spot):
+        """Generic small image constructor. Returns Sprite object."""
+        return self.small.append(class_(img=class_.image, \
+                x=list_[spot], y=self.ypos, batch=MAIN_BATCH))
+
+    def big_coins(self):
         """Assembles the big score of coins. Returns None."""
-        scorespot   = self.big_score_spots
-        score       = self.big_score
-        score.append(Coin(img=Coin.coin, x=scorespot[0], \
-                y=self.score_y, batch=MAIN_BATCH))
+        scorespot   = self.big_pos
+        score       = self.big
+        score.append(big_image(Coin))
         score[0].scale = 1.5
-        score.append(label(text="x", x=scorespot[1], \
-                y=self.score_y, font_name="Comic Sans MS", \
-                font_size=24, batch=MAIN_BATCH))
-        score.append(label(text=str(self.points), x=scorespot[2], \
-                y=self.score_y, font_name="Comic Sans MS", \
-                font_size=24, batch=MAIN_BATCH))
+        score.append(self.big_label("x", scorespot[1]))
+        score.append(self.big_label(str(self.points), scorespot[2]))
 
-    def make_small_score_coins(self):
+    def small_coins(self):
         """Assembles the small score of coins. Returns None."""
-        for x in range(self.points):
-            self.small_score.append(Coin(img=Coin.coin, \
-                    x=self.small_score_spots_coins[x], y=self.score_y, \
-                    batch=MAIN_BATCH))
+        score   = self.small
+        coins   = self.smallcoinpos
+        points  = self.points
+        func    = self.small_image
+        [score.append(func(Coin, coins, x)) for x in range(points)]
         
-    def make_zero_score(self):
-        """Assembles the zero score. Returns None."""
-        self.zero.text = "0"
-
-    def make_small_score_skulls(self):
+    def small_skulls(self):
         """Assembles the small score of skulls. Returns None."""
-        for x in range(abs(self.points)):
-            self.small_score.append(Skull(img=Skull.skull, \
-                    x=self.small_score_spots_skulls[x], y=self.score_y, \
-                    batch=MAIN_BATCH))
+        score   = self.small
+        skulls  = self.smallskullpos
+        points  = self.points
+        func    = self.small_image
+        [score.append(func(Skull, skulls, x)) for x in range(points)]
 
-    def make_big_score_skull(self):
+    def big_skulls(self):
         """Assembles score of big skulls. Returns None."""
-        scorespot   = self.big_score_spots
-        score       = self.big_score
-
-        score.append(Skull(img=Skull.skull, x=scorespot[0], \
-                y=self.score_y))
+        scorespot   = self.big_pos
+        score       = self.big
+        score.append(self.big_image(Skull))
         score[0].scale = 1.5 
-        score.append(label(text="x", x=scorespot[1], \
-                y=self.score_y, font_name="Comic Sans MS", font_size=24))
-        score.append(label(text=str(abs(self.points)), x=scorespot[2], \
-                y=self.score_y, font_name="Comic Sans MS", font_size=24))
-        
-def make_sprite(player, score_x):
-    """Makes player score sprite. Returns Sprite object."""
-    if isinstance(player, FireLight):
-        score_sprite = ScoreSprite(img=FireLight.stand_left_seq[0], \
-                x=score_x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-        #readjusted for score_display only
-        score_sprite.y -= 5
-    elif isinstance(player, Dragon):
-        score_sprite = ScoreSprite(img=Dragon.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-    elif isinstance(player, BigBoo):
-        score_sprite = ScoreSprite(img=BigBoo.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-        #readjusted for score_display only
-        score_sprite.y += 15
-        score_sprite.scale = 0.5
-    elif isinstance(player, GreenKoopa):
-        score_sprite = ScoreSprite(img=GreenKoopa.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-    elif isinstance(player, BigMole):
-        score_sprite = ScoreSprite(img=BigMole.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-    elif isinstance(player, Mario):
-        score_sprite = ScoreSprite(img=Mario.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-    elif isinstance(player, Luigi):
-        score_sprite = ScoreSprite(img=Luigi.stand_left, x=score_x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-    return score_sprite
+        score.append(self.big_label("x", scorespot[1]))
+        score.append(self.big_label(str(abs(self.points), scorespot[2])))

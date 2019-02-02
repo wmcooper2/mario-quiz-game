@@ -2,17 +2,16 @@ import pyglet
 from pyglet.window import key
 import math
 
-#debugging values
-DEBUG               = False
-#DEBUG               = True
-ALL_RED_MUSHROOMS   = False
-ALL_GREEN_MUSHROOMS = False
-ALL_YOSHI_COINS     = False
-ALL_PIRAHNA_PLANTS  = False
-ALL_SPINY_BEETLES   = False
-ALL_POW_BUTTONS     = False
-ALL_BOMBOMBS        = False
+#GAME PLAY SETTINGS
+DIFFICULTY      = "medium" #supereasy, easy, medium, hard, superhard
+NUM_PLAYERS     = 6
+NUM_ITEMS       = 6
+#grades that you want to include in the game
+#GRADES          = [1, 2, 3]              
+#GRADES          = [1, 2]              
+GRADES          = [1]              
 
+#ITEMS
 RED_MUSHROOM        = "red mushroom"
 GREEN_MUSHROOM      = "green mushroom" 
 YOSHI_COIN          = "yoshi coin"
@@ -21,13 +20,19 @@ SPINY_BEETLE        = "spiny beetle"
 POW_BUTTON          = "pow button"
 BOMBOMB             = "bombomb"
 
-#settings
-NUM_PLAYERS     = 6
-NUM_ITEMS       = 6
-#grades that you want to include in the game
-#GRADES          = [1, 2, 3]              
-#GRADES          = [1, 2]              
-GRADES          = [1]              
+#PLAYERS
+PLAYERS = []
+
+#SCORES
+BIG_SCORE_SIZE  = 24
+COIN_WIDTH      = 12
+COIN_WIDTH_B    = 30
+MAXSCORE_S      = 5
+MAXSCORE_B      = 3
+SCORES          = []
+SCORE_FONT      = "Comic Sans MS"
+SKULL_WIDTH     = 16
+ZERO_SIZE       = 24
 
 #page range only applies to the highest grade in GRADES
 #PAGE_RANGE = [0, 500]           
@@ -35,13 +40,6 @@ GRADES          = [1]
 #PAGE_RANGE = [0, 100]           
 PAGE_RANGE = [0, 50]           
 #PAGE_RANGE = [0, 35]
-
-#DIFFICULTIES
-SUPER_EASY  = False
-EASY        = False
-MEDIUM      = False
-HARD        = False
-SUPER_HARD  = True
 
 #DIFFICULTY RANGES
 # item indices;
@@ -125,3 +123,14 @@ SCORE_SPRITE_Y = SCREEN_HEIGHT - 36
 #name size reductions
 label = pyglet.text.Label
 
+#debugging values
+DEBUG               = False
+#DEBUG               = True
+if DEBUG:
+    ALL_RED_MUSHROOMS   = False
+    ALL_GREEN_MUSHROOMS = False
+    ALL_YOSHI_COINS     = False
+    ALL_PIRAHNA_PLANTS  = False
+    ALL_SPINY_BEETLES   = False
+    ALL_POW_BUTTONS     = False
+    ALL_BOMBOMBS        = False
