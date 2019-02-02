@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Main file for the Mario quiz game."""
+#        import pdb; pdb.set_trace()
 
 #stand lib
 import random
@@ -23,61 +24,34 @@ from src.playerscores import *
 from src.problems import *
 from src.items import *             #must come after players 
 
-#background
 BACKGROUND = Background(img=Background.background_img, batch=MAIN_BATCH)
 
 #PLAYER SETUP
-#characters = []
-# the order of elements with pp determines the order
-#+ of the players on the screen.
-players = []
-SCORE_DISPLAY = []
-walkers = []
-
-YAMMY = make_yammy()
-FIRE_LIGHT = make_firelight()
-DRAGON = make_dragon()
-BIG_BOO = make_big_boo()
-GREEN_KOOPA = make_green_koopa()
-BIG_MOLE = make_big_mole()
-MARIO = make_mario()
-LUIGI = make_luigi()
-
-#rethinks these lists, duplicate instances are created when they 
-#+ dont need to be.
-characters = [
-        FIRE_LIGHT,
-        DRAGON,
-        BIG_BOO,
-        GREEN_KOOPA,
-        BIG_MOLE,
-        MARIO,
-        LUIGI]
+yammy = make_yammy()
 floaters = [
-        FIRE_LIGHT,
-        BIG_BOO]
+        fireLight(),
+        bigBoo()]
 walkers = [
-        DRAGON,
-        GREEN_KOOPA,
-        BIG_MOLE,
-        MARIO,
-        LUIGI]
-
-randomize_players(PLAYERS_RANDOMIZED, characters, players, NUM_PLAYERS)
+        dragon(),
+        greenKoopa(),
+        bigMole(),
+        mario(),
+        luigi()]
+characters = floaters + walkers
+randomize_players(PLAYERS_RANDOMIZED, characters, PLAYERS, NUM_PLAYERS)
 
 #SETUP ITEMS
-ALL_ITEMS = []                  
-setup_items(NUM_ITEMS, ALL_ITEMS)
+all_items = setup_items(NUM_ITEMS)
 
-#line setups
-player_line_up()
-item_line_up(ALL_ITEMS)
-top_row_line_up()
+#POSITIONS ON SCREEN, gameutil.py
+player_positions()
+item_positions(all_items)
+score_positions()
 
-#SETUP SCORES
-score_setup(players, SCORE_SPOTS, SCORE_DISPLAY)
+#SETUP SCORES, playerscores.py
+setup_scores(PLAYERS, SCORE_SPOTS, SCORES)
 
-#MAIN PROBLEM INSTANCE
+#PROBLEM, problems.py
 prob = Problem()
 
 @GAME_WINDOW.event
@@ -87,7 +61,7 @@ def on_draw():
 
     GAME_WINDOW.clear()
     MAIN_BATCH.draw()
-    pp = players[0]
+    pp = PLAYERS[0]
 
     if pp.has_item():
         # basic pattern:
@@ -97,7 +71,7 @@ def on_draw():
             # draw the guide
             # draw the question        
         players_item = pp.inventory[0]
-        prob.black_box.draw()
+        prob.box.draw()
         S_BB = True     #set flag
 
         if NEW_QUESTION:
@@ -107,33 +81,30 @@ def on_draw():
                 prob.random_english_word()
             #verbs
             if isinstance(players_item, GreenMushroom):  
-                prob.random_present_verb()
+                prob.present_tense()
             #Japanese to English translation
             if isinstance(players_item, PirahnaPlant):   
-                prob.random_target_sentence()
+                prob.target_sentence()
             #pronunciation
             if isinstance(players_item, YoshiCoin):      
-                prob.random_pronunciation()
+                prob.pronunciation()
             #answer the question
             if isinstance(players_item, SpinyBeetle):    
-                prob.random_question()
+                prob.question()
         prob.guide.draw()
         prob.question.draw()
 
     #top row scores
-    for score in SCORE_DISPLAY:
-        if score.points is 0:
-            score.zero.draw()
+    for score in SCORES:
+        if score.points is 0: score.zero.draw()
         elif abs(score.points) > 0 and abs(score.points) <= 5:
-            for element in score.small_score:
-                element.draw()
+            for element in score.small_score: element.draw()
         elif abs(score.points) > 5:
-            for element in score.big_score:
-                element.draw()
+            for element in score.big_score: element.draw()
 
 def update(DT):
     """Game update loop. Returns None."""
-    pp          = players
+    pp          = PLAYERS
     readyplayer = pp[0]
 
     #need to set effects as globals, maybe because of the game loop
@@ -145,22 +116,22 @@ def update(DT):
         BOMBOMB_EFFECT = False      #reset flag
         item_clean_up()
 
-    #all players, minus one point
+    #all PLAYERS, minus one point
     if POW_BUTTON_EFFECT:           
         for player in readyplayer:
             player.points -= 1
         POW_BUTTON_EFFECT = False   #reset flag
         item_clean_up()
 
-    #update players
+    #update PLAYERS
     for player in pp:
         #location
         player.spot = PLAYER_SPOTS[pp.index(player)]
         player.update(DT)
 
         #scores
-        score_points = SCORE_DISPLAY[player.point_index].points
-        score_object = SCORE_DISPLAY[player.point_index]
+        score_points = SCORES[player.point_index].points
+        score_object = SCORES[player.point_index]
         if player.points != score_points:
             score_object.update(score_object, player) 
 
@@ -169,37 +140,37 @@ def update(DT):
         player.float()
 
     #update items
-    for item in ALL_ITEMS:
-        item.spot_x = ITEM_SPOTS[ALL_ITEMS.index(item)]
+    for item in all_items:
+        item.spot_x = ITEM_SPOTS[all_items.index(item)]
         item.update(DT)
 
     #item transfer controlled by Yammy object
-    YAMMY.update()
-    if YAMMY.inventory:                     #only if len() > 0
-        YAMMY.inventory[0].update(DT)       #update the item
-        YAMMY.inventory[0].transition()     #transition the item
+    yammy.update()
+    if yammy.inventory:                     #only if len() > 0
+        yammy.inventory[0].update(DT)       #update the item
+        yammy.inventory[0].transition()     #transition the item
 
-    #fade YAMMY in and out
+    #fade yammy in and out
     if KH[key.F] \
         and not player_movement(pp) \
-        and not YAMMY.transitioning:
-            YAMMY.transitioning = True              #set flag
-            YAMMY.toggle_transition_direction()     #toggle flag
+        and not yammy.transitioning:
+            yammy.transitioning = True              #set flag
+            yammy.toggle_transition_direction()     #toggle flag
 
     #player gets one item
     if KH[key._1] \
-        and not any_movement(ALL_ITEMS, pp, YAMMY) \
+        and not any_movement(all_items, pp, yammy) \
         and not S_BB:
             NEW_QUESTION = True     #reset flag
-            yi= ALL_ITEMS[0]        #YAMMY acts on first item
-            YAMMY.wave_wand()       #wave magic wand
-            YAMMY.take_item(yi)     #takes the item
-            ALL_ITEMS.remove(yi)    #item taken from platform
+            yi= all_items[0]        #yammy acts on first item
+            yammy.wave_wand()       #wave magic wand
+            yammy.take_item(yi)     #takes the item
+            all_items.remove(yi)    #item taken from platform
             yi.spot_y = ITEM_DISAPPEAR_HEIGHT   #raise item
             yi.transitioning = True             #disappear item 
-            ALL_ITEMS.append(new_item())        #new item to lineup
-            YAMMY.victim = readyplayer
-            #item given to player in YAMMY.update()
+            all_items.append(new_item())        #new item to lineup
+            yammy.victim = readyplayer
+            #item given to player in yammy.update()
 
     if KH[key.LEFT] \
         and not player_movement(pp) \
@@ -219,7 +190,6 @@ def update(DT):
     if KH[key.O] \
         and readyplayer.has_item() \
         and S_BB:
-#            import pdb; pdb.set_trace()
             right_answer(readyplayer)
             item_clean_up(pp, S_BB)
 
@@ -230,16 +200,16 @@ def update(DT):
             item_clean_up(pp, S_BB)
 
     if KH[key.A] \
-        and not item_movement(ALL_ITEMS, YAMMY):
-            rotate_items_left(ALL_ITEMS)
+        and not item_movement(all_items, yammy):
+            rotate_items_left(all_items)
 
     if KH[key.D] \
-        and not item_movement(ALL_ITEMS, YAMMY):
-            rotate_items_right(ALL_ITEMS)
+        and not item_movement(all_items, yammy):
+            rotate_items_right(all_items)
 
     if KH[key.S] \
-        and not item_movement(ALL_ITEMS, YAMMY):
-            mix_items(ALL_ITEMS)
+        and not item_movement(all_items, yammy):
+            mix_items(all_items)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, FRAME_SPEED)

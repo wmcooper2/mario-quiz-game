@@ -21,25 +21,27 @@ class Data():
     default_dict        = "totalenglish123.json"
     default_entry       = {"not found":"not found"}
     
-    book_1_target_sentences = eng_book_1
-    book_2_target_sentences = eng_book_2
-    book_3_target_sentences = eng_book_3
+    #eng target sentences
+    b1_ets = eng_book_1
+    b2_ets = eng_book_2
+    b3_ets = eng_book_3
     
-    book_1_japanese_target_sentences = jap_book_1
-    book_2_japanese_target_sentences = jap_book_2
-    book_3_japanese_target_sentences = jap_book_3
+    #jap target sentences
+    b1_jts = jap_book_1
+    b2_jts = jap_book_2
+    b2_jts = jap_book_3
 
     verb_forms          = verb_forms    
     questions           = questions
     pronunciation_words = words
     lowercase           = string.ascii_lowercase
 
-    nouns           = []
-    verbs           = []
-    pronouns        = []
-    adjectives      = []   
-    e_target_sents  = []
-    j_target_sents  = []
+    nouns       = []
+    verbs       = []
+    pronouns    = []
+    adjectives  = []   
+    e_ts        = []
+    j_ts        = []
 
     def __init__(self):
         """Prepares word list of the dictionary, returns None."""
@@ -61,9 +63,11 @@ class Data():
         
     def add_words_from_grade(self, grade):
         """Adds words based on grade level. Returns None."""
-        for word in self.dictionary.keys():
-            if grade == int(self.dictionary[word]["grade"]):
-                self.words.append(word)
+        words = self.words
+        dict_ = self.dictionary
+        for word in dict_.keys():
+            if grade == int(dict_[word]["grade"]):
+                words.append(word)
 
     def get_words(self):
         """Gets words. Returns List."""
@@ -127,21 +131,21 @@ class Data():
 
     def initialize_target_sentences(self):
         """Loads English target sentences. Returns None."""
-        for sentence in self.book_1_target_sentences:
-            self.e_target_sents.append(sentence)
-        for sentence in self.book_2_target_sentences:
-            self.e_target_sents.append(sentence)
-        for sentence in self.book_3_target_sentences:
-            self.e_target_sents.append(sentence)
+        for sentence in self.b1_ets:
+            self.e_ts.append(sentence)
+        for sentence in self.b2_ets:
+            self.e_ts.append(sentence)
+        for sentence in self.b3_ets:
+            self.e_ts.append(sentence)
 
     def initialize_japanese_target_sentences(self):
         """Loads Japanese target sentences. Returns None."""
-        for sentence in self.book_1_japanese_target_sentences:
-            self.j_target_sents.append(sentence)
-        for sentence in self.book_2_japanese_target_sentences:
-            self.j_target_sents.append(sentence)
-        for sentence in self.book_3_japanese_target_sentences:
-            self.j_target_sents.append(sentence)
+        for sentence in self.b1_jts:
+            self.j_ts.append(sentence)
+        for sentence in self.b2_jts:
+            self.j_ts.append(sentence)
+        for sentence in self.b2_jts:
+            self.j_ts.append(sentence)
 
     #WORDS
     def japanese_word(self, word):
@@ -179,11 +183,11 @@ class Data():
     #SENTENCES
     def random_target_sentence(self):
         """Gets random target sentence. Returns String."""
-        return random.choice(self.e_target_sents)
+        return random.choice(self.e_ts)
 
     def random_target_sentence_japanese(self):
         """Gets random japanese target sentence. Returns String."""
-        return random.choice(self.j_target_sents)
+        return random.choice(self.j_ts)
 
     def random_question(self):
         """Gets random question. Returns String."""

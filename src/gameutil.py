@@ -4,7 +4,7 @@ import random
 #custom
 from src.constants import *
 
-def image_res():
+def image_resources():
     """Gets Pyglet image resources. Returns 3 Functions."""
     pygresimg   = pyglet.resource.image
     pygrid      = pyglet.image.ImageGrid
@@ -29,28 +29,22 @@ def randomize_players(flag, player_lineup, players_in_play, numplayers):
 def any_movement(items, players, yammy): 
     """Checks if anything is moving. Returns Boolean."""
     movement = []
-    for player in players:
-        movement.append(player.moving)
-    for item in items:
-        movement.append(item.moving)
-    if yammy.inventory:
-        movement.append(yammy.inventory[0].moving)
+    [movement.append(player.moving) for player in players]
+    [movement.append(item.moving) for item in items]
+#    [movement.append(yammy.inventory[0].moving) if yammy.inventory]
     return any(movement)
 
 def player_movement(players):
-    """Checks if any player is moving. Returns Boolean."""
+    """True if any player is moving. Returns Boolean."""
     movement = []
-    for player in players:
-        movement.append(player.moving)
+    [movement.append(player.moving) for player in players]
     return any(movement)
 
 def item_movement(items, yammy):
-    """Checks if any item is moving. Return Boolean."""
+    """True if any item is moving. Return Boolean."""
     movement = []
-    for item in items:
-        movement.append(item.moving)
-    if yammy.inventory:
-        movement.append(yammy.inventory[0].moving)
+    [movement.append(item.moving) for item in items]
+#    [movement.append(yammy.inventory[0].moving) if yammy.inventory]
     return any(movement)
 
 def item_clean_up(players, black_box):
@@ -125,7 +119,7 @@ def falling_item(time):
     g = gravity = 5
     return math.floor(-(0.5 * g) * (time ** 2))
 
-def top_row_line_up():
+def score_positions():
     """Sets top row positions on screen. Returns None."""
     for spot in range(7):
         TOP_ROW_SPOTS.append((SCREEN_WIDTH // 8) * spot + 125)
@@ -138,22 +132,22 @@ def top_row_line_up():
     for element in TOP_ROW_SPOTS[4:8]:
         SCORE_SPOTS.append(element)
 
-def player_line_up():
+def player_positions():
     """Sets available player spots on screen. Returns None."""
     for place in range(NUM_PLAYERS):
         if len(PLAYER_SPOTS) == 0:
-            first_spot = (SCREEN_WIDTH // 2) - 150
+            first_spot = (SCREEN_WIDTH // 2)-150
             PLAYER_SPOTS.append(first_spot)
         else:
-            next_spot = (SCREEN_WIDTH // 2) - 150 + (100 * place)
+            next_spot = (SCREEN_WIDTH // 2)-150+(100*place)
             PLAYER_SPOTS.append(next_spot)
 
-def item_line_up(items):
+def item_positions(items):
     """Sets available item spots on screen. Returns None."""
     for item in range(NUM_ITEMS):
         if len(ITEM_SPOTS) == 0:
-            first_spot = (SCREEN_WIDTH // 2) - ITEM_START_LEFT
+            first_spot = (SCREEN_WIDTH // 2)-ITEM_START_LEFT
             ITEM_SPOTS.append(first_spot)
         else:
-            next_spot = (SCREEN_WIDTH // 2) - ITEM_START_LEFT - (24 * item)
+            next_spot = (SCREEN_WIDTH // 2)-ITEM_START_LEFT-(24*item)
             ITEM_SPOTS.append(next_spot)

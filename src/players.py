@@ -8,6 +8,7 @@ import pyglet
 from src.constants import *
 from src.gameutil import *
 
+
 class Background(pyglet.sprite.Sprite):
     background_img = pyglet.resource.image("quiz1.png")
 
@@ -15,7 +16,7 @@ class Background(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
 
 class Player(pyglet.sprite.Sprite):
-    pi, pg, pa = image_res()    #pyglet; gameutil.py
+    pi, pg, pa = image_resources()    #gameutil.py
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,7 +28,7 @@ class Player(pyglet.sprite.Sprite):
         self.point_index= 0
         self.rotating_players = False
         self.speed      = "walk"
-        self.spot       = self.x #players start off screen, right 
+        self.spot       = self.x #starts off screen, right 
 
     def update(self, dt):
         self.delta_x = self.delta
@@ -78,25 +79,19 @@ class Player(pyglet.sprite.Sprite):
         """Runs the player left or right. Returns None."""
         diff = self.delta()
         #update sprite image
-        if diff != 0 and self.moving == False:
+        if diff != 0 and self.moving == False: 
             self.moving = True
-            if diff > 0:
-                self.image = self.run_left_anim
-            if diff < 0:
-                self.image = self.run_right_anim
+            if diff > 0: self.image = self.run_left_anim
+            if diff < 0: self.image = self.run_right_anim
         elif diff == 0:
             self.image = self.stand_left_anim 
             self.moving = False
             self.speed = "walk"
         #move left or right
-        if diff > 0 and diff > 3:
-            self.x -= 3
-        if diff > 0 and diff <= 3:
-            self.x -= 1
-        if diff < 0 and abs(diff) > 3:
-            self.x += 3
-        if diff < 0 and abs(diff) <= 3:
-            self.x += 1
+        if diff > 0 and diff > 3:       self.x -= 3
+        if diff > 0 and diff <= 3:      self.x -= 1
+        if diff < 0 and abs(diff) > 3:  self.x += 3
+        if diff < 0 and abs(diff) <= 3: self.x += 1
 
     def delta(self):
         """Get x distance between two spots. Returns Integer."""
