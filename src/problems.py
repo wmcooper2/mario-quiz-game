@@ -5,6 +5,39 @@ import pyglet
 from src.constants import *
 import src.temporarydatasolution as tds
 
+
+def present_problem(pp, prob):
+    """Presents a problem on the screen. Returns None."""
+    # basic pattern:
+        # draw the black box
+        # change the guide
+        # change the question in the problem
+        # draw the guide
+        # draw the question        
+    players_item = pp.inventory[0]
+    prob.box.draw()
+    S_BB = True     #set flag
+
+    if NEW_QUESTION:
+        NEW_QUESTION = False    #reset flag
+        #simple vocab
+        if isinstance(players_item, RedMushroom):    
+            prob.random_english_word()
+        #verbs
+        if isinstance(players_item, GreenMushroom):  
+            prob.present_tense()
+        #Japanese to English translation
+        if isinstance(players_item, PirahnaPlant):   
+            prob.target_sentence()
+        #pronunciation
+        if isinstance(players_item, YoshiCoin):      
+            prob.pronunciation()
+        #answer the question
+        if isinstance(players_item, SpinyBeetle):    
+            prob.question()
+    prob.guide.draw()
+    prob.question.draw()
+
 class Problem(pyglet.text.Label):
     pi      = pyglet.resource.image
     sprite  = pyglet.sprite.Sprite
@@ -32,24 +65,22 @@ class Problem(pyglet.text.Label):
         self.quest.anchor_y = "center"
         self.data           = tds.Data()
 
-# need to set width and mulitline flags for the sentences and questions.
-    
-    def random_english_word(self):
-        """Chooses a random English vocabulary word. Returns None."""
+    def english(self):
+        """Chooses a random English word. Returns None."""
         self.guide.font_name = ENGLISH_FONT
         self.guide.text = "Translate to Japanese"
         self.quest.text = self.data.english_word() 
 
-#    def random_japanese_word(self):
-#        """Chooses a random Japanese vocabulary word. Returns None."""
-#        choice = self.data.english_word()
-#        self.guide.font_name = JAPANESE_FONT
-#        self.guide.text = choice                    #put this into self.data instance
-#        self.quest.text = self.data.japanese_word() 
+    def japanese(self):
+        """Chooses a random Japanese word. Returns None."""
+        choice = self.data.english_word()
+        self.guide.font_name = JAPANESE_FONT
+        self.guide.text = choice 
+        self.quest.text = self.data.japanese_word() 
     
-    def random_image(self):
-        """Chooses a random word. Returns None."""
-        self.quest.text = "image word" 
+#    def random_image(self):
+#        """Chooses a random word. Returns None."""
+#        self.quest.text = "image word" 
 
     def present_tense(self):
         """Chooses random present tense verb. Returns None."""
@@ -76,10 +107,10 @@ class Problem(pyglet.text.Label):
         self.guide.text = "Translate to Japanese"
         self.quest.text = self.data.random_target_sentence() 
 
-#    def random_japanese_target_sentence(self):
-#        """Chooses a random Japanese target sentence. Returns None."""
-#        self.guide.font_name = JAPANESE_FONT
-#        self.quest.text = "Get Japanese sentences."
+    def japanse_target_sentence(self):
+        """Chooses a random Japanese target sentence. Returns None."""
+        self.guide.font_name = JAPANESE_FONT
+        self.quest.text = "Get Japanese sentences."
 
     def pronunciation(self):
         """Chooses word difficult to pronuounce word. Returns None."""
@@ -93,11 +124,4 @@ class Problem(pyglet.text.Label):
         """Chooses a random quest. Returns None."""
         self.guide.font_name = ENGLISH_FONT
         self.guide.text = "Answer the quest in English"
-##        document = pyglet.text.decode_text("TEST OF DOCUMENTTEST OF DOCUMENTTEST OF DOCUMENTTEST OF DOCUMENTTEST OF DOCUMENTTEST OF DOCUMENT")
-#        self.quest = pyglet.text.layout.TextLayout(document, Problem.bimg.width, Problem.bimg.height//2)
-##        self.quest = pyglet.text.layout.TextLayout(document, Problem.bimg.width, Problem.bimg.height//2, x=300, y=300)
-#        self.quest = pyglet.text.layout.TextLayout(document, Problem.bimg.width, Problem.bimg.height//2)
-#        self.quest = pyglet.text.layout.TextLayout(document, Problem.bimg.width, Problem.bimg.height//2)
-#        self.quest = pyglet.text.layout.FormattedDocument(document, Problem.bimg.width, Problem.bimg.height//2)
         self.quest.text = self.data.random_question()
-##        self.quest.text = document
