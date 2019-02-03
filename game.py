@@ -37,7 +37,6 @@ walkers = [
         mario(),
         luigi()]
 characters = floaters + walkers
-
 randomize_players(characters)               #gameutil.py
 player_positions()                          #gameutil.py
 all_items = setup_items(NUM_ITEMS)          #itemsetup.py
@@ -59,7 +58,7 @@ def on_draw():
 
     if pp.has_item():
         present_problem(pp, prob)
-#    update_scores()
+    update_scores()
 
 def update(DT):
     """Game update loop. Returns None."""
@@ -67,20 +66,10 @@ def update(DT):
     readyplayer = pp[0]
 
     #need to set effects as globals, maybe because of the game loop
-    global BOMBOMB_EFFECT, POW_BUTTON_EFFECT
+#    global BOMBOMB_EFFECT, POW_BUTTON_EFFECT
 
-    #mix items
-    if BOMBOMB_EFFECT:
-        mix_items()
-        BOMBOMB_EFFECT = False      #reset flag
-        item_clean_up()
-
-    #all PLAYERS, minus one point
-    if POW_BUTTON_EFFECT:           
-        for player in readyplayer:
-            player.points -= 1
-        POW_BUTTON_EFFECT = False   #reset flag
-        item_clean_up()
+    if BOMBOMB_EFFECT:      bombomb_effect()    #mix items on screen
+    elif POW_BUTTON_EFFECT: pow_button_effect() #all players, minus point
 
     #update PLAYERS
     for player in pp:
@@ -94,27 +83,16 @@ def update(DT):
         if player.points != score_points:
             score_object.update(score_object, player) 
 
-    #player floating effect
-    for player in floaters:
-        player.float()
-
-    #update items
-    for item in all_items:
-        item.spot_x = ITEM_SPOTS[all_items.index(item)]
-        item.update(DT)
-
-    #item transfer controlled by Yammy object
-    yammy.update()
-    if yammy.inventory:                     #only if len() > 0
-        yammy.inventory[0].update(DT)       #update the item
-        yammy.inventory[0].transition()     #transition the item
+    [player.float() for player in floaters]
+    update_item_pos(all_items, DT)          #items.py
+    yammy.update(DT)
 
     #fade yammy in and out
     if KH[key.F] \
         and not player_movement(pp) \
-        and not yammy.transitioning:
-            yammy.transitioning = True              #set flag
-            yammy.toggle_transition_direction()     #toggle flag
+        and not yammy.trans:
+            yammy.trans = True              #set flag
+            yammy.toggle_transition()     #toggle flag
 
     #player gets one item
     if KH[key._1] \

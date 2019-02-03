@@ -16,13 +16,13 @@ def setup_items(num):
 
 def make_item(class_):
     """Generic item constructor. Returns Sprite object."""
-    item = (class_(img=class_.stand_right_anim, x=OFF_SCREEN_LEFT, \
+    item = (class_(img=class_.facer, x=OFF_SCREEN_LEFT, \
             y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
     item.scale = 1.5
     return item
     
 def decision(probabilities):
-    """Decides item with probability ranges. Returns String."""
+    """Decides which item. Returns String."""
     list_ = probabilities
     choice = random.randrange(1, 100, 1)
     if choice >= list_[5] and choice <= list_[6]:                  
@@ -42,7 +42,7 @@ def decision(probabilities):
     return item
 
 def probability(string):
-    """Decides which probability range to use. Returns String."""
+    """Decides which probability range. Returns String."""
     return {
         "supereasy"     : SUPER_EASY_RANGE,
         "easy"          : EASY_RANGE,

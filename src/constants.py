@@ -3,7 +3,7 @@ from pyglet.window import key
 import math
 
 #GAME PLAY SETTINGS
-DIFFICULTY      = "medium" #supereasy, easy, medium, hard, superhard
+DIFFICULTY      = "superhard" #supereasy, easy, medium, hard, superhard
 NUM_PLAYERS     = 6
 NUM_ITEMS       = 6
 #grades that you want to include in the game
@@ -115,6 +115,7 @@ GAME_WINDOW.push_handlers(KH)
 OFF_SCREEN_RIGHT    = 1100
 OFF_SCREEN_LEFT     = -100
 FLOAT_HEIGHT        = 100
+FLOAT_SPEED         = 3
 WALK_HEIGHT         = 63
 SCREEN_WIDTH        = GAME_WINDOW.width
 SCREEN_HEIGHT       = GAME_WINDOW.height

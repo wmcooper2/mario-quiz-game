@@ -5,6 +5,31 @@ import pyglet
 from src.constants import *
 from src.players import *
 
+def small(char, x_pos):
+    """Generic character score constructor. Returns Sprite Object."""
+    return ScoreSprite(img=char.anim, x=x_pos, \
+                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+
+def score_sprite(player, x):
+    """Makes player score sprite. Returns Sprite object."""
+    #FireLight and BigBoo have different image resources...
+    if isinstance(player, FireLight): #score-adapted
+#        tiny = ScoreSprite(img=FireLight.faceleft_seq[0], x=x, \
+        tiny = ScoreSprite(img=FireLight.anim, x=x, \
+                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+        tiny.y -= 5
+        return tiny
+    elif isinstance(player, BigBoo): #score-adapted
+        tiny = small(BigBoo, x)
+        tiny.y += 15
+        tiny.scale = 0.5
+        return tiny
+    elif isinstance(player, Dragon):        return small(Dragon, x)
+    elif isinstance(player, GreenKoopa):    return small(GreenKoopa, x)
+    elif isinstance(player, BigMole):       return small(BigMole, x)
+    elif isinstance(player, Mario):         return small(Mario, x)
+    elif isinstance(player, Luigi):         return small(Luigi, x)
+
 def update_scores():
     """Updates the scores on the screen. Returns None."""
     #top row scores
@@ -30,30 +55,6 @@ def setup_scores(players, spots, scores):
         sprite = score_sprite(element, x_pos)
         scores.append(sprite)
         element.point_index = scores.index(sprite)
-
-def small(char, x_pos):
-    """Generic character score constructor. Returns Sprite Object."""
-    return ScoreSprite(img=char.stand_left, x=x_pos, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-
-def score_sprite(player, x):
-    """Makes player score sprite. Returns Sprite object."""
-    #FireLight and BigBoo have different image resources...
-    if isinstance(player, FireLight): #score-adapted
-        tiny = ScoreSprite(img=FireLight.stand_left_seq[0], \
-                x=x, y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
-        tiny.y -= 5
-        return tiny
-    elif isinstance(player, BigBoo): #score-adapted
-        tiny = small(BigBoo, x)
-        tiny.y += 15
-        tiny.scale = 0.5
-        return tiny
-    elif isinstance(player, Dragon):        return small(Dragon, x)
-    elif isinstance(player, GreenKoopa):    return small(GreenKoopa, x)
-    elif isinstance(player, BigMole):       return small(BigMole, x)
-    elif isinstance(player, Mario):         return small(Mario, x)
-    elif isinstance(player, Luigi):         return small(Luigi, x)
         
 class Coin(pyglet.sprite.Sprite):
     pi, pg, pa  = image_resources()

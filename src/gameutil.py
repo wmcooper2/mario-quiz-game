@@ -4,12 +4,71 @@ import random
 #custom
 from src.constants import *
 
+#VARIABLES DECLARED HERE
+#pi, pg, pa = image_resources()
+
+#pass size and speed for these then combine constructors
+
+def sprite_con(img, speed, size, type_):
+    """Generic sprite constructor. Returns 3 Sprite objects.
+        - speed is how many times the sprite rotates through its grid
+            images per second.
+        - size is the number of images in the sprites grid, horizontally.
+    """
+    face    = pi(img)
+    if type_ == "float": center_floater(face)
+    else:               center_walker(face)
+    seq     = pg(face, 1, size)
+    anim    = pa(seq, speed, True)
+    return face, seq, anim
+
+def size1_sprite(img1):
+    """Generic 1-img Item Constructor. Returns Sprite objects."""
+    face    = pi(img1)
+    center_walker(face)
+    seq     = pg(face, 1, 1)    #right digit is width of image
+    anim    = pa(seq, 1, True)  #digit is times/sec to flip through
+    return face, anim
+
+def size2_sprite(img1):
+    """Generic 2-img Item Constructor. Returns Sprite objects."""
+    face    = pi(img1)
+    center_walker(face)
+    seq     = pg(face, 1, 2)
+    anim    = pa(seq, 0.1, True)
+    return face, anim
+
+def size3_sprite(img1):
+    """Generic 3-img Item Constructor. Returns Sprite objects."""
+    face    = pi(img1)
+    center_walker(face)
+    seq     = pg(face, 1, 3)
+    anim    = pa(seq, 0.1, True)
+    return face, anim
+
+def size4_sprite(img1):
+    """Generic 4-img Item Constructor. Returns Sprite objects."""
+    face    = pi(img1)
+    center_walker(face)
+    seq     = pg(face, 1, 4)
+    anim    = pa(seq, 1, True)
+    return face, anim
+
+def size5_sprite(img1):
+    """Generic 5-img Item Constructor. Returns Sprite objects."""
+    face    = pi(img1)
+    center_walker(face)
+    seq     = pg(face, 1, 5)
+    anim    = pa(seq, 1, True)
+    return face, anim
+
 def image_resources():
     """Gets Pyglet image resources. Returns 3 Functions."""
     pygresimg   = pyglet.resource.image
     pygrid      = pyglet.image.ImageGrid
     pyganim     = pyglet.image.Animation.from_image_sequence
     return pygresimg, pygrid, pyganim
+pi, pg, pa = image_resources()
 
 def randomize_players(characters):
     """Randomizes starting order of player. Returns None."""
