@@ -7,17 +7,17 @@ from src.players import *
 
 def floating(char):
     """Generic floating character constructor. Returns Player object."""
-    return char(img=char.stand_left, \
-            x=OFF_SCREEN_RIGHT, y=FLOAT_HEIGHT, batch=MAIN_BATCH)
+    return char(img=char.anim, x=OFF_SCREEN_RIGHT, y=FLOAT_HEIGHT, \
+            batch=MAIN_BATCH)
     
 def walking(char):
     """Generic walking character constructor. Returns Player object."""
-    return char(img=char.stand_left, \
-            x=OFF_SCREEN_RIGHT, y=WALK_HEIGHT, batch=MAIN_BATCH)
+    return char(img=char.anim, x=OFF_SCREEN_RIGHT, y=WALK_HEIGHT, \
+            batch=MAIN_BATCH)
 
 #SPECIAL
 def make_yammy():
-    yammy = Yammy(img=Yammy.stand_right, x=30, \
+    yammy = Yammy(img=Yammy.faceright, x=30, \
             y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH)
     yammy.scale = 2
     yammy.opacity = 0

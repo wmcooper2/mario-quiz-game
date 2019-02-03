@@ -5,7 +5,6 @@ import pyglet
 from src.constants import *
 import src.temporarydatasolution as tds
 
-
 def present_problem(pp, prob):
     """Presents a problem on the screen. Returns None."""
     # basic pattern:
