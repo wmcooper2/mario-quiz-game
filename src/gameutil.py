@@ -11,19 +11,15 @@ def image_resources():
     pyganim     = pyglet.image.Animation.from_image_sequence
     return pygresimg, pygrid, pyganim
 
-#random player selection assumes players dont make character choices.
-def randomize_players(flag, player_lineup, players_in_play, numplayers):
+def randomize_players(characters):
     """Randomizes starting order of player. Returns None."""
-    if not flag:
-        flag = True                             #set flag
-        players = []
-        lineup = player_lineup[:]
-        for x in range(numplayers):
-            new = random.choice(lineup)
-            players.append(new)
-            lineup.remove(new)
-        for player in players:
-            players_in_play.append(player)
+    players = []
+    lineup  = characters[:]
+    for x in range(NUM_PLAYERS):
+        new = random.choice(lineup)
+        players.append(new)
+        lineup.remove(new)
+    [PLAYERS.append(p) for p in players]
 
 #dont change this, creates a weird bug if you do.
 def any_movement(items, players, yammy): 
@@ -49,12 +45,12 @@ def item_movement(items, yammy):
 
 def item_clean_up(players, black_box):
     """Performs item clean up. Returns None."""
-    ready_p = players[0]
-    p_item = ready_p.inventory[0]
-    ready_p.inventory.remove(p_item)   #remove inventory
-    p_item.delete()
-    ready_p.item = False    #reset flag
-    black_box = False       #reset flag
+    player          = players[0]
+    item            = player.inventory[0]
+    player.inventory.remove(item)       #remove inventory
+    item.delete()                       #dont need?
+    player.item     = False             #reset flag
+    black_box       = False             #reset flag
 
     #show points in terminal 
     if DEBUG:

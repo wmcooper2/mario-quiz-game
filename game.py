@@ -10,19 +10,18 @@ import sys
 import pyglet
 from pyglet import clock
 from pyglet.window import key
-#setup resources path, don't move these two lines
-pyglet.resource.path = ["./resources"] 
-pyglet.resource.reindex()
+pyglet.resource.path = ["./resources"]  #dont move this
+pyglet.resource.reindex()               #dont move this
 
 #custom
 from src.constants import *
 from src.gameutil import *
 from src.itemsetup import *
-from src.players import *           #not needed?
+from src.players import *
 from src.playersetup import *
 from src.playerscores import *
 from src.problems import *
-from src.items import *             #must come after players 
+from src.items import *     #must come after players import
 
 BACKGROUND = Background(img=Background.background_img, batch=MAIN_BATCH)
 
@@ -38,69 +37,29 @@ walkers = [
         mario(),
         luigi()]
 characters = floaters + walkers
-randomize_players(PLAYERS_RANDOMIZED, characters, PLAYERS, NUM_PLAYERS)
 
-#SETUP ITEMS
-all_items = setup_items(NUM_ITEMS)
-
-#POSITIONS ON SCREEN, gameutil.py
-player_positions()
-item_positions(all_items)
-score_positions()
-
-#SETUP SCORES, playerscores.py
-setup_scores(PLAYERS, SCORE_SPOTS, SCORES)
-
-#PROBLEM, problems.py
-prob = Problem()
+randomize_players(characters)               #gameutil.py
+player_positions()                          #gameutil.py
+all_items = setup_items(NUM_ITEMS)          #itemsetup.py
+item_positions(all_items)                   #gameutil.py
+score_positions()                           #gameutil.py
+setup_scores(PLAYERS, SCORE_SPOTS, SCORES)  #playerscores.py
+prob = Problem()                            #problems.py
 
 @GAME_WINDOW.event
 def on_draw():
     """Draw the visual elements. Returns None."""
-    global NEW_QUESTION
+    #GAME_WINDOW.event's module doesnt import my constants, 
+    #+ maybe thats why I need globals here?
+#    global NEW_QUESTION
 
     GAME_WINDOW.clear()
     MAIN_BATCH.draw()
     pp = PLAYERS[0]
 
     if pp.has_item():
-        # basic pattern:
-            # draw the black box
-            # change the guide
-            # change the question in the problem
-            # draw the guide
-            # draw the question        
-        players_item = pp.inventory[0]
-        prob.box.draw()
-        S_BB = True     #set flag
-
-        if NEW_QUESTION:
-            NEW_QUESTION = False    #reset flag
-            #simple vocab
-            if isinstance(players_item, RedMushroom):    
-                prob.random_english_word()
-            #verbs
-            if isinstance(players_item, GreenMushroom):  
-                prob.present_tense()
-            #Japanese to English translation
-            if isinstance(players_item, PirahnaPlant):   
-                prob.target_sentence()
-            #pronunciation
-            if isinstance(players_item, YoshiCoin):      
-                prob.pronunciation()
-            #answer the question
-            if isinstance(players_item, SpinyBeetle):    
-                prob.question()
-        prob.guide.draw()
-        prob.question.draw()
-
-    #top row scores
-    for score in SCORES:
-        if score.points is 0: score.zero.draw()
-        elif abs(score.points) > 0 and abs(score.points) <= 5:
-            for element in score.small_score: element.draw()
-        elif abs(score.points) > 5:
-            for element in score.big_score: element.draw()
+        present_problem(pp, prob)
+#    update_scores()
 
 def update(DT):
     """Game update loop. Returns None."""

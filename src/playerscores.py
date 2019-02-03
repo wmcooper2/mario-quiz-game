@@ -5,6 +5,16 @@ import pyglet
 from src.constants import *
 from src.players import *
 
+def update_scores():
+    """Updates the scores on the screen. Returns None."""
+    #top row scores
+    for playerscore in SCORES:
+        if playerscore.points==0: playerscore.zero.text="0"
+        elif abs(playerscore.points)>0 and abs(playerscore.points)<=5:
+            for element in playerscore.small: element.draw()
+        elif abs(playerscore.points)>5:
+            for element in playerscore.big: element.draw()
+
 def right_answer(players):
     """Plus one point. Returns None."""
     players[0].points += 1
