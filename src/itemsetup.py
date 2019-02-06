@@ -17,7 +17,7 @@ def setup_items(num):
 def make_item(class_):
     """Generic item constructor. Returns Sprite object."""
     item = (class_(img=class_.facer, x=OFF_SCREEN_LEFT, \
-            y=ITEM_PLATFORM_HEIGHT, batch=MAIN_BATCH))
+            y=ITEM_PLATFORM_HEIGHT, batch=MAIN))
     item.scale = 1.5
     return item
     

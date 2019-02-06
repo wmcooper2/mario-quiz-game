@@ -15,27 +15,32 @@ def present_problem(pp, prob):
         # draw the question        
     players_item = pp.inventory[0]
     prob.box.draw()
-    S_BB = True     #set flag
+#    S_BB = True     #set flag
+    S_BB = not S_BB
 
     if NEW_QUESTION:
-        NEW_QUESTION = False    #reset flag
+#        NEW_QUESTION = False    #reset flag
+        NEW_QUESTION = not NEW_QUESTION
         #simple vocab
         if isinstance(players_item, RedMushroom):    
             prob.random_english_word()
         #verbs
-        if isinstance(players_item, GreenMushroom):  
+        elif isinstance(players_item, GreenMushroom):
             prob.present_tense()
         #Japanese to English translation
-        if isinstance(players_item, PirahnaPlant):   
+        elif isinstance(players_item, PirahnaPlant):   
             prob.target_sentence()
         #pronunciation
-        if isinstance(players_item, YoshiCoin):      
+        elif isinstance(players_item, YoshiCoin):      
             prob.pronunciation()
         #answer the question
-        if isinstance(players_item, SpinyBeetle):    
+        elif isinstance(players_item, SpinyBeetle):    
             prob.question()
     prob.guide.draw()
     prob.question.draw()
+
+#def is_question():
+
 
 class Problem(pyglet.text.Label):
     pi      = pyglet.resource.image
@@ -43,7 +48,7 @@ class Problem(pyglet.text.Label):
     label   = pyglet.text.Label
 
     #black box image
-    bimg    = pi("black_box.png")
+    bimg    = pi("blackbox.png")
     box     = sprite(bimg, x=345, y=264)
 
     #box centers
@@ -106,7 +111,7 @@ class Problem(pyglet.text.Label):
         self.guide.text = "Translate to Japanese"
         self.quest.text = self.data.random_target_sentence() 
 
-    def japanse_target_sentence(self):
+    def japanese_target_sentence(self):
         """Chooses a random Japanese target sentence. Returns None."""
         self.guide.font_name = JAPANESE_FONT
         self.quest.text = "Get Japanese sentences."

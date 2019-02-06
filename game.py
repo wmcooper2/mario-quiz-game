@@ -3,6 +3,7 @@
 #        import pdb; pdb.set_trace()
 
 #stand lib
+from pprint import pprint
 import random
 import sys
 
@@ -23,7 +24,7 @@ from src.playerscores import *
 from src.problems import *
 from src.items import *     #must come after players import
 
-BACKGROUND = Background(img=Background.background_img, batch=MAIN_BATCH)
+BACKGROUND = Background(img=Background.background_img, batch=MAIN)
 
 #PLAYER SETUP
 yammy = make_yammy()
@@ -53,10 +54,10 @@ def on_draw():
 #    global NEW_QUESTION
 
     GAME_WINDOW.clear()
-    MAIN_BATCH.draw()
+    MAIN.draw()
     pp = PLAYERS[0]
 
-    if pp.has_item():
+    if pp.inventory:
         present_problem(pp, prob)
     update_scores()
 
@@ -91,15 +92,21 @@ def update(DT):
     if KH[key.F] \
         and not player_movement(pp) \
         and not yammy.trans:
-            yammy.trans = True              #set flag
-            yammy.toggle_transition()     #toggle flag
+#            yammy.trans = True              #set flag
+            yammy.trans = not yammy.trans
+#            yammy.toggle_transition()     #toggle flag
+
+
+#DEBUG
+    if KH[key.SPACE]:
+        pprint(KH.keys())
 
     #player gets one item
     if KH[key._1] \
         and not any_movement(all_items, pp, yammy) \
         and not S_BB:
             NEW_QUESTION = True     #reset flag
-            yi= all_items[0]        #yammy acts on first item
+            yi = all_items[0]       #yammy acts on first item
             yammy.wave_wand()       #wave magic wand
             yammy.take_item(yi)     #takes the item
             all_items.remove(yi)    #item taken from platform
@@ -127,13 +134,13 @@ def update(DT):
     if KH[key.O] \
         and readyplayer.has_item() \
         and S_BB:
-            right_answer(readyplayer)
+            plus_one(readyplayer)
             item_clean_up(pp, S_BB)
 
     if KH[key.X] \
         and readyplayer.has_item() \
         and S_BB:
-            wrong_answer(readyplayer)
+            minus_one(readyplayer)
             item_clean_up(pp, S_BB)
 
     if KH[key.A] \

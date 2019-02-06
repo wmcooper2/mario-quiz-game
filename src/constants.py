@@ -95,7 +95,6 @@ POW_BUTTON_EFFECT       = False
 FEATHER_EFFECT          = False
 STAR_EFFECT             = False
 #PLAYERS_RANDOMIZED      = False    #delete
-GAME_JUST_STARTED       = True
 S_BB                    = False     #show black box
 MIXING_PLAYER_SPOTS     = False
 NEW_QUESTION            = True
@@ -107,8 +106,9 @@ JAPANESE_FONT   = "Yu Mincho Regular"
 GUIDE           = "Translate"
 GUIDE_SIZE      = 24
 QUESTION_SIZE   = 36
+
 GAME_WINDOW     = pyglet.window.Window(1000, 563)
-MAIN_BATCH      = pyglet.graphics.Batch()
+MAIN            = pyglet.graphics.Batch()
 KH              = key.KeyStateHandler()
 GAME_WINDOW.push_handlers(KH)
 
@@ -121,8 +121,6 @@ SCREEN_WIDTH        = GAME_WINDOW.width
 SCREEN_HEIGHT       = GAME_WINDOW.height
 SCORE_SPRITE_Y      = SCREEN_HEIGHT - 36
 
-#name size reductions
-label = pyglet.text.Label
 
 #debugging values
 DEBUG               = False

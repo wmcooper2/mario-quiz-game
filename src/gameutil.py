@@ -7,7 +7,20 @@ from src.constants import *
 #VARIABLES DECLARED HERE
 #pi, pg, pa = image_resources()
 
-#pass size and speed for these then combine constructors
+#name size reductions
+def image_resources():
+    """Gets Pyglet image resources. Returns 3 Functions."""
+    pygresimg   = pyglet.resource.image
+    pygrid      = pyglet.image.ImageGrid
+    pyganim     = pyglet.image.Animation.from_image_sequence
+    return pygresimg, pygrid, pyganim
+pi, pg, pa = image_resources()
+label = pyglet.text.Label
+
+class Background(pyglet.sprite.Sprite):
+    background_img = pi("quiz1.png")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 def sprite_con(img, speed, size, type_):
     """Generic sprite constructor. Returns 3 Sprite objects.
@@ -21,54 +34,6 @@ def sprite_con(img, speed, size, type_):
     seq     = pg(face, 1, size)
     anim    = pa(seq, speed, True)
     return face, seq, anim
-
-def size1_sprite(img1):
-    """Generic 1-img Item Constructor. Returns Sprite objects."""
-    face    = pi(img1)
-    center_walker(face)
-    seq     = pg(face, 1, 1)    #right digit is width of image
-    anim    = pa(seq, 1, True)  #digit is times/sec to flip through
-    return face, anim
-
-def size2_sprite(img1):
-    """Generic 2-img Item Constructor. Returns Sprite objects."""
-    face    = pi(img1)
-    center_walker(face)
-    seq     = pg(face, 1, 2)
-    anim    = pa(seq, 0.1, True)
-    return face, anim
-
-def size3_sprite(img1):
-    """Generic 3-img Item Constructor. Returns Sprite objects."""
-    face    = pi(img1)
-    center_walker(face)
-    seq     = pg(face, 1, 3)
-    anim    = pa(seq, 0.1, True)
-    return face, anim
-
-def size4_sprite(img1):
-    """Generic 4-img Item Constructor. Returns Sprite objects."""
-    face    = pi(img1)
-    center_walker(face)
-    seq     = pg(face, 1, 4)
-    anim    = pa(seq, 1, True)
-    return face, anim
-
-def size5_sprite(img1):
-    """Generic 5-img Item Constructor. Returns Sprite objects."""
-    face    = pi(img1)
-    center_walker(face)
-    seq     = pg(face, 1, 5)
-    anim    = pa(seq, 1, True)
-    return face, anim
-
-def image_resources():
-    """Gets Pyglet image resources. Returns 3 Functions."""
-    pygresimg   = pyglet.resource.image
-    pygrid      = pyglet.image.ImageGrid
-    pyganim     = pyglet.image.Animation.from_image_sequence
-    return pygresimg, pygrid, pyganim
-pi, pg, pa = image_resources()
 
 def randomize_players(characters):
     """Randomizes starting order of player. Returns None."""
@@ -84,22 +49,24 @@ def randomize_players(characters):
 def any_movement(items, players, yammy): 
     """Checks if anything is moving. Returns Boolean."""
     movement = []
-    [movement.append(player.moving) for player in players]
-    [movement.append(item.moving) for item in items]
-#    [movement.append(yammy.inventory[0].moving) if yammy.inventory]
+    [movement.append(player.delta()) for player in players]
+    [movement.append(item.deltax()) for item in items]
+    [movement.append(item.deltay()) for item in items]
     return any(movement)
 
 def player_movement(players):
     """True if any player is moving. Returns Boolean."""
     movement = []
-    [movement.append(player.moving) for player in players]
+    [movement.append(player.delta()) for player in players]
     return any(movement)
 
 def item_movement(items, yammy):
     """True if any item is moving. Return Boolean."""
     movement = []
-    [movement.append(item.moving) for item in items]
-#    [movement.append(yammy.inventory[0].moving) if yammy.inventory]
+    [movement.append(item.deltax()) for item in items]
+    [movement.append(item.deltay()) for item in items]
+    #syntax bug?
+#    [movement.append(yammy.inventory[0].moving) if yammy.inventory] 
     return any(movement)
 
 def item_clean_up(players, black_box):
@@ -108,7 +75,7 @@ def item_clean_up(players, black_box):
     item            = player.inventory[0]
     player.inventory.remove(item)       #remove inventory
     item.delete()                       #dont need?
-    player.item     = False             #reset flag
+#    player.item     = False             #reset flag
     black_box       = False             #reset flag
 
     #show points in terminal 
@@ -167,7 +134,7 @@ def center_walker(image):
     """Centers the anchor point in the image."""
     image.anchor_x = image.width // 2
 
-def falling_item(time):
+def gravity(time):
     """Calculates y position of falling object. Returns Integer."""
     #calculates "-(1/2) * g * t^2" where g == 9.8 
     #+ and time is the accumulated time for falling.
@@ -182,10 +149,8 @@ def score_positions():
         INVENTORY_SPOT.append(TOP_ROW_SPOTS[3])
 
     #quick patch
-    for element in TOP_ROW_SPOTS[0:3]:
-        SCORE_SPOTS.append(element)
-    for element in TOP_ROW_SPOTS[4:8]:
-        SCORE_SPOTS.append(element)
+    for element in TOP_ROW_SPOTS[0:3]: SCORE_SPOTS.append(element)
+    for element in TOP_ROW_SPOTS[4:8]: SCORE_SPOTS.append(element)
 
 def player_positions():
     """Sets available player spots on screen. Returns None."""

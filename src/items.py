@@ -23,61 +23,56 @@ class Item(pyglet.sprite.Sprite):
         self.falling        = False
         self.moving         = False
         self.trans          = False
-        self.trans_dir      = "out"
-        self.special        = False
+        self.trans_dir      = False
         self.spot_x         = self.x
         self.spot_y         = self.y
         self.x_speed        = ITEM_X_SPEED
         self.y_speed        = ITEM_Y_SPEED
+        self.deltax         = lambda: self.x - self.spot_x
+        self.deltay         = lambda: self.y - self.spot_y
 
     def update(self, dt):
         if self.falling: 
             global MAIN_TIME
             MAIN_TIME += dt
             if MAIN_TIME > 5: MAIN_TIME = 0
-            self.y += falling_item(MAIN_TIME) #add gravity
-        #(current spot "x") - (where its supposed to be "spot_x")
-        self.delta_x = self.x - self.spot_x 
-        self.delta_y = self.y - self.spot_y
+            self.y += gravity(MAIN_TIME)   #gameutil.py
         self.move() 
         if self.trans: self.transition()
 
     def move(self): 
         """Moves the items closer to spot_x and spot_y. Returns None."""
-        dx = self.delta_x
-        dy = self.delta_y
-        if dx > 0: self.x -= self.x_speed
-        if dx < 0: self.x += self.x_speed
-        if dy > 0: self.y -= self.y_speed
-        if dy < 0: self.y += self.y_speed
+        dx, dy = self.deltax, self.deltay
+        self.change_pos(dx, dy)
+        self.change_img(dx, dy)
 
+    def change_pos(self, dx, dy):
+        """Shifts the item's image horizontally. Returns None."""
+        if dx() > 0: self.x -= self.x_speed
+        if dx() < 0: self.x += self.x_speed
+        if dy() > 0: self.y -= self.y_speed
+        if dy() < 0: self.y += self.y_speed
+
+    def change_img(self, dx, dy):
         #update sprite image
-        if dx != 0 and self.moving == False:
-            self.moving = True
-            if dx > 0:     self.image = self.animl 
-            elif dx < 0:   self.image = self.animr 
-        elif dx == 0:
-            self.image = self.anims
-            self.moving = False
-    
-    def toggle_transition(self):
-        """Toggles trans_dir attribute. Returns None."""
-        td = self.trans_dir
-        if td == "in":      td = "out"
-        elif td == "out":   td = "in"
+        if dx() != 0 and not self.moving:
+            self.moving = not self.moving
+            if dx() > 0:     self.image = self.animl 
+            elif dx() < 0:   self.image = self.animr 
+        elif dx() == 0:
+            self.image  = self.anims
+            self.moving = not self.moving
 
     def transition(self):
         """Disappears/Appears item. Returns None."""
-        if self.trans_dir == "in": 
-            self.opacity += ITEM_TRANSITION_SPEED 
-        elif self.trans_dir == "out":
-            self.opacity -= ITEM_TRANSITION_SPEED
+        if self.trans_dir:      self.opacity+=ITEM_TRANSITION_SPEED
+        elif self.trans_dir:    self.opacity-=ITEM_TRANSITION_SPEED
         if self.opacity >= 255:
             self.opacity = 255
-            self.trans = False
+            self.trans = not self.trans
         elif self.opacity <= 0:
             self.opacity = 0
-            self.trans = False
+            self.trans = not self.trans
 
 #Notes:
 # each item has face, sequence, and animation attributes
@@ -126,9 +121,11 @@ class PirahnaPlant(Item):
 
 class SpinyBeetle(Item): 
     """Question problem, 3rd year JHS at Bunkyo 9th. Returns None."""
-    facer, seqr, animr = sprite_con("spinybeetlegoright.png", 0.1, 2, "go")
-    facel, seql, animl = sprite_con("spinybeetlegoleft.png", 0.1, 2, "go")
-    faces, seqs, anims = sprite_con("spinybeetlegoright.png", 0.7, 2, "go")
+    facer, seqr, animr = sprite_con("spinybeetlegoright.png",0.1,2,"go")
+    facel, seql, animl = sprite_con("spinybeetlegoleft.png",0.1,2,"go")
+    faces, seqs, anims = sprite_con("spinybeetlegoright.png",0.7,2,"go")
+
+    #__init__ not needed?
     def delete(self):
         super(Item, self).delete()
 
@@ -145,9 +142,9 @@ class PowButton(Item):
 
 class Bombomb(Item):
     """Randomly mixes items. Returns None."""
-    facer, seqr, animr = sprite_con("bombombgoright.png", 0.1, 1, "go")
-    facel, seql, animl = sprite_con("bombombgoleft.png", 0.1, 1, "go")
-    faces, seqs, anims = sprite_con("bombombgoright.png", 0.6, 1, "go")
+    facer, seqr, animr = sprite_con("bombombgoright.png", 0.1, 2, "go")
+    facel, seql, animl = sprite_con("bombombgoleft.png", 0.1, 2, "go")
+    faces, seqs, anims = sprite_con("bombombgoright.png", 0.6, 2, "go")
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

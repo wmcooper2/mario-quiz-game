@@ -5,18 +5,24 @@ import pyglet
 from src.constants import *
 from src.players import *
 
+def minus_one(player):
+    """Decrease player points by one. Returns None."""
+    player[0].points -= 1
+
+def plus_one(player):
+    """Increase player points by one. Returns None."""
+    player[0].points += 1
+
 def small(char, x_pos):
     """Generic character score constructor. Returns Sprite Object."""
-    return ScoreSprite(img=char.anim, x=x_pos, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+    return ScoreSprite(img=char.animl, x=x_pos, y=SCORE_SPRITE_Y, \
+            batch=MAIN)
 
 def score_sprite(player, x):
     """Makes player score sprite. Returns Sprite object."""
-    #FireLight and BigBoo have different image resources...
     if isinstance(player, FireLight): #score-adapted
-#        tiny = ScoreSprite(img=FireLight.faceleft_seq[0], x=x, \
-        tiny = ScoreSprite(img=FireLight.anim, x=x, \
-                y=SCORE_SPRITE_Y, batch=MAIN_BATCH)
+        tiny = ScoreSprite(img=FireLight.animl, x=x, y=SCORE_SPRITE_Y, \
+                batch=MAIN)
         tiny.y -= 5
         return tiny
     elif isinstance(player, BigBoo): #score-adapted
@@ -40,25 +46,18 @@ def update_scores():
         elif abs(playerscore.points)>5:
             for element in playerscore.big: element.draw()
 
-def right_answer(players):
-    """Plus one point. Returns None."""
-    players[0].points += 1
-
-def wrong_answer(players):
-    """Minus one point. Returns None."""
-    players[0].points -= 1
 
 def setup_scores(players, spots, scores):
     """Sets up the scores in the top rows. Returns None."""
     for element in players:
-        x_pos = spots[players.index(element)]
-        sprite = score_sprite(element, x_pos)
+        x_pos   = spots[players.index(element)]
+        sprite  = score_sprite(element, x_pos)
         scores.append(sprite)
         element.point_index = scores.index(sprite)
         
 class Coin(pyglet.sprite.Sprite):
     pi, pg, pa  = image_resources()
-    coin_img    = pi("yellow_coin.png")
+    coin_img    = pi("yellowcoin.png")
     coin_seq    = pg(coin_img, 1, 3)
     image       = coin_seq[0]
 
@@ -93,7 +92,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
         self.smallskullpos  = []
         self.zero           = label(text="0", x=self.x, y=self.ypos, \
                             font_name=ENGLISH_FONT, font_size=ZERO_SIZE,\
-                            batch=MAIN_BATCH)
+                            batch=MAIN)
 
     #UPDATES
     def update(self, score_obj, player):
@@ -173,24 +172,24 @@ class ScoreSprite(pyglet.sprite.Sprite):
         """Generic big label constructor. Returns Label object."""
         return  label(text=string, x=spot, y=self.ypos, \
                 font_name=SCORE_FONT, font_size=BIG_SCORE_SIZE, \
-                batch=MAIN_BATCH)
+                batch=MAIN)
 
     def big_image(self, class_, spot):
         """Generic big image constructor. Returns Sprite object."""
-        return score.append(class_(img=class_.image, x=spot, \
-                y=self.ypos, batch=MAIN_BATCH))
+        return score.append(class_(img=class_.image, x=spot, y=self.ypos,\
+                batch=MAIN))
 
     def small_image(self, class_, list_, spot):
         """Generic small image constructor. Returns Sprite object."""
         return self.small.append(class_(img=class_.image, \
-                x=list_[spot], y=self.ypos, batch=MAIN_BATCH))
+                x=list_[spot], y=self.ypos, batch=MAIN))
 
     def big_coins(self):
         """Assembles the big score of coins. Returns None."""
-        scorespot   = self.big_pos
-        score       = self.big
+        scorespot       = self.big_pos
+        score           = self.big
         score.append(big_image(Coin))
-        score[0].scale = 1.5
+        score[0].scale  = 1.5
         score.append(self.big_label("x", scorespot[1]))
         score.append(self.big_label(str(self.points), scorespot[2]))
 
@@ -212,9 +211,9 @@ class ScoreSprite(pyglet.sprite.Sprite):
 
     def big_skulls(self):
         """Assembles score of big skulls. Returns None."""
-        scorespot   = self.big_pos
-        score       = self.big
+        scorespot       = self.big_pos
+        score           = self.big
         score.append(self.big_image(Skull))
-        score[0].scale = 1.5 
+        score[0].scale  = 1.5 
         score.append(self.big_label("x", scorespot[1]))
         score.append(self.big_label(str(abs(self.points), scorespot[2])))

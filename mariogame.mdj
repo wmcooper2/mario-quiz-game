@@ -2024,6 +2024,61 @@
 							"nameLabel": {
 								"$ref": "AAAAAAForlVnJCOnppY="
 							}
+						},
+						{
+							"_type": "DFDExternalEntityView",
+							"_id": "AAAAAAFostrtyyPYs1c=",
+							"_parent": {
+								"$ref": "AAAAAAFonipj+zC8LBk="
+							},
+							"model": {
+								"$ref": "AAAAAAFostrtyyPWC30="
+							},
+							"subViews": [
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAFostrtzCPek2U=",
+									"_parent": {
+										"$ref": "AAAAAAFostrtyyPYs1c="
+									},
+									"font": "Arial;13;0",
+									"left": 1090,
+									"top": 293,
+									"width": 87.4326171875,
+									"height": 13
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAFostrtyyPZijA=",
+									"_parent": {
+										"$ref": "AAAAAAFostrtyyPYs1c="
+									},
+									"font": "Arial;13;0",
+									"left": 1090,
+									"top": 298,
+									"width": 87.4326171875,
+									"height": 13,
+									"text": "itemeffects.py",
+									"wordWrap": true
+								},
+								{
+									"_type": "LabelView",
+									"_id": "AAAAAAFostrtyyPaUj0=",
+									"_parent": {
+										"$ref": "AAAAAAFostrtyyPYs1c="
+									},
+									"font": "Arial;13;0",
+									"height": 13
+								}
+							],
+							"font": "Arial;13;0",
+							"left": 1080,
+							"top": 288,
+							"width": 107.4326171875,
+							"height": 33,
+							"nameLabel": {
+								"$ref": "AAAAAAFostrtyyPZijA="
+							}
 						}
 					]
 				},
@@ -2678,6 +2733,14 @@
 						"$ref": "AAAAAAFonipj+zC7ZUc="
 					},
 					"name": "game.py"
+				},
+				{
+					"_type": "DFDExternalEntity",
+					"_id": "AAAAAAFostrtyyPWC30=",
+					"_parent": {
+						"$ref": "AAAAAAFonipj+zC7ZUc="
+					},
+					"name": "itemeffects.py"
 				}
 			]
 		},
