@@ -46,7 +46,6 @@ def update_scores():
         elif abs(playerscore.points)>5:
             for element in playerscore.big: element.draw()
 
-
 def setup_scores(players, spots, scores):
     """Sets up the scores in the top rows. Returns None."""
     for element in players:

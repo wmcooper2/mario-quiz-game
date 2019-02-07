@@ -13,34 +13,26 @@ def present_problem(pp, prob):
         # change the question in the problem
         # draw the guide
         # draw the question        
-    players_item = pp.inventory[0]
+    item = pp.inventory[0]
+#    prob.box.draw()
+    FLAGS["box"] = not FLAGS["box"]
+
+    if FLAGS["question"]:
+        FLAGS["question"] = not FLAGS["question"]
+        if is_eng_vocab(item):          prob.random_english_word()
+        elif is_pres_verb(item):        prob.present_tense()
+        elif is_j2e(item):              prob.target_sentence()
+        elif is_e2j(item):              prob.pronunciation()
+        elif is_pronunciation(item):    prob.question()
     prob.box.draw()
-#    S_BB = True     #set flag
-    S_BB = not S_BB
-
-    if NEW_QUESTION:
-#        NEW_QUESTION = False    #reset flag
-        NEW_QUESTION = not NEW_QUESTION
-        #simple vocab
-        if isinstance(players_item, RedMushroom):    
-            prob.random_english_word()
-        #verbs
-        elif isinstance(players_item, GreenMushroom):
-            prob.present_tense()
-        #Japanese to English translation
-        elif isinstance(players_item, PirahnaPlant):   
-            prob.target_sentence()
-        #pronunciation
-        elif isinstance(players_item, YoshiCoin):      
-            prob.pronunciation()
-        #answer the question
-        elif isinstance(players_item, SpinyBeetle):    
-            prob.question()
     prob.guide.draw()
-    prob.question.draw()
+    prob.quest.draw()
 
-#def is_question():
-
+def is_eng_vocab(item):     return isinstance(item, RedMushroom)
+def is_pres_verb(item):     return isinstance(item, GreenMushroom)
+def is_j2e(item):           return isinstance(item, PirahnaPlant)
+def is_e2j(item):           return isinstance(item, YoshiCoin)
+def is_pronunciation(item): return isinstance(item, SpinyBeetle)
 
 class Problem(pyglet.text.Label):
     pi      = pyglet.resource.image
@@ -82,10 +74,6 @@ class Problem(pyglet.text.Label):
         self.guide.text = choice 
         self.quest.text = self.data.japanese_word() 
     
-#    def random_image(self):
-#        """Chooses a random word. Returns None."""
-#        self.quest.text = "image word" 
-
     def present_tense(self):
         """Chooses random present tense verb. Returns None."""
         self.guide.font_name = ENGLISH_FONT
@@ -118,6 +106,7 @@ class Problem(pyglet.text.Label):
 
     def pronunciation(self):
         """Chooses word difficult to pronuounce word. Returns None."""
+        #problems displaying japanese characters in pyglet
 #        self.guide.font_name = JAPANESE_FONT
 #        self.guide.text = "発音練習"
         self.guide.font_name = ENGLISH_FONT

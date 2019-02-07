@@ -10,11 +10,36 @@ import pyglet
 from src.constants import *
 from src.gameutil import *
 
+def update_players(dt):
+    """Updates the players. Returns None."""
+    for player in PLAYERS:
+        player_location(player, dt)
+        player_score(player)
+        player_inventory(player, dt)
+
+def player_location(player, dt):
+    """Updates player's location. Returns None."""
+    player.spot = PLAYER_SPOTS[PLAYERS.index(player)]
+    player.update(dt)
+
+def player_score(player):
+    """Updates player's score. Returns None."""
+    score_points = SCORES[player.point_index].points
+    score_object = SCORES[player.point_index]
+    if player.points != score_points:
+        score_object.update(score_object, player) 
+
+def player_inventory(player, dt):
+    """Updates player's item. Returns None."""
+    items = player.inventory
+    if items:
+        items[0].update(dt)
+        items[0].transition()
+
 class Player(pyglet.sprite.Sprite):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.inventory  = []
-#        self.item       = False     #check gameutil.py, item_clean_up()
         self.points     = 0
         self.point_index= 0
         self.spot       = self.x    #starts off screen, right 
@@ -22,11 +47,11 @@ class Player(pyglet.sprite.Sprite):
 
     def update(self, dt):
         self.move()
-        self.take_item()
+        self.take()
 
-    def take_item(self):
+    def take(self):
         """Sets player's item to player's pos. Returns None."""
-        if self.inventory: self.inventory[0].y = self.height
+        if self.inventory: self.inventory[0].y = self.height//2
 
     def move(self):
         """Walks the player left or right. Returns None."""
@@ -121,61 +146,54 @@ class Yammy(pyglet.sprite.Sprite):
         super().__init__(*args, **kwargs)
         self.inventory      = []
         self.trans          = False
-        self.trans_dir      = False
+        self.trans_dir      = False #False = disappear
         self.trans_rate     = 3
         self.victim         = "" 
 
     def update(self, dt):
         """Yammy's main update loop. Returns None."""
         if self.trans: self.transition()
-        self.give_item()
         items = self.inventory
-        if items:                     #only if len() > 0
-            items[0].update(dt)       #update the item
-            items[0].transition()     #transition the item
+        if items:
+            self.give_item()    #transfer
+            if items:           #if transfer not complete
+                items[0].update(dt)      #important
+                items[0].transition()    #important
 
     def give_item(self):
         """Gives an item to a player. Returns String."""
-        if self.inventory:
-            item = self.inventory[0]
-            if item.opacity == 0 and item.delta_y == 0:
-                item.spot_x     = self.victim.spot
-                item.x          = self.victim.spot
-                item.falling    = not item.falling
-                item.trans_dir  = not item.trans_dir
-                item.trans      = not item.trans
-            if item.y <= self.victim.y:
-                item.falling    = not item.falling
-                self.victim.inventory.append(item)  #give item
-                self.inventory.remove(item)         #remove item
+        item            = self.inventory[0]
+#        transfer_point  = self.victim.y//2
+        if item.opacity == 0 and item.delta_y == 0:
+            item.spot_x     = self.victim.spot
+            item.x          = self.victim.spot
+            item.falling    = not item.falling
+            item.trans_dir  = not item.trans_dir
+            item.trans      = not item.trans
+        if item.y <= self.victim.y:
+#        if item.y <= transfer_point:
+#            item.y = transfer_point
+            item.falling    = not item.falling
+            self.victim.inventory.append(item)  #give item
+            self.inventory.remove(item)         #remove item
 
     def transition(self):
         """Toggles fading animation. Returns None."""
         td, tr = self.trans_dir, self.trans_rate
-        if td:          self.opacity += tr
-        elif not td:    self.opacity -= tr
+        if td:          self.opacity += tr  #appear
+        elif not td:    self.opacity -= tr  #disappear
         if self.opacity >= 255:
-            self.opacity = 255 
-            self.trans = not self.trans
+            self.opacity    = 255 
+            self.trans      = not self.trans
         elif self.opacity <= 0:
-            self.opacity = 0
-            self.trans = not self.trans
+            self.opacity    = 0
+            self.trans      = not self.trans
 
-    #item
-    def transition_out(self):
-        """Fades first inventory item out. Returns None."""
-        self.inventory[0].opacity -=1
-
-    #item
-    def transition_in(self):
-        """Fades first inventory item in. Returns None."""
-        self.inventory[0].opacity += 1
-
-    def wave_wand(self):
+    def wand(self):
         """Yammy waves his magic wand. Returns None."""
         self.image = self.action_right_anim
 
-    def take_item(self, item):
+    def take(self, item):
         """Adds item to Yammy's inventory. Returns None."""
         self.inventory.append(item)
 

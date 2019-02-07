@@ -1,6 +1,7 @@
+import math
+from pathlib import Path
 import pyglet
 from pyglet.window import key
-import math
 
 #GAME PLAY SETTINGS
 DIFFICULTY      = "superhard" #supereasy, easy, medium, hard, superhard
@@ -85,19 +86,31 @@ ITEM_Y_SPEED            = 1
 
 #FLAGS
 #QUESTION_BLOCK_EFFECT   = False
-BOMBOMB_EFFECT          = False
-POW_BUTTON_EFFECT       = False
-#SPINY_BEETLE_EFFECT     = False
+#BOMBOMB_EFFECT          = False
+#DEBUG                   = False
 #GREEN_MUSHROOM_EFFECT   = False
-#RED_MUSHROOM_EFFECT     = False
 #PIRAHNA_PLANT_EFFECT    = False
+#POW_BUTTON_EFFECT       = False
+#RED_MUSHROOM_EFFECT     = False
+#SPINY_BEETLE_EFFECT     = False
 #YOSHI_COIN_EFFECT       = False
-FEATHER_EFFECT          = False
-STAR_EFFECT             = False
+#FEATHER_EFFECT          = False
+#STAR_EFFECT             = False
 #PLAYERS_RANDOMIZED      = False    #delete
-S_BB                    = False     #show black box
-MIXING_PLAYER_SPOTS     = False
-NEW_QUESTION            = True
+#S_BB                    = False     #show black box
+#NEW_QUESTION            = True
+FLAGS = {
+    "beetle"    : False,
+    "bombomb"   : False,
+    "box"       : False,
+    "coin"      : False,
+    "debug"     : False,
+    "g_mush"    : False,
+    "pirahna"   : False,
+    "pow"       : False,
+    "question"  : False,
+    "r_mush"    : False,
+    }
 
 FRAME_SPEED     = 1/90
 MAIN_TIME       = 0
@@ -121,7 +134,9 @@ SCREEN_WIDTH        = GAME_WINDOW.width
 SCREEN_HEIGHT       = GAME_WINDOW.height
 SCORE_SPRITE_Y      = SCREEN_HEIGHT - 36
 
+#doesnt work, use the built in resource thing
+#IMGS                = str(Path.cwd())+"/resources/"
+#FIRELIGHT_R         = IMGS+"firelightgoright.png"
+#FIRELIGHT_L         = IMGS+"firelightgoleft.png"
 
-#debugging values
-DEBUG               = False
-#DEBUG               = True
+

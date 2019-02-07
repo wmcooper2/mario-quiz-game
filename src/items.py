@@ -9,7 +9,7 @@ from src.constants import *
 from src.gameutil import *
 from src.itemeffects import *
 
-def update_item_pos(items, dt):
+def update_items(items, dt):
     """Updates item positions on screen. Returns None."""
     for item in items:
         item.spot_x = ITEM_SPOTS[items.index(item)]
@@ -23,11 +23,12 @@ class Item(pyglet.sprite.Sprite):
         self.falling        = False
         self.moving         = False
         self.trans          = False
-        self.trans_dir      = False
+        self.trans_dir      = True  #False = disappear
         self.spot_x         = self.x
         self.spot_y         = self.y
         self.x_speed        = ITEM_X_SPEED
         self.y_speed        = ITEM_Y_SPEED
+
         self.deltax         = lambda: self.x - self.spot_x
         self.deltay         = lambda: self.y - self.spot_y
 
@@ -39,6 +40,17 @@ class Item(pyglet.sprite.Sprite):
             self.y += gravity(MAIN_TIME)   #gameutil.py
         self.move() 
         if self.trans: self.transition()
+
+    def transition(self):
+        """Disappears/Appears item. Returns None."""
+        if self.trans_dir:  self.opacity+=ITEM_TRANSITION_SPEED
+        else:               self.opacity-=ITEM_TRANSITION_SPEED
+        if self.opacity >= 255:
+            self.opacity    = 255
+            self.trans      = not self.trans
+        elif self.opacity <= 0:
+            self.opacity    = 0
+            self.trans      = not self.trans
 
     def move(self): 
         """Moves the items closer to spot_x and spot_y. Returns None."""
@@ -62,17 +74,6 @@ class Item(pyglet.sprite.Sprite):
         elif dx() == 0:
             self.image  = self.anims
             self.moving = not self.moving
-
-    def transition(self):
-        """Disappears/Appears item. Returns None."""
-        if self.trans_dir:      self.opacity+=ITEM_TRANSITION_SPEED
-        elif self.trans_dir:    self.opacity-=ITEM_TRANSITION_SPEED
-        if self.opacity >= 255:
-            self.opacity = 255
-            self.trans = not self.trans
-        elif self.opacity <= 0:
-            self.opacity = 0
-            self.trans = not self.trans
 
 #Notes:
 # each item has face, sequence, and animation attributes
