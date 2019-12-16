@@ -7,8 +7,8 @@ from math import sin, radians
 import pyglet
 
 #custom
-from src.constants import *
-from src.gameutil import *
+from constants import *
+from gameutil import *
 
 def update_players(dt):
     """Updates the players. Returns None."""

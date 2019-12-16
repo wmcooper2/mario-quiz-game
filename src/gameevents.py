@@ -1,5 +1,5 @@
 
-from src.constants import *
+from constants import *
 
 def update(DT):
     """Game update loop. Returns None."""

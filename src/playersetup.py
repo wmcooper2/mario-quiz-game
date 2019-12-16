@@ -2,8 +2,8 @@
 import pyglet
 
 #custom
-from src.constants import *
-from src.players import *
+from constants import *
+from players import *
 
 def floating(char):
     """Generic floating character constructor. Returns Player object."""

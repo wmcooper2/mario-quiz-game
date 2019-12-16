@@ -12,7 +12,7 @@ from gamedata.pronunciation import *
 from gamedata.targetsentences import *
 from gamedata.targetsentencesjapanese import *
 from gamedata.verbforms import *
-from src.constants import *
+from constants import *
 
 class Data():
     """Creates instance of chosen dictionary. Returns none."""

@@ -2,7 +2,7 @@
 import random
 
 #custom
-from src.constants import *
+from constants import *
 
 #VARIABLES DECLARED HERE
 #pi, pg, pa = image_resources()

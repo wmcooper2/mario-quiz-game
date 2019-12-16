@@ -11,18 +11,18 @@ import sys
 import pyglet
 from pyglet import clock
 from pyglet.window import key
-pyglet.resource.path = ["./resources"]  #dont move this
+pyglet.resource.path = ["../resources"]  #dont move this
 pyglet.resource.reindex()               #dont move this
 
 #custom
-from src.constants import *
-from src.gameutil import *
-from src.itemsetup import *
-from src.players import *
-from src.playersetup import *
-from src.playerscores import *
-from src.problems import *
-from src.items import *     #must come after players import
+from constants import *
+from gameutil import *
+from itemsetup import *
+from players import *
+from playersetup import *
+from playerscores import *
+from problems import *
+from items import *     #must come after players import
 
 BACKGROUND = Background(img=Background.background_img, batch=MAIN)
 

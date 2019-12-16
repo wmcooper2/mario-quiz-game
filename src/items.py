@@ -5,9 +5,9 @@ import math
 import pyglet
 
 #custom
-from src.constants import *
-from src.gameutil import *
-from src.itemeffects import *
+from constants import *
+from gameutil import *
+from itemeffects import *
 
 def update_items(items, dt):
     """Updates item positions on screen. Returns None."""

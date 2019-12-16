@@ -2,8 +2,8 @@
 import pyglet
 
 #custom
-from src.constants import *
-import src.temporarydatasolution as tds
+from constants import *
+import temporarydatasolution as tds
 
 def present_problem(pp, prob):
     """Presents a problem on the screen. Returns None."""

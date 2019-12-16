@@ -1,6 +1,6 @@
 #custom
-from src.constants import *
-from src.gameutil import item_clean_up
+from constants import *
+from gameutil import item_clean_up
 
 def bombomb_effect():
     mix_items()

@@ -5,8 +5,8 @@ import random
 import pyglet
 
 #custom
-from src.constants import *
-from src.items import *
+from constants import *
+from items import *
 
 def setup_items(num):
     """Sets up 'num' items on the platform. Returns None."""
