@@ -2,8 +2,8 @@
 import pyglet
 
 #custom
-from constants import *
-from players import *
+# from constants import *
+# from players import *
 
 def minus_one(player):
     """Decrease player points by one. Returns None."""
