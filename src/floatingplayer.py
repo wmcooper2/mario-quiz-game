@@ -4,11 +4,13 @@ from player import Player
 
 
 class FloatingPlayer(Player):
-    def __init__(self, img, go_right_img, go_left_img, *args, **kwargs):
+    def __init__(self, img, go_right_img, go_left_img, rest_images, anim_images, name, *args, **kwargs):
+
         # center images before passing along to super
         self._center_floater(go_right_img)
         self._center_floater(go_left_img)
-        super().__init__(img, go_right_img, go_left_img, *args, **kwargs)
+        super().__init__(img, go_right_img, go_left_img,
+                         rest_images, anim_images, name, *args, **kwargs)
         self.float_deg = 0
         self.float_height = 0
         self.float_speed = 3
@@ -41,7 +43,10 @@ class FloatingPlayer(Player):
         elif diff < 0:
             self.image = self.go_right
         elif diff == 0:
-            self.image = self.go_left
+            if self.name == "Big Boo":
+                self.image = self.img
+            else:
+                self.image = self.go_left
 
     def update(self):
         self._float()

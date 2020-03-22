@@ -1,107 +1,90 @@
-#!/usr/bin/env python3
+# 3rd party
+from sharedconstants import main_batch
+from setup import players
+from gameutil import randomize_players, calculate_player_starting_pos
+import pyglet
+from tabulate import tabulate
+"""Main file for the Mario quiz game."""
+clock = pyglet.clock
+key = pyglet.window.key
+
+# for image setup
+# read, https://pyglet.readthedocs.io/en/latest/modules/resource.html#pyglet.resource.reindex
+pyglet.resource.reindex()
+
 # from constants import *
-# from gameutil import *
 # from itemsetup import *
 # from playerscores import *
 # from problems import *
 # from items import *  # must come after players import
-from background import Background
-# from yammy import Yammy
-from floatingplayer import FloatingPlayer
-from walkingplayer import WalkingPlayer
+# from background import Background
 
 
-# 3rd party
-import pyglet
-
-"""Main file for the Mario quiz game."""
-clock = pyglet.clock
-key = pyglet.window.key
-# from pyglet import clock
-# from pyglet.window import key
-pyglet.resource.path = ["./images"]  # dont move this
-pyglet.resource.reindex()  # dont move this
-
-
-FRAME_SPEED = 1/90
+FRAME_SPEED: float = 1/90
 GAME_WINDOW = pyglet.window.Window(1000, 563)
-SCREEN_WIDTH = GAME_WINDOW.width
-SCREEN_HEIGHT = GAME_WINDOW.height
-SCORE_SPRITE_Y = SCREEN_HEIGHT - 36
-MAIN = pyglet.graphics.Batch()
+SCREEN_WIDTH: int = GAME_WINDOW.width
+SCREEN_HEIGHT: int = GAME_WINDOW.height
+SCORE_SPRITE_Y: int = SCREEN_HEIGHT - 36
 key_handler = key.KeyStateHandler()
 GAME_WINDOW.push_handlers(key_handler)
-background_img = pyglet.resource.image("quiz1.png")
-BACKGROUND = Background(img=background_img, batch=MAIN)
-
-YAMMY_PLATFORM_H = 264
-YAMMY_X = 30
-OFF_SCREEN_RIGHT = 600
-OFF_SCREEN_LEFT = -100
-FLOAT_HEIGHT = 100
-FLOAT_SPEED = 3
-GROUND_HEIGHT = 63
+DEBUG = True
 
 
 @GAME_WINDOW.event
 def on_draw():
     """Draw the visual elements. Returns None."""
     GAME_WINDOW.clear()
-    MAIN.draw()
-
-
-# PLAYER SETUP
-# sprite image setup
-# yammy_img = pyglet.resource.image("yammyfaceright.png")
-# yammy_img = pyglet.image.load("yammyfaceright.png").get_texture()
-fire_light_img = pyglet.resource.image("firelightgoleft.png")
-fire_light_go_right = pyglet.resource.image("firelightgoright.png")
-fire_light_go_left = pyglet.resource.image("firelightgoleft.png")
-
-boo_img = pyglet.resource.image("bigboofaceleft.png")
-boo_go_right = pyglet.resource.image("bigboogoright.png")
-boo_go_left = pyglet.resource.image("bigboogoleft.png")
-
-mole_img = pyglet.resource.image("bigmolefaceleft.png")
-mole_go_right = pyglet.resource.image("bigmolegoright.png")
-mole_go_left = pyglet.resource.image("bigmolegoleft.png")
-
-
-dragon_img = pyglet.resource.image("dragonfaceleft.png")
-dragon_go_right = pyglet.resource.image("dragongoright.png")
-dragon_go_left = pyglet.resource.image("dragongoleft.png")
-
-
-# yammy = Yammy(yammy_img, x=YAMMY_X, y=YAMMY_PLATFORM_H, batch=MAIN)
-# f2 = FireLight()
-# print("f2: ", f2)
-fire_light = FloatingPlayer(fire_light_img, fire_light_go_right,
-                            fire_light_go_left, x=100, y=FLOAT_HEIGHT, batch=MAIN)
-boo = FloatingPlayer(boo_img, boo_go_right,
-                     boo_go_left, x=200, y=FLOAT_HEIGHT, batch=MAIN)
-mole = WalkingPlayer(mole_img, mole_go_right, mole_go_left,
-                     x=300, y=GROUND_HEIGHT, batch=MAIN)
-dragon = WalkingPlayer(dragon_img, dragon_go_right, dragon_go_left,
-                       x=400, y=GROUND_HEIGHT, batch=MAIN)
-
+    main_batch.draw()
 
 # this is for shuffling the order and for the update loop
-# characters are drawn through the batch=MAIN kwargs
-PLAYERS = [fire_light, boo, mole, dragon]
+# characters are drawn through the batch=main_batch kwargs
+# players = [fire_light, boo, mole, dragon, koopa, luigi, mario]
 # PLAYER_SPOTS = []
 
-# randomize_players(characters)                 # gameutil.py
-# player_positions()                            # gameutil.py
+
+# initial random order
+# gameutil.py
+starting_orders = randomize_players(players)
+if DEBUG:
+    orders = []
+    for player in starting_orders:
+        orders.append([starting_orders.index(player), player.name, id(player), player])
+    print(tabulate(orders, ["random starting order", "name", "object id", "object"]))
+    print()
+
+# replace original player order from loading instances with randomized starting order
+players = starting_orders
+
+# gameutil.py
+player_screen_positions = calculate_player_starting_pos(
+    players, SCREEN_WIDTH)
+# print("player_screen_positions: ", player_screen_positions)
+# assign players to screen positions
+for player in players:
+    index = players.index(player)
+    new_position = player_screen_positions[index]
+    player.spot_in_line = new_position
+
+if DEBUG:
+    orders = []
+    for player in players:
+        orders.append(
+            [players.index(player), player.spot_in_line, player.name, id(player), player])
+    print(tabulate(orders, ["current order",
+                            "x-pixels", "name", "object id", "object"]))
+    print()
+
+
 # all_items = setup_items(NUM_ITEMS)            # itemsetup.py
 # item_positions(all_items)                     # gameutil.py
 # score_positions()                             # gameutil.py
-# setup_scores(PLAYERS, SCORE_SPOTS, SCORES)    # playerscores.py
+# setup_scores(players, SCORE_SPOTS, SCORES)    # playerscores.py
 # prob = Problem()                              # problems.py
 
 
 # def update_x_pos(player, DT):
 # """Updates player's x-position. Returns None."""
-# player.spot = PLAYER_SPOTS[PLAYERS.index(player)]
+# player.spot_in_line = PLAYER_SPOTS[players.index(player)]
 # player.update(DT)
 
 
@@ -128,14 +111,14 @@ def update(DT):
     # big_boo.update()
     # big_mole.update()
 
-    for player in PLAYERS:
+    for player in players:
         # update_x_pos(player, DT)
         # player_score(player)
         # player_inventory(player, DT)
         player.update()
 
 
-# pp = PLAYERS
+# pp = players
 # readyplayer = pp[0]
 # pprint(FLAGS)
 # if readyplayer.inventory:
@@ -144,7 +127,7 @@ def update(DT):
 # if FLAGS["bombomb"]:
 # print("BANG!")
 
-# update PLAYERS
+# update players
 # update_players(DT)
 # [player.float() for player in floaters]
 # update_items(all_items, DT)  # items.py

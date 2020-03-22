@@ -1,24 +1,21 @@
 # stand lib
+import copy
 import random
+from typing import Any, List
 
 # 3rd party
 import pyglet
 
-# custom
-from constants import *
 
-
-def randomize_players(characters):
+def randomize_players(players: List[Any]) -> List[Any]:
     """Randomizes starting order of player. Returns None."""
-    players = []
-    lineup = characters[:]
-    for x in range(NUM_PLAYERS):
-        new = random.choice(lineup)
-        players.append(new)
-        lineup.remove(new)
-    [PLAYERS.append(p) for p in players]
-
-# dont change this, creates a weird bug if you do.
+    new_order = []
+    lineup = players.copy()
+    for player in range(len(players)):
+        choice = random.choice(lineup)
+        new_order.append(choice)
+        lineup.remove(choice)
+    return new_order
 
 
 def any_movement(items, players, yammy):
@@ -133,15 +130,17 @@ def score_positions():
         SCORE_SPOTS.append(element)
 
 
-def player_positions():
-    """Sets available player spots on screen. Returns None."""
-    for place in range(NUM_PLAYERS):
-        if len(PLAYER_SPOTS) == 0:
-            first_spot = (SCREEN_WIDTH // 2)-150
-            PLAYER_SPOTS.append(first_spot)
+def calculate_player_starting_pos(players: List[Any], screen_w: int) -> List[int]:
+    """Calculates available player 'x' spots on screen. Returns List of positions."""
+    player_screen_positions = []
+    for index in range(len(players)):
+        if len(player_screen_positions) == 0:
+            first_position = (screen_w // 2)-150
+            player_screen_positions.append(first_position)
         else:
-            next_spot = (SCREEN_WIDTH // 2)-150+(100*place)
-            PLAYER_SPOTS.append(next_spot)
+            next_position = (screen_w // 2)-150+(100*index)
+            player_screen_positions.append(next_position)
+    return player_screen_positions
 
 
 def item_positions(items):

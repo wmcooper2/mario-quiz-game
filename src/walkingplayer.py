@@ -3,10 +3,11 @@ from player import Player
 
 
 class WalkingPlayer(Player):
-    def __init__(self, img, go_right_img, go_left_img, *args, **kwargs):
+    def __init__(self, img, go_right_img, go_left_img, rest_images, anim_images, name, *args, **kwargs):
         self._center_walker(go_right_img)
         self._center_walker(go_left_img)
-        super().__init__(img, go_right_img, go_left_img, *args, **kwargs)
+        super().__init__(img, go_right_img, go_left_img,
+                         rest_images, anim_images, name, *args, **kwargs)
 
     def _center_walker(self, image):
         """Centers the anchor point in the image."""
@@ -21,8 +22,8 @@ class WalkingPlayer(Player):
         """
         diff = self._pos_delta()
         if diff > 0:
-            self.image = self.act_anim_left
+            self.image = self.go_left
         elif diff < 0:
-            self.image = self.act_anim_right
+            self.image = self.go_right
         elif diff == 0:
             self.image = self.look_left

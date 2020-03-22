@@ -2,6 +2,7 @@
 from enum import Enum, auto
 import math
 from pathlib import Path
+from typing import Dict, Text
 
 # 3rd party
 import pyglet
