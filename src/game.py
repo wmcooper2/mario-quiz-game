@@ -7,10 +7,8 @@
 # from items import *  # must come after players import
 from background import Background
 # from yammy import Yammy
-from firelight import FireLight
-# from bigboo import BigBoo
-# from bigmole import BigMole
-# from dragon import Dragon
+from floatingplayer import FloatingPlayer
+from walkingplayer import WalkingPlayer
 
 
 # 3rd party
@@ -59,21 +57,37 @@ def on_draw():
 fire_light_img = pyglet.resource.image("firelightgoleft.png")
 fire_light_go_right = pyglet.resource.image("firelightgoright.png")
 fire_light_go_left = pyglet.resource.image("firelightgoleft.png")
-# boo_img = pyglet.resource.image("bigboofaceleft.png")
-# mole_img = pyglet.resource.image("bigmolefaceleft.png")
-# dragon_img = pyglet.resource.image("dragonfaceleft.png")
+
+boo_img = pyglet.resource.image("bigboofaceleft.png")
+boo_go_right = pyglet.resource.image("bigboogoright.png")
+boo_go_left = pyglet.resource.image("bigboogoleft.png")
+
+mole_img = pyglet.resource.image("bigmolefaceleft.png")
+mole_go_right = pyglet.resource.image("bigmolegoright.png")
+mole_go_left = pyglet.resource.image("bigmolegoleft.png")
+
+
+dragon_img = pyglet.resource.image("dragonfaceleft.png")
+dragon_go_right = pyglet.resource.image("dragongoright.png")
+dragon_go_left = pyglet.resource.image("dragongoleft.png")
+
 
 # yammy = Yammy(yammy_img, x=YAMMY_X, y=YAMMY_PLATFORM_H, batch=MAIN)
 # f2 = FireLight()
 # print("f2: ", f2)
-fire_light = FireLight(fire_light_img, fire_light_go_right,
-                       fire_light_go_left, x=100, y=FLOAT_HEIGHT, batch=MAIN)
-# big_boo = BigBoo(boo_img, x=200, y=FLOAT_HEIGHT, batch=MAIN)
-# big_mole = BigMole(mole_img, x=300, y=GROUND_HEIGHT, batch=MAIN)
-# dragon = Dragon(dragon_img, x=400, y=GROUND_HEIGHT, batch=MAIN)
+fire_light = FloatingPlayer(fire_light_img, fire_light_go_right,
+                            fire_light_go_left, x=100, y=FLOAT_HEIGHT, batch=MAIN)
+boo = FloatingPlayer(boo_img, boo_go_right,
+                     boo_go_left, x=200, y=FLOAT_HEIGHT, batch=MAIN)
+mole = WalkingPlayer(mole_img, mole_go_right, mole_go_left,
+                     x=300, y=GROUND_HEIGHT, batch=MAIN)
+dragon = WalkingPlayer(dragon_img, dragon_go_right, dragon_go_left,
+                       x=400, y=GROUND_HEIGHT, batch=MAIN)
 
 
-# PLAYERS = [fire_light, big_boo]
+# this is for shuffling the order and for the update loop
+# characters are drawn through the batch=MAIN kwargs
+PLAYERS = [fire_light, boo, mole, dragon]
 # PLAYER_SPOTS = []
 
 # randomize_players(characters)                 # gameutil.py
@@ -110,15 +124,15 @@ fire_light = FireLight(fire_light_img, fire_light_go_right,
 def update(DT):
     """Game update loop. Returns None."""
     # yammy.update(DT)
-    fire_light.update()
+    # fire_light.update()
     # big_boo.update()
     # big_mole.update()
 
-    # for player in PLAYERS:
-    # update_x_pos(player, DT)
-    # player_score(player)
-    # player_inventory(player, DT)
-    # player.update()
+    for player in PLAYERS:
+        # update_x_pos(player, DT)
+        # player_score(player)
+        # player_inventory(player, DT)
+        player.update()
 
 
 # pp = PLAYERS

@@ -1,14 +1,16 @@
-from math import sin, radians
 import pyglet
-from floatingplayer import FloatingPlayer
+from player import Player
 
 
-class FireLight(FloatingPlayer):
+class WalkingPlayer(Player):
     def __init__(self, img, go_right_img, go_left_img, *args, **kwargs):
-        # print("FireLight() args: ", args)
-        # print("FireLight() kwargs: ", kwargs)
-        # print("FireLight() args: ", self.__dict__)
+        self._center_walker(go_right_img)
+        self._center_walker(go_left_img)
         super().__init__(img, go_right_img, go_left_img, *args, **kwargs)
+
+    def _center_walker(self, image):
+        """Centers the anchor point in the image."""
+        image.anchor_x = image.width // 2
 
     def _update_img(self) -> None:
         """Changes sprite's image depending on which direction it is going. Returns None.
@@ -19,14 +21,8 @@ class FireLight(FloatingPlayer):
         """
         diff = self._pos_delta()
         if diff > 0:
-            self.image = self.go_left
+            self.image = self.act_anim_left
         elif diff < 0:
-            self.image = self.go_right
+            self.image = self.act_anim_right
         elif diff == 0:
-            self.image = self.go_left
-
-    def update(self):
-        self._update_img()
-        self._update_pos()
-        self._float()
-        # self._take()
+            self.image = self.look_left
