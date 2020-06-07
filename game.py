@@ -122,7 +122,7 @@ def on_draw():
 
     #top row scores
     for score in SCORE_DISPLAY:
-        if score.points is 0:
+        if score.points == 0:
             score.zero.draw()
         elif abs(score.points) > 0 and abs(score.points) <= 5:
             for element in score.small_score:
