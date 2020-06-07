@@ -46,6 +46,8 @@ score_positions()                           #gameutil.py
 setup_scores(PLAYERS, SCORE_SPOTS, SCORES)  #playerscores.py
 prob = Problem()                            #problems.py
 
+# make sure that everything loaded properly at this point, before entering the game loop
+
 @GAME_WINDOW.event
 def on_draw():
     """Draw the visual elements. Returns None."""
