@@ -1,15 +1,21 @@
-import util
-import pyglet
+#std lib
 import random
+
+#3rd party
+import pyglet
+# from pyglet import clock
+from pyglet.window import key
+
+#custom
+import util
 import players #not needed?
 import problems
 import items #must come after players (resource mod is defined in players... move to main?) #not needed?
 import playersetup
 import playerscores
-import constants
-from constants import *
-from itemsetup import *
-from pyglet import clock
+from constants import constants as c
+from itemsetup import new_item
+
 
 #setup player containers 
 all_players = []            #the initial order of players hard-coded below, and the order of scores at the top.
@@ -19,7 +25,7 @@ walking_players = []
 floating_players = []
 
 #background
-background = players.Background(img = players.Background.background_img, batch = main_batch)
+background = players.Background(img=players.Background.background_img, batch=c.MAIN_BATCH)
 
 #player setup
 yammy = playersetup.make_yammy()
@@ -48,14 +54,18 @@ walking_players.append(big_mole)
 walking_players.append(mario)
 walking_players.append(luigi)
 
+#PROBLEM
+PROB = problems.Problem
+VBB = PROB.BLACK_BOX
+
 #this random player selection assumes that the players dont want to choose their characters.
 def randomize_players():
     """Randomizes the starting order of the player line up. Returns None."""
-    if players.Player.randomized == False:
-        players.Player.randomized = True
+    if c.RANDOMIZED == False:
+        c.RANDOMIZED = True
         random_players = []
         copy = all_players[:]
-        for x in range(NUM_PLAYERS):
+        for x in range(c.NUM_PLAYERS):
             player_choice = random.choice(copy)
             random_players.append(player_choice)
             copy.remove(player_choice)
@@ -63,105 +73,29 @@ def randomize_players():
             playing_players.append(player) 
 randomize_players()
 
-#setup items 
-all_items = []                  #global #new items added with new_item() and the for-loop below it. 
-falling_item = []
-for item in range(NUM_ITEMS):
-    all_items.append(new_item())
-
-#line setups
-lines = util.Line(screen_w = SCREEN_W, num_players = NUM_PLAYERS, num_items = NUM_ITEMS)
-lines.line_up()                                             #player line up
-lines.item_line_up(all_items)                               #item line up
-lines.top_row_line_up()                                     #for scores and item at top of game_window
-player_spots = lines.player_spots                           #at players platform
-item_spots = lines.item_spots                               #at item platform
-score_spots = lines.score_spots                             #at top of game_window
-inventory_spot = lines.inventory_spot                       #at top center of game_window
-
-#score setup, relies on playerscores.py
-for player in playing_players:
-    score_x = score_spots[playing_players.index(player)]
-    score_sprite = playerscores.make_sprite(player, score_x)
-    score_display.append(score_sprite) 
-    player.point_index = score_display.index(score_sprite) 
-
-@game_window.event
-def on_draw():
-<<<<<<< HEAD
-    """Draw the visual elements. Returns None."""
-    global NEW_QUESTION
-
-    GAME_WINDOW.clear()
-    MAIN_BATCH.draw()
-    pp = players[0]
-
-    if pp.has_item():
-        # basic pattern:
-            # draw the black box
-            # change the guide
-            # change the question in the problem
-            # draw the guide
-            # draw the question        
-        players_item = pp.inventory[0]
-        prob.black_box.draw()
-        S_BB = True     #set flag
-
-        if NEW_QUESTION:
-            NEW_QUESTION = False    #reset flag
-            #simple vocab
-            if isinstance(players_item, RedMushroom):    
-                prob.random_english_word()
-            #verbs
-            if isinstance(players_item, GreenMushroom):  
-                prob.random_present_verb()
-            #Japanese to English translation
-            if isinstance(players_item, PirahnaPlant):   
-                prob.random_target_sentence()
-            #pronunciation
-            if isinstance(players_item, YoshiCoin):      
-                prob.random_pronunciation()
-            #answer the question
-            if isinstance(players_item, SpinyBeetle):    
-                prob.random_question()
-        prob.guide.draw()
-        prob.question.draw()
-
-    #top row scores
-    for score in SCORE_DISPLAY:
-        if score.points == 0:
-            score.zero.draw()
-        elif abs(score.points) > 0 and abs(score.points) <= 5:
-            for element in score.small_score:
-                element.draw()
-        elif abs(score.points) > 5:
-            for element in score.big_score:
-                element.draw()
-
 def update(DT):
-=======
     game_window.clear()
-    main_batch.draw()
+    c.MAIN_BATCH.draw()
     player = playing_players[0]
     
     #show the problem
-    if problems.showing_black_box: 
-        problems.Problem.vocab_black_box.draw()#mixing the different ways methods from different classes are called...           
+    if c.SHOWING_BLACK_BOX: 
+        VBB.draw()#mixing the different ways methods from different classes are called...           
         player.inventory[0].problem.question.draw() #change so that it doesnt go through the item instance, but goes directly to the class attribute
 
         #question guides
-        if player.has_item() and problems.showing_black_box: 
+        if player.has_item() and c.SHOWING_BLACK_BOX: 
             players_item = player.inventory[0]
             if isinstance(players_item, items.RedMushroom):    #simple vocab
-                problems.Problem.english_vocab_guide.draw()
-            if isinstance(players_item, items.GreenMushroom):  #verbs
-                problems.Problem.present_verb_guide.draw()
-            if isinstance(players_item, items.PirahnaPlant):   #J -> E translation
-                problems.Problem.english_sentence_guide.draw() 
-            if isinstance(players_item, items.YoshiCoin):      #pronunciation
-                problems.Problem.pronunciation_guide.draw()
-            if isinstance(players_item, items.SpinyBeetle):    #answer the question
-                problems.Problem.answer_my_question_guide.draw()
+                PROB.english_vocab_guide.draw()
+            elif isinstance(players_item, items.GreenMushroom):  #verbs
+                PROB.present_verb_guide.draw()
+            elif isinstance(players_item, items.PirahnaPlant):   #J -> E translation
+                PROB.english_sentence_guide.draw() 
+            elif isinstance(players_item, items.YoshiCoin):      #pronunciation
+                PROB.pronunciation_guide.draw()
+            elif isinstance(players_item, items.SpinyBeetle):    #answer the question
+                PROB.answer_my_question_guide.draw()
 
     #I dont know what this block does
 #    for score in score_display:
@@ -172,7 +106,6 @@ def update(DT):
 #            score.zero.draw()
 
 def update(dt):
->>>>>>> 2d3974084beb5ebcd98a8751d4019ac7f5604158
     """Game update loop. Returns None."""
     #non-question effects go below this comment.
     if items.bombomb_effect:                                    #mix items
@@ -205,7 +138,7 @@ def update(dt):
         player.update(dt)
 
         #player automatically uses item
-        if player.has_item() and problems.showing_black_box == False: 
+        if player.has_item() and c.SHOWING_BLACK_BOX == False: 
             players_item = ready_player.inventory[0]
             player.use_item() 
    
@@ -229,52 +162,52 @@ def update(dt):
         yammy.inventory[0].transition() 
 
     #fade yammy in and out
-    if key_handler[key.F] and not player_movement() and not yammy.transitioning:
+    elif c.KH[key.F] and not player_movement() and not yammy.transitioning:
         yammy.transitioning = True
         yammy.toggle_transition_direction()
     
     #player gets one item
-    if key_handler[key._1] and not any_movement() and not problems.showing_black_box: 
+    elif c.KH[key._1] and not any_movement() and not c.SHOWING_BLACK_BOX: 
         yammys_item = all_items[0]
         yammy.wave_wand()
         yammy.take_item(yammys_item)
         all_items.remove(yammys_item)
-        yammys_item.spot_y = ITEM_DISAPPEAR_H                   #make the item rise
+        yammys_item.spot_y = c.ITEM_DISAPPEAR_H                   #make the item rise
         yammys_item.transitioning = True                        #make item disappear
         all_items.append(new_item())                            #add new item to lineup
         yammy.victim = ready_player                             #victim player in ready position
 
-    if key_handler[key.LEFT] and not player_movement() and not problems.showing_black_box:
+    elif c.KH[key.LEFT] and not player_movement() and not c.SHOWING_BLACK_BOX:
         rotate_players_left()
 
-    if key_handler[key.RIGHT] and not player_movement() and not problems.showing_black_box:
+    elif c.KH[key.RIGHT] and not player_movement() and not c.SHOWING_BLACK_BOX:
         rotate_players_right()
 
-    if key_handler[key.UP] and not player_movement() and not problems.showing_black_box:
+    elif c.KH[key.UP] and not player_movement() and not c.SHOWING_BLACK_BOX:
         mix_players()
 
-    if key_handler[key.O] and ready_player.item and problems.showing_black_box:
+    elif c.KH[key.O] and ready_player.item and c.SHOWING_BLACK_BOX:
         right_answer()                                          #plus one point
         item_clean_up()
 
-    if key_handler[key.X] and ready_player.item and problems.showing_black_box:
+    elif c.KH[key.X] and ready_player.item and c.SHOWING_BLACK_BOX:
         wrong_answer()                                          #minus one point
         item_clean_up()
 
-    if key_handler[key.A] and not item_movement():
+    elif c.KH[key.A] and not item_movement():
         rotate_items_left()
 
-    if key_handler[key.D] and not item_movement():
+    elif c.KH[key.D] and not item_movement():
         rotate_items_right()
 
-    if key_handler[key.S] and not item_movement():
+    elif c.KH[key.S] and not item_movement():
         mix_items()
 
 def item_clean_up():
     """Performs item clean up. Returns None."""
     player = playing_players[0]
     players_item = player.inventory[0]
-    problems.showing_black_box = False                          #reset flag, stop showing box
+    c.SHOWING_BLACK_BOX = False                                 #reset flag, stop showing box
     player.item = False                                         #reset flag
     player.inventory.remove(players_item)                       #remove the item from player's inventory
     players_item.delete()                                       #item's instance is deleted
@@ -371,7 +304,87 @@ def mix_players():
         copy.remove(player_choice)
     playing_players = mixed_players[:]
 
-if __name__ == "__main__":
-    pyglet.clock.schedule_interval(update, FRAME_SPEED)
-    pyglet.app.run()
 
+
+
+#setup items 
+all_items = []                  #global #new items added with new_item() and the for-loop below it. 
+falling_item = []
+for item in range(c.NUM_ITEMS):
+    all_items.append(new_item())
+
+#line setups
+lines = util.Line(screen_w=c.SCREEN_W, num_players=c.NUM_PLAYERS, num_items=c.NUM_ITEMS)
+lines.line_up()                                             #player line up
+lines.item_line_up(all_items)                               #item line up
+lines.top_row_line_up()                                     #for scores and item at top of game_window
+player_spots = lines.player_spots                           #at players platform
+item_spots = lines.item_spots                               #at item platform
+score_spots = lines.score_spots                             #at top of game_window
+inventory_spot = lines.inventory_spot                       #at top center of game_window
+
+#score setup, relies on playerscores.py
+for player in playing_players:
+    score_x = score_spots[playing_players.index(player)]
+    score_sprite = playerscores.make_sprite(player, score_x)
+    score_display.append(score_sprite) 
+    player.point_index = score_display.index(score_sprite) 
+
+
+
+@c.GAME_WINDOW.event
+def on_draw():
+    """Draw the visual elements. Returns None."""
+    #TODO, change this to a constant class attr
+    c.NEW_QUESTION
+
+    c.GAME_WINDOW.clear()
+    c.MAIN_BATCH.draw()
+    main_player = playing_players[0]
+
+    if main_player.has_item():
+        # basic pattern:
+            # draw the black box
+            # change the guide
+            # change the question in the problem
+            # draw the guide
+            # draw the question        
+        players_item = main_player.inventory[0]
+        VBB.draw()
+        S_BB = True     #set flag
+
+        if c.NEW_QUESTION:
+            c.NEW_QUESTION = False    #reset flag
+            #simple vocab
+            if isinstance(players_item, RedMushroom):    
+                PROB.random_english_word()
+            #verbs
+            elif isinstance(players_item, GreenMushroom):  
+                PROB.random_present_verb()
+            #Japanese to English translation
+            elif isinstance(players_item, PirahnaPlant):   
+                PROB.random_target_sentence()
+            #pronunciation
+            elif isinstance(players_item, YoshiCoin):      
+                PROB.random_pronunciation()
+            #answer the question
+            elif isinstance(players_item, SpinyBeetle):    
+                PROB.random_question()
+#         PROB.guide.draw()
+#         PROB.question.draw()
+
+    #top row scores
+    for score in score_display:
+        if score.points == 0:
+            score.zero.draw()
+        elif abs(score.points) > 0 and abs(score.points) <= 5:
+            for element in score.small_score:
+                element.draw()
+        elif abs(score.points) > 5:
+            for element in score.big_score:
+                element.draw()
+
+
+if __name__ == "__main__":
+    pyglet.clock.schedule_interval(update, c.FRAME_SPEED)
+    pyglet.app.run()

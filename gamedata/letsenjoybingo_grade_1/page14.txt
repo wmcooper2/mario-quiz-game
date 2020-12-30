@@ -1,0 +1,40 @@
+hot
+cold
+large
+small
+long
+short
+high
+low
+has
+does
+teaches
+watches
+writes
+wants
+lives
+meets
+what time
+o'clock
+at noon
+at night
+get up
+go to bed
+have lunch
+get home
+Sydney
+Melbourne
+Los Angeles
+New York
+California
+London
+Paris
+Rome
+breakfast
+coffee
+water
+house
+bed
+table
+clock
+time

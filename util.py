@@ -1,7 +1,12 @@
+#std lib
 import math
-import pyglet
 import random
-from constants import *
+
+#3rd party
+import pyglet
+
+#custom
+from constants import constants as c
 
 def center_image(image):
     """Centers the anchor point in the image."""
@@ -27,6 +32,7 @@ def falling_object(time):
     #changed gravity to 5 from 9.8
     return math.floor(-(0.5 * 5) * (time ** 2))
 
+
 class Line():
     """Line setup for items, players, scores, etc."""
     top_row_spots = []          #all positions at top of game_window
@@ -36,7 +42,7 @@ class Line():
     score_spots = []            #the xpos of the players' score sprites 
     mixing_player_spots = False
 
-    def __init__(self, num_players = 0, screen_w = 0, num_items = 0, *args, **kwargs):
+    def __init__(self, num_players=0, screen_w=0, num_items=0, *args, **kwargs):
         self.num_players = num_players
         self.screen_w = screen_w
         self.num_items = num_items
@@ -64,8 +70,8 @@ class Line():
         """Sets the available item positions on the screen. Returns None."""
         for item in range(self.num_items):
             if len(self.item_spots) == 0:
-                first_spot = (self.screen_w // 2) - ITEM_START_LEFT
+                first_spot = (self.screen_w // 2) - c.ITEM_START_LEFT
                 self.item_spots.append(first_spot)
             else:
-                next_spot = (self.screen_w // 2) - ITEM_START_LEFT - (24 * item) 
+                next_spot = (self.screen_w // 2) - c.ITEM_START_LEFT - (24 * item) 
                 self.item_spots.append(next_spot)

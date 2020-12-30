@@ -1,0 +1,40 @@
+be
+serve
+travel
+stay
+enjoy
+lady
+gentleman
+everyone
+will
+rain
+snow
+suny
+cloudy
+rainy
+snowy
+windy
+sky
+weather
+forecast
+all day
+tomorrow
+in the morning
+in the afternoon
+at night
+cold
+cool
+warm
+hot
+humid
+temperature
+degrees
+Celsius
+Europe
+the U.K.
+France
+Spain
+Italy
+Greece
+Bulgaria
+Turkey

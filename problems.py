@@ -2,27 +2,26 @@
 import pyglet
 import temporarydatasolution as tds
 
-showing_black_box = False
 
 class Problem(pyglet.text.Label):
 
-    vocab_black_box_img = pyglet.resource.image("black_box.png")
-    vocab_black_box = pyglet.sprite.Sprite(vocab_black_box_img, x = 345, y = 264)
-    question_center_x = vocab_black_box_img.width // 2 + vocab_black_box.x
-    question_center_y = vocab_black_box_img.height // 2 + vocab_black_box.y
-    english_vocab_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    english_sentence_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    present_verb_guide = pyglet.text.Label(text = "Translate to Japanese", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    japanese_vocab_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    pronunciation_guide = pyglet.text.Label(text = "Speak", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    japanese_sentence_guide = pyglet.text.Label(text = "Translate to English", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
-    answer_my_question_guide= pyglet.text.Label(text = "Answer the question", font_name = "Comic Sans MS", anchor_x = "center",  x = question_center_x, y = question_center_y + 60, font_size = 12)
+    BLACK_BOX_IMG = pyglet.resource.image("blackbox.png")
+    BLACK_BOX = pyglet.sprite.Sprite(BLACK_BOX_IMG, x = 345, y = 264)
+    question_center_x = BLACK_BOX_IMG.width // 2 + BLACK_BOX.x
+    question_center_y = BLACK_BOX_IMG.height // 2 + BLACK_BOX.y
+    english_vocab_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    english_sentence_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    present_verb_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    japanese_vocab_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    pronunciation_guide = pyglet.text.Label(text="Speak", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    japanese_sentence_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+    answer_my_question_guide = pyglet.text.Label(text="Answer the question", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
 
-    def __init__(self, x = 345, y = 300, text = "blank",  *args, **kwargs):
+    def __init__(self, x=345, y=300, text="blank",  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.q_x = Problem.question_center_x
         self.q_y = Problem.question_center_y
-        self.question = pyglet.text.Label(text = "blank", font_name = "Comic Sans MS", x = self.q_x, y = self.q_y, font_size = 24, width = self.vocab_black_box_img.width)
+        self.question = pyglet.text.Label(text="blank", font_name="Comic Sans MS", x=self.q_x, y=self.q_y, font_size=24, width=self.BLACK_BOX_IMG.width)
         self.question.anchor_x = "center"
         self.question.anchor_y = "center"
         self.data = tds.Data()

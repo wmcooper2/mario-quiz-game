@@ -1,12 +1,15 @@
-#temporary solution for mario quiz game
-from constants import *
+#std lib
+import json
+import random
 import sys
+import string
+
+#custom
+from constants import constants as c
+
 if "./gamedata" not in sys.path:
     sys.path.append("./gamedata")
 
-import json
-import string
-import random
 import verbforms
 import targetsentences 
 import customquestions          #custom made for this game
@@ -20,13 +23,13 @@ class Data():
     default_dict = "totalenglish123.json"
     default_entry = {"not found":"not found"}
     
-    book_1_target_sentences = targetsentences.book_1
-    book_2_target_sentences = targetsentences.book_2
-    book_3_target_sentences = targetsentences.book_3
+    book_1_target_sentences = targetsentences.eng_book_1
+    book_2_target_sentences = targetsentences.eng_book_2
+    book_3_target_sentences = targetsentences.eng_book_3
     
-    book_1_japanese_target_sentences = targetsentencesjapanese.book_1
-    book_2_japanese_target_sentences = targetsentencesjapanese.book_2
-    book_3_japanese_target_sentences = targetsentencesjapanese.book_3
+    book_1_japanese_target_sentences = targetsentencesjapanese.jap_book_1
+    book_2_japanese_target_sentences = targetsentencesjapanese.jap_book_2
+    book_3_japanese_target_sentences = targetsentencesjapanese.jap_book_3
 
     verb_forms = verbforms.verb_forms    
     questions = customquestions.questions
@@ -68,7 +71,7 @@ class Data():
 
     def load_words(self):
         """Loads words into self.words based on grade levels and page ranges. Returns None."""
-        for grade in GRADES:
+        for grade in c.GRADES:
             self.add_words_from_grade(grade)
         
     def add_words_from_grade(self, grade):

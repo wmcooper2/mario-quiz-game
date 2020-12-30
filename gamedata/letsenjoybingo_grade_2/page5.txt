@@ -1,0 +1,40 @@
+son
+daughter
+mom
+dad
+uncle
+aunt
+cousin
+people
+grandfather
+grandmother
+grandson
+granddaughter
+husband
+wife
+woman
+baby
+have
+no
+many
+big brother
+little sister
+older sister
+younger brother
+only child
+what time
+o'clock
+about
+fifteen
+thirty
+forty-five
+a.m.
+p.m.
+week
+Sunday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
