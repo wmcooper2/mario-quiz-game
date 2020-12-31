@@ -8,6 +8,98 @@ import pyglet
 #custom
 from constants import constants as c
 
+
+#GAMEPLAY
+
+def mix_items() -> None:
+    """Randomly mixes the items in the line."""
+    mixed_items = []
+    copy = c.ALL_ITEMS[:]
+    for x in c.ALL_ITEMS:
+        item_choice = random.choice(copy)
+        mixed_items.append(item_choice)
+        copy.remove(item_choice)
+    c.ALL_ITEMS = mixed_items[:]
+
+def mix_players() -> None:
+    """Randomly mixes the players in the line."""
+    mixed_players = []
+    copy = c.PLAYERS[:]
+    for x in c.PLAYERS:
+        player_choice = random.choice(copy)
+        mixed_players.append(player_choice)
+        copy.remove(player_choice)
+    c.PLAYERS = mixed_players[:]
+
+def right_answer(player) -> None:
+    """Gives a point to the player in the ready position."""
+    player.points += 1
+
+def wrong_answer(player) -> None:
+    """Takes away a point from the player in the ready position."""
+    player.points -= 1
+
+def player_movement(players) -> bool:
+    """Checks if any player is moving."""
+    movement = []
+    for player in players: 
+        movement.append(player.moving)
+    return any(movement)
+
+def randomize_players() -> None:
+    """Randomizes the starting order of the player line up."""
+    if c.RANDOMIZED == False:
+        c.RANDOMIZED = True
+        random_players = []
+        copy = c.ALL_PLAYERS[:]
+        for x in range(c.NUM_PLAYERS):
+            player_choice = random.choice(copy)
+            random_players.append(player_choice)
+            copy.remove(player_choice)
+        for player in random_players:
+            c.PLAYERS.append(player) 
+
+def rotate_items_left() -> None:
+    """Rotates contents of items list to the right by one.
+
+        Reverses order from what appears on screen.
+    """         
+    item = c.ALL_ITEMS.pop()
+    c.ALL_ITEMS.insert(0, item)
+
+def rotate_items_right() -> None:
+    """Rotates contents of the items list to left the by one.
+
+        Reverse order from what appears on screen.
+    """      
+    item = c.ALL_ITEMS.pop(0)
+    c.ALL_ITEMS.append(item) 
+
+def rotate_players_left() -> None: 
+    """Rotates contents of players list to the left by one."""
+    player = c.PLAYERS.pop(0)
+    c.PLAYERS.append(player)
+
+def rotate_players_right() -> None:
+    """Rotates contents of players list to the right by one."""
+    player = c.PLAYERS.pop()
+    c.PLAYERS.insert(0, player)
+
+def reverse_rotate_player_list():
+    """Rotates contents of players list to the right by one. Returns None."""
+    player = c.PLAYERS.pop()
+    c.PLAYERS.insert(0, player)
+    
+
+
+
+
+#SETUP
+def add_items(new_item) -> None:
+    """Populate c.ALL_ITEMS."""
+    for item in range(c.NUM_ITEMS):
+        c.ALL_ITEMS.append(new_item())
+
 def center_image(image):
     """Centers the anchor point in the image."""
     image.anchor_x = image.width // 2
@@ -40,7 +132,7 @@ class Line():
     player_spots = []           #filled by Line.line_up() 
     item_spots = []             #filled by Line.item_line_up()
     score_spots = []            #the xpos of the players' score sprites 
-    mixing_player_spots = False
+#     mixing_player_spots = False
 
     def __init__(self, num_players=0, screen_w=0, num_items=0, *args, **kwargs):
         self.num_players = num_players

@@ -4,9 +4,9 @@ import util
 import problems
 from constants import constants as c
 
-main_time = 0
-bombomb_effect = False
-pow_button_effect = False
+# main_time = 0
+# bombomb_effect = False
+# pow_button_effect = False
 
 class Item(pyglet.sprite.Sprite):
     
@@ -29,11 +29,11 @@ class Item(pyglet.sprite.Sprite):
 
     def update(self, dt):
         if self.falling: 
-            global main_time
-            main_time += dt
-            if main_time > 5:
-                main_time = 0
-            self.y += util.falling_object(main_time) #add gravity
+#             global main_time
+            c.MAIN_TIME += dt
+            if c.MAIN_TIME > 5:
+                c.MAIN_TIME = 0
+            self.y += util.falling_object(c.MAIN_TIME) #add gravity
 
         #(current spot "x") - (where its supposed to be "spot_x")
         self.delta_x = self.x - self.spot_x 
@@ -244,8 +244,8 @@ class PowButton(Item):
 
     def effect(self):
         """Pow Button takes one point away from everyone. Returns None"""
-        global pow_button_effect
-        pow_button_effect = True 
+#         global pow_button_effect
+        c.POW_BUTTON_EFFECT = True 
 
     def delete(self):
         super(Item, self).delete()
@@ -273,8 +273,8 @@ class Bombomb(Item):
 
     def effect(self):
         """Randomly mix the order of items on the screen. Returns None."""
-        global bombomb_effect
-        bombomb_effect = True 
+#         global bombomb_effect
+        c.BOMBOMB_EFFECT = True 
 
     def delete(self):
         super(Item, self).delete()

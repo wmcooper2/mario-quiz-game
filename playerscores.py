@@ -1,5 +1,8 @@
-import util
+#3rd party
 import pyglet
+
+#custom
+import util
 import players                  #needed for the players' images
 from constants import constants as c
 
@@ -58,17 +61,17 @@ class ScoreSprite(pyglet.sprite.Sprite):
         #populate self.small_score_spots_coins
         if not self.small_score_spots_coins:                  
             self.make_small_score_spots_coins(score_object)    
-            print("small_score_spots_coins = ", self.small_score_spots_coins) 
+#             print("small_score_spots_coins = ", self.small_score_spots_coins) 
 
         #populate self.small_score_spots_skulls
         if not self.small_score_spots_skulls:                   
             self.make_small_score_spots_skulls(score_object)     
-            print("small_score_spots_skulls = ", self.small_score_spots_skulls) 
+#             print("small_score_spots_skulls = ", self.small_score_spots_skulls) 
 
         #populate self.big_score_spots
         if not self.big_score_spots:                     
             self.make_big_score_spots(score_object)
-            print("big_score_spots = ", self.big_score_spots)
+#             print("big_score_spots = ", self.big_score_spots)
 
     def make_small_score_spots_coins(self, score_object):
         """Sets spots for self.small_score_spots_coins. Returns None."""
@@ -120,7 +123,7 @@ class ScoreSprite(pyglet.sprite.Sprite):
             self.points += 1
         elif self.points > player.points:
             self.points -= 1
-        print(self, ", points = ", self.points)
+#         print(self, ", points = ", self.points)
 
     def set_score_images(self):
         """Adds the proper score sprites for the given point range. Returns None."""

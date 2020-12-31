@@ -1,9 +1,14 @@
+#std lib 
+import enum
+
+#3rd party
 import pyglet
 from pyglet.window import key
 
 class constants():
 
-#DEBUGGING VALUES
+#FLAGS
+    #DEBUG
     DEBUG = False
     ALL_RED_MUSHROOMS = False
     ALL_GREEN_MUSHROOMS = False
@@ -13,6 +18,23 @@ class constants():
     ALL_POW_BUTTONS = False
     ALL_BOMBOMBS = False
 
+    #EFFECTS
+    #QUESTION_BLOCK_EFFECT = False
+    #BOMBOMB_EFFECT = False
+    #POW_BUTTON_EFFECT = False
+    #SPINY_BEETLE_EFFECT = False
+    #GREEN_MUSHROOM_EFFECT = False
+    #RED_MUSHROOM_EFFECT = False
+    #PIRAHNA_PLANT_EFFECT = False
+    #YOSHI_COIN_EFFECT = False
+    FEATHER_EFFECT = False
+    STAR_EFFECT = False
+    RANDOMIZED = False
+    GAME_JUST_STARTED = True 
+    MIXING_PLAYER_SPOTS = False
+    BOMBOMB_EFFECT = False
+    POW_BUTTON_EFFECT = False
+
     RED_MUSHROOM = "red mushroom"
     GREEN_MUSHROOM = "green mushroom" 
     YOSHI_COIN = "yoshi coin"
@@ -21,13 +43,20 @@ class constants():
     POW_BUTTON = "pow button"
     BOMBOMB = "bombomb"
 
+#IMPORTANT LISTS
+    ALL_ITEMS = []
+    PLAYERS = []
+    ALL_PLAYERS = []
+    SCORE_DISPLAY = []
+    WALKING_PLAYERS = []
+    FLOATING_PLAYERS = []
+
 #SETTINGS
     NUM_PLAYERS = 6
     NUM_ITEMS = 9
     GRADES = [1, 2, 3]
     PAGE_RANGE = [0, 500]
-    RANDOMIZED = False
-    GAME_JUST_STARTED = True 
+    MAX_OPACITY = 255
 
 #DIFFICULTY LEVEL
     SUPER_EASY = False
@@ -53,18 +82,6 @@ class constants():
     ITEM_X_SPEED = 1.5                      #set to 1 or 2 when not in debug mode
     ITEM_Y_SPEED = 1
 
-#EFFECT FLAGS
-    #QUESTION_BLOCK_EFFECT = False
-    #BOMBOMB_EFFECT = False
-    #POW_BUTTON_EFFECT = False
-    #SPINY_BEETLE_EFFECT = False
-    #GREEN_MUSHROOM_EFFECT = False
-    #RED_MUSHROOM_EFFECT = False
-    #PIRAHNA_PLANT_EFFECT = False
-    #YOSHI_COIN_EFFECT = False
-    FEATHER_EFFECT = False
-    STAR_EFFECT = False
-
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90
     GAME_WINDOW = pyglet.window.Window(1000, 563)
@@ -79,8 +96,13 @@ class constants():
     FLOAT_H = 100
     WALK_H = 63
     SCORE_SPRITE_Y = SCREEN_H - 36
+    MAIN_TIME = 0
 
 #QUESTION SETTINGS 
     SHOWING_BLACK_BOX = False
     NEW_QUESTION = None
+
+class player_speed(enum.Enum):
+    walk = 0
+    run = 1
 

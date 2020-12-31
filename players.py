@@ -1,6 +1,11 @@
+#std lib
 import math
-import util
+
+#3rd party
 import pyglet
+
+#custom
+import util
 from constants import constants as c
 
 #setup image directory
@@ -8,14 +13,19 @@ resource_dir = "./resources"
 pyglet.resource.path = [resource_dir]
 pyglet.resource.reindex()
 
-class Background(pyglet.sprite.Sprite):
+#convenience variables
+IMG = pyglet.resource.image
+GRID = pyglet.image.ImageGrid
+ANIM = pyglet.image.Animation.from_image_sequence
+SPRITE = pyglet.sprite.Sprite
 
-    background_img = pyglet.resource.image("quiz1.png")
+class Background(SPRITE):
+    background_img = IMG("quiz1.png")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-class Player(pyglet.sprite.Sprite):
+class Player(SPRITE):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,10 +41,11 @@ class Player(pyglet.sprite.Sprite):
 
     def update(self, dt):
         self.delta_x = self.x - self.spot
-        if c.GAME_JUST_STARTED:
+        #TODO, make util.Line.player_spots[-1] into "main_position"
+        if c.GAME_JUST_STARTED or self.spot == util.Line.player_spots[-1]:
             self.speed = "run"
-        if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
-            self.speed = "run"
+#         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
+#             self.speed = "run"
         self.move()
 
     def has_item(self):
@@ -137,14 +148,12 @@ class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-class Yammy(pyglet.sprite.Sprite):
-
+class Yammy(SPRITE):
     
-    #TODO, fix naming of resources and reupload the name changes to the repo
-    stand_right = pyglet.resource.image("yammystandright.png")    
-    action_right_img = pyglet.resource.image("yammyactionright.png")
-    action_right_seq = pyglet.image.ImageGrid(action_right_img, 1, 2)
-    action_right_anim = pyglet.image.Animation.from_image_sequence(action_right_seq, 0.2, False)
+    stand_right = IMG("yammystandright.png")    
+    action_right_img = IMG("yammyactionright.png")
+    action_right_seq = GRID(action_right_img, 1, 2)
+    action_right_anim = ANIM(action_right_seq, 0.2, False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -159,9 +168,11 @@ class Yammy(pyglet.sprite.Sprite):
         self.transition()
         self.give_item()
     
+#     def transition_out(self, item):
     def transition_out(self):
         """Fades first inventory item out. Returns None."""
         self.inventory[0].opacity -=1
+#         item.opacity -=1
 
     def transition_in(self):
         """Fades first inventory item in. Returns None."""
@@ -181,8 +192,8 @@ class Yammy(pyglet.sprite.Sprite):
                 self.opacity += self.transition_rate
             if self.transition_direction == "out":
                 self.opacity -= self.transition_rate
-            if self.opacity >= 255:
-                self.opacity = 255 
+            if self.opacity >= c.MAX_OPACITY:
+                self.opacity = c.MAX_OPACITY 
                 self.transitioning = False
             if self.opacity <= 0:
                 self.opacity = 0
@@ -212,128 +223,181 @@ class Yammy(pyglet.sprite.Sprite):
 #                print("game_objects[0].inventory = ", self.victim.inventory)    
                 self.inventory.remove(yammys_item)          #remove reference to item
 
+    def give_item_(self, player, item) -> None:
+        """Gives an item to a player."""
+        if item.opacity == 0 and item.delta_y == 0:
+            item.spot_x = player.spot
+            item.x = player.spot
+            item.falling = True                  #reset flag 
+            item.toggle_transition_direction()
+            item.transitioning = True            #change flag
+        if item.y <= player.y:
+            item.falling = False                 #reset flag
+            player.inventory.append(item)   #give item to game_objects[0]
+
 class FireLight(FloatingPlayer):
     
-    stand_left = pyglet.resource.image("firelightwalkleft.png")
+    stand_left = IMG("firelightwalkleft.png")
     util.center_floating_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 2)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 0.1, True) 
-    walk_right = pyglet.resource.image("firelightwalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left = pyglet.resource.image("firelightwalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1, 2)
+    stand_left_anim = ANIM(stand_left_seq, 0.1, True) 
+    walk_right = IMG("firelightwalkright.png")
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left = IMG("firelightwalkleft.png")
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Dragon(WalkingPlayer):
     
-    stand_left = pyglet.resource.image("dragonstandleft.png")
+    stand_left = IMG("dragonstandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
-    walk_right = pyglet.resource.image("dragonwalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left = pyglet.resource.image("dragonwalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1, 1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True) 
+    walk_right = IMG("dragonwalkright.png")
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left = IMG("dragonwalkleft.png")
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigBoo(FloatingPlayer):
     
-    stand_left = pyglet.resource.image("bigboostandleft.png")
+    stand_left = IMG("bigboostandleft.png")
     util.center_floating_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
-    walk_right = pyglet.resource.image("bigboowalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left = pyglet.resource.image("bigboowalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1, 1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True) 
+    walk_right = IMG("bigboowalkright.png")
+    walk_right_seq = GRID(walk_right, 1, 1)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left = IMG("bigboowalkleft.png")
+    walk_left_seq = GRID(walk_left, 1, 1)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class GreenKoopa(WalkingPlayer):
     
-    stand_left = pyglet.resource.image("greenkoopastandleft.png")
+    stand_left = IMG("greenkoopastandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
-    walk_right = pyglet.resource.image("greenkoopawalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left = pyglet.resource.image("greenkoopawalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1, 1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True) 
+    walk_right = IMG("greenkoopawalkright.png")
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left = IMG("greenkoopawalkleft.png")
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigMole(WalkingPlayer):
     
-    stand_left = pyglet.resource.image("bigmolestandleft.png")
+    stand_left = IMG("bigmolestandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True) 
-    walk_right = pyglet.resource.image("bigmolewalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left = pyglet.resource.image("bigmolewalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1,1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True) 
+    walk_right = IMG("bigmolewalkright.png")
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left = IMG("bigmolewalkleft.png")
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Mario(WalkingPlayer):
 
-    stand_left = pyglet.resource.image("bigmariostandleft.png")
+    stand_left = IMG("bigmariostandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
-    walk_right_img = pyglet.resource.image("bigmariowalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right_img, 1, 3)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left_img = pyglet.resource.image("bigmariowalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left_img, 1, 3)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1,1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True)
+    walk_right_img = IMG("bigmariowalkright.png")
+    walk_right_seq = GRID(walk_right_img, 1, 3)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left_img = IMG("bigmariowalkleft.png")
+    walk_left_seq = GRID(walk_left_img, 1, 3)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Luigi(WalkingPlayer):
     
-    stand_left = pyglet.resource.image("bigluigistandleft.png")
+#     stand_left = IMG("bigluigistandleft.png")
+    stand_left = IMG("bigluigistandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1,1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
-    walk_right_img = pyglet.resource.image("bigluigiwalkright.png")
-    walk_right_seq = pyglet.image.ImageGrid(walk_right_img, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
-    walk_left_img = pyglet.resource.image("bigluigiwalkleft.png")
-    walk_left_seq = pyglet.image.ImageGrid(walk_left_img, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
-    run_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.05, True)
-    run_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.05, True)
+    stand_left_seq = GRID(stand_left, 1,1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True)
+    walk_right_img = IMG("bigluigiwalkright.png")
+    walk_right_seq = GRID(walk_right_img, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
+    walk_left_img = IMG("bigluigiwalkleft.png")
+    walk_left_seq = GRID(walk_left_img, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+def make_yammy():       #not a playing character
+    yammy = Yammy(img=Yammy.stand_right, x=30, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH)
+    yammy.scale = 2
+    yammy.opacity = 0
+    return yammy
+
+def make_firelight():
+    fire_light = FireLight(img=FireLight.stand_left, x=c.OFF_SCREEN_R, y=c.FLOAT_H, batch=c.MAIN_BATCH)
+    fire_light.scale = 1.5
+    return fire_light
+
+def make_dragon():
+    dragon = Dragon(img=Dragon.stand_left, x=c.OFF_SCREEN_R, y=c.WALK_H, batch=c.MAIN_BATCH)
+    dragon.scale = 2
+    return dragon
+
+def make_big_boo():
+    big_boo = BigBoo(img=BigBoo.stand_left, x=c.OFF_SCREEN_R, y=c.FLOAT_H, batch=c.MAIN_BATCH)
+    return big_boo
+
+def make_green_koopa():
+    green_koopa = GreenKoopa(img=GreenKoopa.stand_left, x=c.OFF_SCREEN_R, y=c.WALK_H, batch=c.MAIN_BATCH) 
+    green_koopa.scale = 2
+    return green_koopa
+
+def make_big_mole():
+    big_mole = BigMole(img=BigMole.stand_left, x=c.OFF_SCREEN_R, y=c.WALK_H, batch=c.MAIN_BATCH)
+    big_mole.scale = 1.5 
+    return big_mole
+
+def make_mario():
+    mario = Mario(img=Mario.stand_left, x=c.OFF_SCREEN_R, y=c.WALK_H, batch=c.MAIN_BATCH)
+    mario.scale = 2
+    return mario
+
+def make_luigi():
+    luigi = Luigi(img=Luigi.stand_left, x=c.OFF_SCREEN_R, y=c.WALK_H, batch=c.MAIN_BATCH)
+    luigi.scale = 2
+    return luigi
