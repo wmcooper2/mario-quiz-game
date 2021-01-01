@@ -22,7 +22,8 @@ class Item(pyglet.sprite.Sprite):
         self.transition_rate = 9
         self.moving = False
         self.falling = False
-        self.transitioning = False
+#         self.disappear = False
+        self.disappear = False
         self.special = False
         self.problem = problems.Problem()
         self.item_not_used = True
@@ -78,17 +79,17 @@ class Item(pyglet.sprite.Sprite):
 
     def transition(self):
         """Toggles item opacity. Returns None."""
-        if self.transitioning:
+        if self.disappear:
             if self.transition_direction == "in":
                 self.opacity += self.transition_rate
             if self.transition_direction == "out":
                 self.opacity -= self.transition_rate
             if self.opacity >= 255:
                 self.opacity = 255
-                self.transitioning = False
+                self.disappear = False
             if self.opacity <= 0:
                 self.opacity = 0
-                self.transitioning = False
+                self.disappear = False
 
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""

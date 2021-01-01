@@ -50,12 +50,14 @@ class constants():
     SCORE_DISPLAY = []
     WALKING_PLAYERS = []
     FLOATING_PLAYERS = []
+    QUESTION_ITEM = []
 
 #SETTINGS
     NUM_PLAYERS = 6
     NUM_ITEMS = 9
     GRADES = [1, 2, 3]
     PAGE_RANGE = [0, 500]
+    MIN_OPACITY = 255
     MAX_OPACITY = 255
 
 #DIFFICULTY LEVEL

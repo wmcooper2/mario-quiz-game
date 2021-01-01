@@ -157,83 +157,36 @@ class Yammy(SPRITE):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.transition_direction = "out"
-        self.transitioning = False
-        self.inventory = []
-        self.transition_rate = 3
-        self.victim = "" 
+        self.disappear = False
+        self.disappear_rate = 3
+        self.max_opacity = 255
+        self.min_opacity = 0
 
-    def update(self):
-        """Yammy's main update loop. Returns None."""
-        self.transition()
-        self.give_item()
+    def update(self) -> None:
+        """Yammy's main update loop."""
+        self.disappear_animation()
+
+    def toggle_disappear(self) -> None:
+        """Toggle self.disappear flag."""
+        if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
+            self.disappear = not self.disappear
     
-#     def transition_out(self, item):
-    def transition_out(self):
-        """Fades first inventory item out. Returns None."""
-        self.inventory[0].opacity -=1
-#         item.opacity -=1
+    def disappear_animation(self) -> None:
+        """Make Yammy disappear/reappear."""
+        if self.disappear:
+            self.opacity -= self.disappear_rate
+        else:
+            self.opacity += self.disappear_rate
 
-    def transition_in(self):
-        """Fades first inventory item in. Returns None."""
-        self.inventory[0].opacity += 1
+        if self.opacity >= self.max_opacity:
+            self.opacity = self.max_opacity
+        elif self.opacity <= self.min_opacity:
+            self.opacity = self.min_opacity
 
-    def toggle_transition_direction(self):
-        """Toggles transition_direction attribute between in and out. Returns None."""
-        if self.transition_direction == "in":
-            self.transition_direction = "out"
-        elif self.transition_direction == "out":
-            self.transition_direction = "in"
 
-    def transition(self):
-        """Toggles fading animation. Returns None."""
-        if self.transitioning:
-            if self.transition_direction == "in":
-                self.opacity += self.transition_rate
-            if self.transition_direction == "out":
-                self.opacity -= self.transition_rate
-            if self.opacity >= c.MAX_OPACITY:
-                self.opacity = c.MAX_OPACITY 
-                self.transitioning = False
-            if self.opacity <= 0:
-                self.opacity = 0
-                self.transitioning = False
-
-    def wave_wand(self):
-        """Yammy waves his magic wand. Returns None."""
+    def wave_wand(self) -> None:
+        """Yammy waves his magic wand."""
         self.image = self.action_right_anim
-
-    def take_item(self, item):
-        """Adds item to Yammy's inventory. Returns None."""
-        self.inventory.append(item)
-
-    def give_item(self):
-        """Gives an item to a player. Returns String."""
-        if self.inventory:
-            yammys_item = self.inventory[0]
-            if yammys_item.opacity == 0 and yammys_item.delta_y == 0:
-                yammys_item.spot_x = self.victim.spot
-                yammys_item.x = self.victim.spot
-                yammys_item.falling = True                  #reset flag 
-                yammys_item.toggle_transition_direction()
-                yammys_item.transitioning = True            #change flag
-            if yammys_item.y <= self.victim.y:
-                yammys_item.falling = False                 #reset flag
-                self.victim.inventory.append(yammys_item)   #give item to game_objects[0]
-#                print("game_objects[0].inventory = ", self.victim.inventory)    
-                self.inventory.remove(yammys_item)          #remove reference to item
-
-    def give_item_(self, player, item) -> None:
-        """Gives an item to a player."""
-        if item.opacity == 0 and item.delta_y == 0:
-            item.spot_x = player.spot
-            item.x = player.spot
-            item.falling = True                  #reset flag 
-            item.toggle_transition_direction()
-            item.transitioning = True            #change flag
-        if item.y <= player.y:
-            item.falling = False                 #reset flag
-            player.inventory.append(item)   #give item to game_objects[0]
 
 class FireLight(FloatingPlayer):
     

@@ -7,6 +7,7 @@ import pyglet
 from pyglet.window import key
 
 #custom
+from constants import constants as c
 from util import (
     add_items,
     mix_items,
@@ -20,15 +21,11 @@ from util import (
     rotate_players_left,
     rotate_players_right,
     Line)
-
 import players as sprites
 import problems
 import items #must come after sprites (resource mod is defined in sprites... move to main?) #not needed?
-# import playersetup
 import playerscores
-from constants import constants as c
-
-from itemsetup import new_item
+from itemsetup import new_item # must stay here... strange error
 
 #SPRITES
 background = sprites.Background(img=sprites.Background.background_img, batch=c.MAIN_BATCH)
@@ -75,19 +72,20 @@ randomize_players()
 
 
 
-def update(DT):
-    game_window.clear()
+#TODO, there are 2 update functions???
+def update_(DT):
+    c.GAME_WINDOW.clear()
     c.MAIN_BATCH.draw()
-    player = c.PLAYERS[0]
+    p1 = c.PLAYERS[0]
     
     #show the problem
     if c.SHOWING_BLACK_BOX: 
-        VBB.draw()#mixing the different ways methods from different classes are called...           
-        player.inventory[0].problem.question.draw() #change so that it doesnt go through the item instance, but goes directly to the class attribute
+        VBB.draw()#mixing the different ways methods from different classes are called... 
+        p1.inventory[0].problem.question.draw() #change so that it doesnt go through the item instance, but goes directly to the class attribute
 
         #question guides
-        if player.has_item() and c.SHOWING_BLACK_BOX: 
-            players_item = player.inventory[0]
+        if p1.has_item() and c.SHOWING_BLACK_BOX: 
+            players_item = p1.inventory[0]
             if isinstance(players_item, items.RedMushroom):    #simple vocab
                 PROB.english_vocab_guide.draw()
             elif isinstance(players_item, items.GreenMushroom):  #verbs
@@ -164,25 +162,30 @@ def update(dt):
     #item transfer is automatically controlled by Yammy
     #TODO, pass player and item to yammy to do the transfer
     yammy.update()
-    if yammy.inventory:                                         #only if len() > 0
-        yammy.inventory[0].update(dt)
-        yammy.inventory[0].transition() 
 
-    #fade yammy in and out
-    elif c.KH[key.F] and not player_movement() and not yammy.transitioning:
-        yammy.transitioning = True
-        yammy.toggle_transition_direction()
-    
+    #disappear Yammy
+    if c.KH[key.F]:
+        yammy.toggle_disappear()
+
+#     #player gets one item
+#     elif c.KH[key._1] and not any_movement() and not c.SHOWING_BLACK_BOX: 
+#         yammys_item = c.ALL_ITEMS[0]
+#         yammy.wave_wand()
+#         yammy.take_item(yammys_item)
+#         c.ALL_ITEMS.remove(yammys_item)
+#         yammys_item.spot_y = c.ITEM_DISAPPEAR_H                   #make the item rise
+#         yammys_item.disappear = True                        #make item disappear
+#         c.ALL_ITEMS.append(new_item())                            #add new item to lineup
+#         yammy.victim = p1                             #victim player in ready position
     #player gets one item
     elif c.KH[key._1] and not any_movement() and not c.SHOWING_BLACK_BOX: 
-        yammys_item = c.ALL_ITEMS[0]
-        yammy.wave_wand()
-        yammy.take_item(yammys_item)
-        c.ALL_ITEMS.remove(yammys_item)
-        yammys_item.spot_y = c.ITEM_DISAPPEAR_H                   #make the item rise
-        yammys_item.transitioning = True                        #make item disappear
-        c.ALL_ITEMS.append(new_item())                            #add new item to lineup
-        yammy.victim = p1                             #victim player in ready position
+        c.QUESTION_ITEM = c.ALL_ITEMS.pop(0)    #take item from list
+        yammy.wave_wand()                       #visual action
+#         item.disappear()                      #change item's attributes
+        item.spot_y = c.ITEM_DISAPPEAR_H            #make the item rise, make method of item
+        item.disappear = True                       #make item disappear, make method of item
+        c.ALL_ITEMS.append(new_item())          #add new item to list
+
 
     elif c.KH[key.LEFT] and not player_movement() and not c.SHOWING_BLACK_BOX:
         rotate_players_left()
