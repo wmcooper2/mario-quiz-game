@@ -6,10 +6,14 @@ import util
 import players                  #needed for the players' images
 from constants import constants as c
 
-class Coin(pyglet.sprite.Sprite):
+IMG = pyglet.resource.image
+GRID = pyglet.image.ImageGrid
+SPRITE = pyglet.sprite.Sprite
 
-    coin_img = pyglet.resource.image("yellowcoin.png")
-    coin_seq = pyglet.image.ImageGrid(coin_img, 1, 3)
+class Coin(SPRITE):
+
+    coin_img = IMG("yellowcoin.png")
+    coin_seq = GRID(coin_img, 1, 3)
     coin = coin_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -18,10 +22,10 @@ class Coin(pyglet.sprite.Sprite):
     def delete(self):
         super().delete()
 
-class Skull(pyglet.sprite.Sprite):
+class Skull(SPRITE):
 
-    skull_img = pyglet.resource.image("skull.png") 
-    skull_seq = pyglet.image.ImageGrid(skull_img, 1, 1)
+    skull_img = IMG("skull.png") 
+    skull_seq = GRID(skull_img, 1, 1)
     skull = skull_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -30,7 +34,7 @@ class Skull(pyglet.sprite.Sprite):
     def delete(self):
         super().delete()
 
-class ScoreSprite(pyglet.sprite.Sprite):
+class ScoreSprite(SPRITE):
     
     def __init__(self, score_sprite=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -215,3 +219,11 @@ def make_sprite(player, score_x):
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     return score_sprite
+
+def scores_setup(spots) -> None:
+    """Setup the score sprites at the top of the screen."""
+    for player in c.PLAYERS:
+        score_x = spots[c.PLAYERS.index(player)]
+        sprite = make_sprite(player, score_x)
+        c.SCORE_DISPLAY.append(sprite) 
+        player.point_index = c.SCORE_DISPLAY.index(sprite) 

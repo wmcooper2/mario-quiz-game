@@ -4,99 +4,105 @@ import util
 import problems
 from constants import constants as c
 
-# main_time = 0
-# bombomb_effect = False
-# pow_button_effect = False
+#convenience variables
+IMG = pyglet.resource.image
+GRID = pyglet.image.ImageGrid
+ANIM = pyglet.image.Animation.from_image_sequence
+SPRITE = pyglet.sprite.Sprite
 
-class Item(pyglet.sprite.Sprite):
+class Item(SPRITE):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.spot_x = self.x
-        self.spot_y = self.y
-        self.delta_x = 0        
-        self.delta_y = 0
+
+        #location
+        self.dest_x = self.x
+        self.dest_y = self.y
+        self.dx = 0        
+        self.dy = 0
+
+        #speed
         self.y_speed = c.ITEM_Y_SPEED
         self.x_speed = c.ITEM_X_SPEED
+
+        #opacity
         self.transition_direction = "out"
-        self.transition_rate = 9
-        self.moving = False
-        self.falling = False
-#         self.disappear = False
+        self.disappear_rate = 9
         self.disappear = False
+        self.max_opacity = 255
+        self.min_opacity = 0
+
+        #problem
+#         self.problem = problems.Problem()
+
+        #flags
+#         self.moving = False
+        self.falling = False
         self.special = False
-        self.problem = problems.Problem()
         self.item_not_used = True
 
-    def update(self, dt):
+    def update(self, dt) -> None:
         if self.falling: 
-#             global main_time
             c.MAIN_TIME += dt
             if c.MAIN_TIME > 5:
                 c.MAIN_TIME = 0
             self.y += util.falling_object(c.MAIN_TIME) #add gravity
 
-        #(current spot "x") - (where its supposed to be "spot_x")
-        self.delta_x = self.x - self.spot_x 
-        self.delta_y = self.y - self.spot_y
-        self.walk()
+        #(current spot "x") - (where its supposed to be "dest_x")
+        self.dx = self.x - self.dest_x 
+        self.dy = self.y - self.dest_y
+        self.change_direction()
         self.move() 
-        self.transition()
+        self.disappear_animation()
+        print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
 
-    def move(self): 
-        """Moves the items closer to spot_x and spot_y. Returns None."""
-        delta_x = self.delta_x
-        delta_y = self.delta_y
-        if delta_x > 0:
+    def move(self) -> None: 
+        """Moves the items closer to dest_x and dest_y."""
+        dx, dy = self.dx, self.dy
+        if dx > 0:
             self.x -= self.x_speed
-        if delta_x < 0:
+        if dx < 0:
             self.x += self.x_speed
-        if delta_y > 0:
+        if dy > 0:
             self.y -= self.y_speed
-        if delta_y < 0:
+        if dy < 0:
             self.y += self.y_speed
 
-    def walk(self):
-        """Changes the animation of the sprite"""
-        delta_x = self.delta_x
-        #update sprite image
-        if delta_x != 0 and self.moving == False:
-            self.moving = True
-            if delta_x > 0:
+    def change_direction(self) -> None:
+        """Changes the direction of the sprite."""
+        dx = self.dx
+        if dx != 0:
+            if dx > 0:
                 self.image = self.walk_left_anim 
-            if delta_x < 0:
+            if dx < 0:
                 self.image = self.walk_right_anim 
-        elif delta_x == 0:
+        elif dx == 0:
             self.image = self.stand_right_anim
-            self.moving = False
-    
-    def toggle_transition_direction(self):
-        """Toggles transition_direction attribute. Returns None."""
-        if self.transition_direction == "in":
-            self.transition_direction = "out"
-        elif self.transition_direction == "out":
-            self.transition_direction = "in"
 
-    def transition(self):
-        """Toggles item opacity. Returns None."""
+    def toggle_disappear(self) -> None:
+        """Toggle self.disappear flag."""
+        if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
+            self.disappear = not self.disappear
+            print("item.disappear:", self.disappear)
+
+    def disappear_animation(self) -> None:
+        """Make item disappear/reappear."""
         if self.disappear:
-            if self.transition_direction == "in":
-                self.opacity += self.transition_rate
-            if self.transition_direction == "out":
-                self.opacity -= self.transition_rate
-            if self.opacity >= 255:
-                self.opacity = 255
-                self.disappear = False
-            if self.opacity <= 0:
-                self.opacity = 0
-                self.disappear = False
+            self.opacity -= self.disappear_rate
+        else:
+            self.opacity += self.disappear_rate
+        if self.opacity >= self.max_opacity:
+            self.opacity = self.max_opacity
+        elif self.opacity <= self.min_opacity:
+            self.opacity = self.min_opacity
+#         print("opacity:", self.opacity)
 
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""
     
-    stand_left = pyglet.resource.image("redmushroom.png")
+    stand_left = IMG("redmushroom.png")
     util.center_ground_sprite(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
+    stand_left_seq = GRID(stand_left, 1, 1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
 
     stand_right_anim = stand_left_anim
@@ -117,10 +123,10 @@ class RedMushroom(Item):
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question. Returns None."""
 
-    stand_left = pyglet.resource.image("greenmushroom.png")
+    stand_left = IMG("greenmushroom.png")
     util.center_ground_sprite(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
+    stand_left_seq = GRID(stand_left, 1, 1)
+    stand_left_anim = ANIM(stand_left_seq, 1, True)
 
     stand_right_anim = stand_left_anim
     walk_left_anim = stand_left_anim
@@ -140,20 +146,20 @@ class GreenMushroom(Item):
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question. Returns None."""
     
-    stand_right = pyglet.resource.image("yoshicoinright.png")
+    stand_right = IMG("yoshicoinright.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 5)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 5)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("yoshicoinleft.png")
+    walk_left = IMG("yoshicoinleft.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 5)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 5)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("yoshicoinright.png")
+    walk_right = IMG("yoshicoinright.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 5)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 5)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
 
     stand_left_anim = walk_left_anim
 
@@ -171,20 +177,20 @@ class YoshiCoin(Item):
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese). Returns None."""
 
-    stand_right = pyglet.resource.image("pirahnaplantsmall.png")
+    stand_right = IMG("pirahnaplantsmall.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 2)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 0.1, True)
+    stand_right_seq = GRID(stand_right, 1, 2)
+    stand_right_anim = ANIM(stand_right_seq, 0.1, True)
 
-    walk_left = pyglet.resource.image("pirahnaplantsmall.png")
+    walk_left = IMG("pirahnaplantsmall.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("pirahnaplantsmall.png")
+    walk_right = IMG("pirahnaplantsmall.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
 
     stand_left_anim = stand_right_anim
 
@@ -202,20 +208,20 @@ class PirahnaPlant(Item):
 class SpinyBeetle(Item): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu. Returns None."""
 
-    stand_right = pyglet.resource.image("spinybeetlestandright.png")
+    stand_right = IMG("spinybeetlestandright.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 1)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("spinybeetlewalkleft.png")
+    walk_left = IMG("spinybeetlewalkleft.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("spinybeetlewalkright.png")
+    walk_right = IMG("spinybeetlewalkright.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -231,10 +237,10 @@ class SpinyBeetle(Item):
 class PowButton(Item):
     """Pow Button takes away one point from everyone. Returns None."""
         
-    stand_left = pyglet.resource.image("powbutton.png")
+    stand_left = IMG("powbutton.png")
     util.center_ground_sprite(stand_left)
-    stand_left_seq = pyglet.image.ImageGrid(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, False)
+    stand_left_seq = GRID(stand_left, 1, 1)
+    stand_left_anim = ANIM(stand_left_seq, 1, False)
 
     stand_right_anim = stand_left_anim
     walk_left_anim = stand_left_anim
@@ -254,20 +260,20 @@ class PowButton(Item):
 class Bombomb(Item):
     """Bombomb randomly mixes the order of the items on the screen. Returns None."""
 
-    stand_right = pyglet.resource.image("bombombstandright.png")
+    stand_right = IMG("bombombstandright.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 1)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("bombombwalkleft.png")
+    walk_left = IMG("bombombwalkleft.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 2)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 2)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("bombombwalkright.png")
+    walk_right = IMG("bombombwalkright.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 2)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 2)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -283,20 +289,20 @@ class Bombomb(Item):
 class QuestionBlock(Item): #unfinished
     """Question block chooses a random effect. Returns None."""
 
-    stand_right = pyglet.resource.image("questionblock.png")
+    stand_right = IMG("questionblock.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 4)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 4)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("questionblock.png")
+    walk_left = IMG("questionblock.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 4)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 4)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("questionblock.png")
+    walk_right = IMG("questionblock.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 4)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 4)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -311,20 +317,20 @@ class QuestionBlock(Item): #unfinished
 class Feather(Item): #unfinished
     """Feather allows the player to skip their turn when the item is used. Returns None."""
 
-    stand_right = pyglet.resource.image("feather.png")
+    stand_right = IMG("feather.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 1)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("feather.png")
+    walk_left = IMG("feather.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 1)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("feather.png")
+    walk_right = IMG("feather.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 1)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -339,20 +345,20 @@ class Feather(Item): #unfinished
 class Star(Item): #unfinished
     """Star allows the player to avoid the negative affects of other items. Returns None."""
 
-    stand_right = pyglet.resource.image("star.png")
+    stand_right = IMG("star.png")
     util.center_ground_sprite(stand_right)
-    stand_right_seq = pyglet.image.ImageGrid(stand_right, 1, 1)
-    stand_right_anim = pyglet.image.Animation.from_image_sequence(stand_right_seq, 1, True)
+    stand_right_seq = GRID(stand_right, 1, 1)
+    stand_right_anim = ANIM(stand_right_seq, 1, True)
 
-    walk_left = pyglet.resource.image("star.png")
+    walk_left = IMG("star.png")
     util.center_ground_sprite(walk_left)
-    walk_left_seq = pyglet.image.ImageGrid(walk_left, 1, 1)
-    walk_left_anim = pyglet.image.Animation.from_image_sequence(walk_left_seq, 0.1, True)
+    walk_left_seq = GRID(walk_left, 1, 1)
+    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
 
-    walk_right = pyglet.resource.image("star.png")
+    walk_right = IMG("star.png")
     util.center_ground_sprite(walk_right)
-    walk_right_seq = pyglet.image.ImageGrid(walk_right, 1, 1)
-    walk_right_anim = pyglet.image.Animation.from_image_sequence(walk_right_seq, 0.1, True)
+    walk_right_seq = GRID(walk_right, 1, 1)
+    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

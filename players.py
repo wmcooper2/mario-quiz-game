@@ -170,19 +170,17 @@ class Yammy(SPRITE):
         """Toggle self.disappear flag."""
         if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
             self.disappear = not self.disappear
-    
+
     def disappear_animation(self) -> None:
         """Make Yammy disappear/reappear."""
         if self.disappear:
             self.opacity -= self.disappear_rate
         else:
             self.opacity += self.disappear_rate
-
         if self.opacity >= self.max_opacity:
             self.opacity = self.max_opacity
         elif self.opacity <= self.min_opacity:
             self.opacity = self.min_opacity
-
 
     def wave_wand(self) -> None:
         """Yammy waves his magic wand."""

@@ -10,6 +10,13 @@ from constants import constants as c
 
 
 #GAMEPLAY
+def any_movement() -> bool:
+    """Checks if anything is moving."""
+    return any([player_movement(), item_movement()])
+
+def item_movement() -> bool:
+    """Checks if any item is moving."""
+    return any([item.dx or item.dy for item in c.ALL_ITEMS])
 
 def mix_items() -> None:
     """Randomly mixes the items in the line."""
@@ -31,6 +38,10 @@ def mix_players() -> None:
         copy.remove(player_choice)
     c.PLAYERS = mixed_players[:]
 
+def player_movement() -> bool:
+    """Checks if any player is moving."""
+    return any([player.moving for player in c.PLAYERS])
+
 def right_answer(player) -> None:
     """Gives a point to the player in the ready position."""
     player.points += 1
@@ -38,26 +49,6 @@ def right_answer(player) -> None:
 def wrong_answer(player) -> None:
     """Takes away a point from the player in the ready position."""
     player.points -= 1
-
-def player_movement(players) -> bool:
-    """Checks if any player is moving."""
-    movement = []
-    for player in players: 
-        movement.append(player.moving)
-    return any(movement)
-
-def randomize_players() -> None:
-    """Randomizes the starting order of the player line up."""
-    if c.RANDOMIZED == False:
-        c.RANDOMIZED = True
-        random_players = []
-        copy = c.ALL_PLAYERS[:]
-        for x in range(c.NUM_PLAYERS):
-            player_choice = random.choice(copy)
-            random_players.append(player_choice)
-            copy.remove(player_choice)
-        for player in random_players:
-            c.PLAYERS.append(player) 
 
 def rotate_items_left() -> None:
     """Rotates contents of items list to the right by one.
@@ -96,9 +87,22 @@ def reverse_rotate_player_list():
 
 #SETUP
 def add_items(new_item) -> None:
-    """Populate c.ALL_ITEMS."""
+    """Populates c.ALL_ITEMS."""
     for item in range(c.NUM_ITEMS):
         c.ALL_ITEMS.append(new_item())
+
+def add_players(random_=False) -> None:
+    """Populates c.PLAYERS."""
+    #TODO, Random is the default here... change this to allow a non-random option
+    if random_ == False:
+        players = []
+        copy = c.ALL_PLAYERS[:]
+        for x in range(c.NUM_PLAYERS):
+            choice_ = random.choice(copy)
+            players.append(choice_)
+            copy.remove(choice_)
+        for player in players:
+            c.PLAYERS.append(player) 
 
 def center_image(image):
     """Centers the anchor point in the image."""

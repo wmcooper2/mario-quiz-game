@@ -29,7 +29,7 @@ class constants():
     #YOSHI_COIN_EFFECT = False
     FEATHER_EFFECT = False
     STAR_EFFECT = False
-    RANDOMIZED = False
+    RANDOMIZE_PLAYERS = False
     GAME_JUST_STARTED = True 
     MIXING_PLAYER_SPOTS = False
     BOMBOMB_EFFECT = False
@@ -99,6 +99,10 @@ class constants():
     WALK_H = 63
     SCORE_SPRITE_Y = SCREEN_H - 36
     MAIN_TIME = 0
+
+#CHANGING POINTS OF FOCUS DURING GAMEPLAY
+    P1 = None
+    ITEM = None
 
 #QUESTION SETTINGS 
     SHOWING_BLACK_BOX = False
