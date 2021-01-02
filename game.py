@@ -157,9 +157,10 @@ def update(dt) -> None:
     for item in c.ALL_ITEMS:
         item.dest_x = ITEM_SPOTS[c.ALL_ITEMS.index(item)]
         item.update(dt)
-        if c.ITEM is not None:
-        #TODO, fix y change speed
-            c.ITEM.update(dt)
+
+    if c.ITEM is not None:
+    #TODO, fix y change speed
+        c.ITEM.update(dt)
 
     #KEY HANDLERS
     #disappear Yammy

@@ -77,11 +77,10 @@ class constants():
     HARD_RANGE =        [15, 30, 45, 60, 75, 90, 100]           #15, 15, 15, 15, 15, 15, 10
     SUPER_HARD_RANGE =  [10, 20, 40, 60, 80, 90, 100]           #10, 10, 20, 20, 20, 10, 10
 
-    ITEM_START_LEFT = 216                   #be careful changing this value
+    ITEM_START_LEFT = 216   #be careful changing this value
     ITEM_PLATFORM_H = 264
     ITEM_PLATFORM_W = 300
-    ITEM_DISAPPEAR_H = 300
-    ITEM_X_SPEED = 1.5                      #set to 1 or 2 when not in debug mode
+    ITEM_X_SPEED = 2        #set to 1 or 2 when not in debug mode
     ITEM_Y_SPEED = 1
 
 #GAMEPLAY SETTINGS
@@ -107,6 +106,9 @@ class constants():
 #QUESTION SETTINGS 
     SHOWING_BLACK_BOX = False
     NEW_QUESTION = None
+
+#DEBUG TOOLS
+    SPRITE_DATA = ["opacity", "x", "y", "dx", "dy", "dest_x", "dest_y"]
 
 class player_speed(enum.Enum):
     walk = 0

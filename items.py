@@ -1,8 +1,15 @@
-import pyglet
+#std lib
 import math
-import util
-import problems
+from typing import Tuple
+
+#3rd party
+import pyglet
+# from tabulate import tabulate
+
+#custom
 from constants import constants as c
+import problems
+import util
 
 #convenience variables
 IMG = pyglet.resource.image
@@ -22,12 +29,14 @@ class Item(SPRITE):
         self.dy = 0
 
         #speed
-        self.y_speed = c.ITEM_Y_SPEED / 3
+#         self.y_speed = round(c.ITEM_Y_SPEED / 3, 2)
+        self.y_speed = c.ITEM_Y_SPEED
         self.x_speed = c.ITEM_X_SPEED
 
         #opacity
         self.disappear_rate = 2
         self.disappear = False
+        self.disappear_height = 100
         self.max_opacity = 255
         self.min_opacity = 0
 
@@ -36,7 +45,7 @@ class Item(SPRITE):
 
         #flags
 #         self.moving = False
-        self.falling = False
+#         self.falling = False
         self.special = False
         self.item_not_used = True
 
@@ -56,21 +65,45 @@ class Item(SPRITE):
         #if self is the item to transfer, perform animation sequence
         if self == c.ITEM:
 #             print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
-            print(f"{self}\t\topacity:{self.opacity}, dx:{self.dx}, dy:{self.dy}")
-            self.dest_y = c.ITEM_DISAPPEAR_H    #set new y_pos
+            print(f"op:{self.opacity} x:{self.x} y:{self.y} dx:{self.dx} dy:{self.dy} dest_x:{self.dest_x} dest_y:{self.dest_y}")
+#             print(tabulate([self.opacity, self.x, self.y, self.dx, self.dy, self.dest_x, self.dest_y], headers=c.SPRITE_DATA))
 
-            #item disappears
-            if self.dy == 0:
-                self.toggle_disappear()
+            #always update animation
             self.disappear_animation()
 
+            #item rise and disappear
+            #if y_pos < disappear height & opacity > 0
+            if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
+                self.dest_y = self.y + self.disappear_height
+                self.toggle_disappear()
+
+            #item over player
+            #if y_pos >= disappear height & opacity <= 0:
+            if self.opacity <= c.MIN_OPACITY and self.y >= c.ITEM_PLATFORM_H + self.disappear_height:
+                self.opacity = c.MIN_OPACITY
+                self.x, self.dest_x = c.P1.x, c.P1.x     # put item over P1
+#                 self.y, self.dest_y = c.P1.y + 130
+
+            #item over player, much closer to it and appearing
+            #if item is over P1 & higher than the platform plus the extra height
+#             if self.x == c.P1.x and self.y >= c.ITEM_PLATFORM_H + self.disappear_height:
+#                 self.dest_y = c.P1.y
+#                 self.y, self.dest_y = c.P1.y + self.disappear_height, c.P1.y
+#                 self.toggle_disappear()
+                
+
+
+
+#                 self.toggle_disappear()
+#             self.disappear_animation()
+
             ##after reaching full disappear height...
-            if self.opacity == c.MIN_OPACITY:
+#             if self.opacity == c.MIN_OPACITY:
                 #item x_pos == p1's x_pos
-                c.ITEM.x = c.P1.x
+#                 c.ITEM.x = c.P1.x
 
                 #item reappears
-                self.toggle_disappear()
+#                 self.toggle_disappear()
 
                 #set item's dest_y to the player
 #                 c.ITEM.dest_y = c.P1.y
@@ -114,6 +147,12 @@ class Item(SPRITE):
         elif self.opacity <= self.min_opacity:
             self.opacity = self.min_opacity
 
+    def is_left_of_p1(self) -> bool:
+        return self.x < c.P1.x
+
+    def is_on_platform(self) -> bool:
+        return self.y == c.ITEM_PLATFORM_H
+
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""
         dx, dy = self.dx, self.dy
@@ -121,19 +160,18 @@ class Item(SPRITE):
             self.x -= self.x_speed
         elif dx < 0:
             self.x += self.x_speed
-        else:
-            self.x += 0
 
-        #DEBUG, problem with self.dy
-        #   I think that self.y needs to be rounded or self.y_speed
-        #   self.dy needs to be set to 0 when the value overshoots
-        #   it's bouncing around 0, but never actually becoming it.
         if dy > 0:                  # y_pos
             self.y -= self.y_speed
         elif dy < 0:
             self.y += self.y_speed
-        else:
-            self.y += 0
+
+        #if the object is within range of the speed "step", then just make delta == 0
+        close_x, close_y = self.within_margin()
+        if close_x:
+            self.x = self.dest_x
+        if close_y:
+            self.y = self.dest_y
 
     def toggle_disappear(self) -> None:
         """Toggle self.disappear flag."""
@@ -143,6 +181,13 @@ class Item(SPRITE):
     def transfer_animation(self) -> None:
         """The animation of giving the item to a player."""
         pass
+
+    def is_visible(self) -> bool:
+        return self.opacity > c.MIN_OPACITY
+
+    def within_margin(self) -> Tuple[bool, bool]:
+        """Checks if item within range of destination."""
+        return (abs(self.dx) <= self.x_speed, abs(self.dy) <= self.y_speed)
 
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""
