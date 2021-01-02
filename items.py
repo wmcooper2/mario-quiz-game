@@ -22,12 +22,11 @@ class Item(SPRITE):
         self.dy = 0
 
         #speed
-        self.y_speed = c.ITEM_Y_SPEED
+        self.y_speed = c.ITEM_Y_SPEED / 3
         self.x_speed = c.ITEM_X_SPEED
 
         #opacity
-        self.transition_direction = "out"
-        self.disappear_rate = 9
+        self.disappear_rate = 2
         self.disappear = False
         self.max_opacity = 255
         self.min_opacity = 0
@@ -42,34 +41,57 @@ class Item(SPRITE):
         self.item_not_used = True
 
     def update(self, dt) -> None:
-        if self.falling: 
-            c.MAIN_TIME += dt
-            if c.MAIN_TIME > 5:
-                c.MAIN_TIME = 0
-            self.y += util.falling_object(c.MAIN_TIME) #add gravity
+        """Item's main update."""
+        self.dt = dt
 
-        #(current spot "x") - (where its supposed to be "dest_x")
+        #self.x and self.y inherited
         self.dx = self.x - self.dest_x 
         self.dy = self.y - self.dest_y
-        self.change_direction()
+        self.change_image()
         self.move() 
         self.disappear_animation()
-        print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
+#         if self.dy != 0:
+#             print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
 
-    def move(self) -> None: 
-        """Moves the items closer to dest_x and dest_y."""
-        dx, dy = self.dx, self.dy
-        if dx > 0:
-            self.x -= self.x_speed
-        if dx < 0:
-            self.x += self.x_speed
-        if dy > 0:
-            self.y -= self.y_speed
-        if dy < 0:
-            self.y += self.y_speed
+        #if self is the item to transfer, perform animation sequence
+        if self == c.ITEM:
+#             print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
+            print(f"{self}\t\topacity:{self.opacity}, dx:{self.dx}, dy:{self.dy}")
+            self.dest_y = c.ITEM_DISAPPEAR_H    #set new y_pos
 
-    def change_direction(self) -> None:
-        """Changes the direction of the sprite."""
+            #item disappears
+            if self.dy == 0:
+                self.toggle_disappear()
+            self.disappear_animation()
+
+            ##after reaching full disappear height...
+            if self.opacity == c.MIN_OPACITY:
+                #item x_pos == p1's x_pos
+                c.ITEM.x = c.P1.x
+
+                #item reappears
+                self.toggle_disappear()
+
+                #set item's dest_y to the player
+#                 c.ITEM.dest_y = c.P1.y
+
+            ##item falls with gravity
+#             self.apply_gravity(self.dt)
+ 
+    def apply_gravity(self, time) -> None:
+        """Calculates y position of falling item.
+
+            Calculates "-(1/2) * g * t^2" where g == 9.8
+                and time is the accumulated time for falling.
+            Changed gravity to 5 from 9.8
+
+        """
+        if time > 5:
+            time = 0
+        self.y += math.floor(-(0.5 * 5) * (time ** 2))
+
+    def change_image(self) -> None:
+        """Changes the sprite's image."""
         dx = self.dx
         if dx != 0:
             if dx > 0:
@@ -79,23 +101,48 @@ class Item(SPRITE):
         elif dx == 0:
             self.image = self.stand_right_anim
 
-    def toggle_disappear(self) -> None:
-        """Toggle self.disappear flag."""
-        if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
-            self.disappear = not self.disappear
-            print("item.disappear:", self.disappear)
-
     def disappear_animation(self) -> None:
         """Make item disappear/reappear."""
+        #change opacity
         if self.disappear:
             self.opacity -= self.disappear_rate
         else:
             self.opacity += self.disappear_rate
+        #keep opacity within limits
         if self.opacity >= self.max_opacity:
             self.opacity = self.max_opacity
         elif self.opacity <= self.min_opacity:
             self.opacity = self.min_opacity
-#         print("opacity:", self.opacity)
+
+    def move(self) -> None: 
+        """Moves the items closer to dest_x and dest_y."""
+        dx, dy = self.dx, self.dy
+        if dx > 0:                  # x_pos
+            self.x -= self.x_speed
+        elif dx < 0:
+            self.x += self.x_speed
+        else:
+            self.x += 0
+
+        #DEBUG, problem with self.dy
+        #   I think that self.y needs to be rounded or self.y_speed
+        #   self.dy needs to be set to 0 when the value overshoots
+        #   it's bouncing around 0, but never actually becoming it.
+        if dy > 0:                  # y_pos
+            self.y -= self.y_speed
+        elif dy < 0:
+            self.y += self.y_speed
+        else:
+            self.y += 0
+
+    def toggle_disappear(self) -> None:
+        """Toggle self.disappear flag."""
+        if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
+            self.disappear = not self.disappear
+
+    def transfer_animation(self) -> None:
+        """The animation of giving the item to a player."""
+        pass
 
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""

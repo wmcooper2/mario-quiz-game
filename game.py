@@ -8,6 +8,7 @@ from pyglet.window import key
 #custom
 from constants import constants as c
 from util import (
+    add_item,
     add_items,
     add_players,
     any_movement,
@@ -15,12 +16,14 @@ from util import (
     mix_items,
     mix_players,
     player_movement,
+    remove_item_from_all_items,
     reverse_rotate_player_list,
     right_answer,
     rotate_items_left,
     rotate_items_right,
     rotate_players_left,
     rotate_players_right,
+#     transfer_item_to_p1,
     Line)
 import players as sprites
 import problems
@@ -91,10 +94,11 @@ def update(dt) -> None:
             Yammy
             All players' x_pos
             Floating players y_pos
-            All items' x_pos and y_pos
-
+            c.ALL_ITEMS x_pos and y_pos
+            c.ITEM x_pos and y_pos
     """
-#EFFECTS
+
+    #EFFECTS
     if c.BOMBOMB_EFFECT:                                        #mix items
         mix_items()
         c.BOMBOMB_EFFECT = False                            #reset flag
@@ -120,14 +124,11 @@ def update(dt) -> None:
 #        item_clean_up()
 
 
-#YAMMY
+    #YAMMY
     yammy.update()
 
-
-#ALL PLAYERS
-#     print(c.PLAYERS)
-    #reset player 1
-    c.P1 = c.PLAYERS[0]
+    #ALL PLAYERS
+    c.P1 = c.PLAYERS[0]     #reset player 1
 
     #update player positions
     for player in c.PLAYERS:
@@ -135,9 +136,9 @@ def update(dt) -> None:
         player.update(dt)
 
         #player automatically uses item
-#         if player.has_item() and c.SHOWING_BLACK_BOX == False: 
+#         if player.inventory and c.SHOWING_BLACK_BOX == False: 
 #             print("INVENTORY:", c.P1.inventory)
-#             players_item = c.P1.inventory[0]
+#             main_item = c.P1.inventory[0]
 #             player.use_item() 
    
         #update player scores 
@@ -146,12 +147,12 @@ def update(dt) -> None:
 #         if player.points != score_points: 
 #             score_object.update(score_object, player)           #player_score is in a different instance than player
 
-#FLOATING PLAYERS
+    #FLOATING PLAYERS
     #update floating players y_pos
     for player in c.FLOATING_PLAYERS:
         player.float()
 
-#ITEMS
+    #ITEMS
     #update items x_pos and y_pos
     for item in c.ALL_ITEMS:
         item.dest_x = ITEM_SPOTS[c.ALL_ITEMS.index(item)]
@@ -160,24 +161,19 @@ def update(dt) -> None:
         #TODO, fix y change speed
             c.ITEM.update(dt)
 
-#KEY HANDLERS
+    #KEY HANDLERS
     #disappear Yammy
     if c.KH[key.F]:
         yammy.toggle_disappear()
 
     #player 1 gets an item
     elif c.KH[key._1] and not any_movement() and not c.SHOWING_BLACK_BOX:
-        c.ITEM = c.ALL_ITEMS.pop(0)               #take item from list
-        #the item is no longer part of the c.ALL_ITEMS list
-        
-        print("item:", c.ITEM)
-        yammy.wave_wand()                       #visual action
-        c.ITEM.toggle_disappear()                 #change item's attributes
-        c.ITEM.dest_y = c.ITEM_DISAPPEAR_H        #make the item rise, make method of item
-        print("dest_y:", c.ITEM.dest_y)
-        print("cur_y:", c.ITEM.y)
-        c.ALL_ITEMS.append(new_item())          #add new item to list
-#         breakpoint()
+        yammy.wave_wand()
+        remove_item_from_all_items()
+
+        #TODO, fix item transfer below
+#         transfer_item_to_p1()
+        add_item(new_item)
 
     elif c.KH[key.LEFT] and not player_movement() and not c.SHOWING_BLACK_BOX:
         rotate_players_left()
@@ -205,14 +201,16 @@ def update(dt) -> None:
     elif c.KH[key.S] and not item_movement():
         mix_items()
 
-def item_clean_up(player) -> None:
-    """Performs item clean up."""
-    player = c.PLAYERS[0]
-    item = player.inventory[0]
-    c.SHOWING_BLACK_BOX = False                                 #reset flag, stop showing box
-    player.item = False                                         #reset flag
-    player.inventory.remove(item)                       #remove the item from player's inventory
-    item.delete()                                       #item's instance is deleted
+def item_clean_up() -> None:
+    """Removes item from c.P1 inventory and deletes it from the game."""
+    item = c.P1.inventory[0]
+    c.SHOWING_BLACK_BOX = False     #reset flag, stop showing box
+
+    #empty list returns false...
+#     c.P1.item = False               #reset flag
+
+    c.P1.inventory.remove(item)     #remove the item from c.P1's inventory
+    item.delete()                   #item's instance is deleted
 
     #show points in terminal (move to the update/draw blocks)
 #     for player in c.PLAYERS:
@@ -227,33 +225,35 @@ def on_draw():
     c.MAIN_BATCH.draw()
     c.P1 = c.PLAYERS[0]
 
-    if c.P1.has_item():
+#     if c.P1.has_item():
+    #if c.P1's inventory has anything, it returns True
+    if c.P1.inventory:
         # basic pattern:
             # draw the black box
             # change the guide
             # change the question in the problem
             # draw the guide
             # draw the question        
-        players_item = c.P1.inventory[0]
+        main_item = c.P1.inventory[0]
         VBB.draw()
         S_BB = True     #set flag
 
         if c.NEW_QUESTION:
             c.NEW_QUESTION = False    #reset flag
             #simple vocab
-            if isinstance(players_item, RedMushroom):    
+            if isinstance(main_item, RedMushroom):    
                 PROB.random_english_word()
             #verbs
-            elif isinstance(players_item, GreenMushroom):  
+            elif isinstance(main_item, GreenMushroom):  
                 PROB.random_present_verb()
             #Japanese to English translation
-            elif isinstance(players_item, PirahnaPlant):   
+            elif isinstance(main_item, PirahnaPlant):   
                 PROB.random_target_sentence()
             #pronunciation
-            elif isinstance(players_item, YoshiCoin):      
+            elif isinstance(main_item, YoshiCoin):      
                 PROB.random_pronunciation()
             #answer the question
-            elif isinstance(players_item, SpinyBeetle):    
+            elif isinstance(main_item, SpinyBeetle):    
                 PROB.random_question()
 #         PROB.guide.draw()
 #         PROB.question.draw()

@@ -14,6 +14,7 @@ def any_movement() -> bool:
     """Checks if anything is moving."""
     return any([player_movement(), item_movement()])
 
+#TODO, what about the movement of c.ITEM ?
 def item_movement() -> bool:
     """Checks if any item is moving."""
     return any([item.dx or item.dy for item in c.ALL_ITEMS])
@@ -42,13 +43,18 @@ def player_movement() -> bool:
     """Checks if any player is moving."""
     return any([player.moving for player in c.PLAYERS])
 
+def remove_item_from_all_items() -> None:
+    """Removes item from c.ALL_ITEMS and places it in c.ITEMS."""
+    c.ITEM = c.ALL_ITEMS.pop(0)
+
+def reverse_rotate_player_list():
+    """Rotates contents of players list to the right by one. Returns None."""
+    player = c.PLAYERS.pop()
+    c.PLAYERS.insert(0, player)
+
 def right_answer(player) -> None:
     """Gives a point to the player in the ready position."""
     player.points += 1
-
-def wrong_answer(player) -> None:
-    """Takes away a point from the player in the ready position."""
-    player.points -= 1
 
 def rotate_items_left() -> None:
     """Rotates contents of items list to the right by one.
@@ -76,16 +82,22 @@ def rotate_players_right() -> None:
     player = c.PLAYERS.pop()
     c.PLAYERS.insert(0, player)
 
-def reverse_rotate_player_list():
-    """Rotates contents of players list to the right by one. Returns None."""
-    player = c.PLAYERS.pop()
-    c.PLAYERS.insert(0, player)
-    
+
+
+
+
+def wrong_answer(player) -> None:
+    """Takes away a point from the player in the ready position."""
+    player.points -= 1
 
 
 
 
 #SETUP
+def add_item(new_item) -> None:
+    """Adds 1 new item to c.ALL_ITEMS."""
+    c.ALL_ITEMS.append(new_item())
+
 def add_items(new_item) -> None:
     """Populates c.ALL_ITEMS."""
     for item in range(c.NUM_ITEMS):
@@ -121,13 +133,6 @@ def center_walking_player(image):
 def center_ground_sprite(obj):
     obj.anchor_x = obj.width // 2
     obj.anchor_y = 0
-
-def falling_object(time):
-    """Calculates y position of falling object. Returns Integer."""
-    #calculates "-(1/2) * g * t^2" where g == 9.8 and time is the accumulated time for falling
-    #changed gravity to 5 from 9.8
-    return math.floor(-(0.5 * 5) * (time ** 2))
-
 
 class Line():
     """Line setup for items, players, scores, etc."""

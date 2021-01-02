@@ -31,7 +31,10 @@ class Player(SPRITE):
         super().__init__(*args, **kwargs)
         self.spot = self.x      #initially off screen, changed immediately
         self.delta_x = 0        #intially zero, changed immediately
+
+        #empty list returns false, don't need self.item
         self.item = False
+
         self.speed = "walk"
         self.moving = False
         self.rotating_players = False
@@ -48,12 +51,12 @@ class Player(SPRITE):
 #             self.speed = "run"
         self.move()
 
-    def has_item(self):
-        """Checks if the player has an item in their inventory. Returns None."""
-        if len(self.inventory) == 0:
-            return False
-        elif len(self.inventory) > 0:
-            return True
+#     def has_item(self):
+#         """Checks if the player has an item in their inventory. Returns None."""
+#         if len(self.inventory) == 0:
+#             return False
+#         elif len(self.inventory) > 0:
+#             return True
 
     def use_item(self):
         """Player uses the item in their inventory. Returns None."""
