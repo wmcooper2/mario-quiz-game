@@ -36,7 +36,7 @@ class Item(SPRITE):
         #opacity
         self.disappear_rate = 2
         self.disappear = False
-        self.disappear_height = 100
+        self.disappear_limit = 100
         self.max_opacity = 255
         self.min_opacity = 0
 
@@ -59,14 +59,9 @@ class Item(SPRITE):
         self.change_image()
         self.move() 
         self.disappear_animation()
-#         if self.dy != 0:
-#             print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
 
         #if self is the item to transfer, perform animation sequence
         if self == c.ITEM:
-#             print(f"{self}\t\tdx:{self.dx}, dy:{self.dy}")
-            print(f"op:{self.opacity} x:{self.x} y:{self.y} dx:{self.dx} dy:{self.dy} dest_x:{self.dest_x} dest_y:{self.dest_y}")
-#             print(tabulate([self.opacity, self.x, self.y, self.dx, self.dy, self.dest_x, self.dest_y], headers=c.SPRITE_DATA))
 
             #always update animation
             self.disappear_animation()
@@ -74,22 +69,21 @@ class Item(SPRITE):
             #item rise and disappear
             #if y_pos < disappear height & opacity > 0
             if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
-                self.dest_y = self.y + self.disappear_height
+                self.dest_y = self.y + self.disappear_limit
                 self.toggle_disappear()
 
             #item over player
             #if y_pos >= disappear height & opacity <= 0:
-            if self.opacity <= c.MIN_OPACITY and self.y >= c.ITEM_PLATFORM_H + self.disappear_height:
+            if not self.is_visible() and self.is_at_disappear_limit():
                 self.opacity = c.MIN_OPACITY
                 self.x, self.dest_x = c.P1.x, c.P1.x     # put item over P1
-#                 self.y, self.dest_y = c.P1.y + 130
 
             #item over player, much closer to it and appearing
             #if item is over P1 & higher than the platform plus the extra height
-#             if self.x == c.P1.x and self.y >= c.ITEM_PLATFORM_H + self.disappear_height:
-#                 self.dest_y = c.P1.y
-#                 self.y, self.dest_y = c.P1.y + self.disappear_height, c.P1.y
-#                 self.toggle_disappear()
+            if self.is_over_p1() and self.is_at_disappear_limit():
+                self.dest_y = c.P1.y
+                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y
+                self.toggle_disappear()
                 
 
 
@@ -147,11 +141,17 @@ class Item(SPRITE):
         elif self.opacity <= self.min_opacity:
             self.opacity = self.min_opacity
 
+    def is_at_disappear_limit(self) -> bool:
+        return self.y >= (c.ITEM_PLATFORM_H + self.disappear_limit)
+
     def is_left_of_p1(self) -> bool:
         return self.x < c.P1.x
 
     def is_on_platform(self) -> bool:
         return self.y == c.ITEM_PLATFORM_H
+
+    def is_over_p1(self) -> bool:
+        return self.x == c.P1.x 
 
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""

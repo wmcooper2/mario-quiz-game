@@ -57,7 +57,7 @@ class constants():
     NUM_ITEMS = 9
     GRADES = [1, 2, 3]
     PAGE_RANGE = [0, 500]
-    MIN_OPACITY = 255
+    MIN_OPACITY = 0
     MAX_OPACITY = 255
 
 #DIFFICULTY LEVEL
