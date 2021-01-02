@@ -4,7 +4,6 @@ from typing import Tuple
 
 #3rd party
 import pyglet
-# from tabulate import tabulate
 
 #custom
 from constants import constants as c
@@ -29,12 +28,11 @@ class Item(SPRITE):
         self.dy = 0
 
         #speed
-#         self.y_speed = round(c.ITEM_Y_SPEED / 3, 2)
-        self.y_speed = c.ITEM_Y_SPEED
+        self.y_speed = c.ITEM_Y_SPEED * 2
         self.x_speed = c.ITEM_X_SPEED
 
         #opacity
-        self.disappear_rate = 2
+        self.disappear_rate = 4
         self.disappear = False
         self.disappear_limit = 100
         self.max_opacity = 255
@@ -44,8 +42,6 @@ class Item(SPRITE):
 #         self.problem = problems.Problem()
 
         #flags
-#         self.moving = False
-#         self.falling = False
         self.special = False
         self.item_not_used = True
 
@@ -59,51 +55,8 @@ class Item(SPRITE):
         self.change_image()
         self.move() 
         self.disappear_animation()
+        self.transfer_item_animation()
 
-        #if self is the item to transfer, perform animation sequence
-        if self == c.ITEM:
-
-            #always update animation
-            self.disappear_animation()
-
-            #item rise and disappear
-            #if y_pos < disappear height & opacity > 0
-            if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
-                self.dest_y = self.y + self.disappear_limit
-                self.toggle_disappear()
-
-            #item over player
-            #if y_pos >= disappear height & opacity <= 0:
-            if not self.is_visible() and self.is_at_disappear_limit():
-                self.opacity = c.MIN_OPACITY
-                self.x, self.dest_x = c.P1.x, c.P1.x     # put item over P1
-
-            #item over player, much closer to it and appearing
-            #if item is over P1 & higher than the platform plus the extra height
-            if self.is_over_p1() and self.is_at_disappear_limit():
-                self.dest_y = c.P1.y
-                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y
-                self.toggle_disappear()
-                
-
-
-
-#                 self.toggle_disappear()
-#             self.disappear_animation()
-
-            ##after reaching full disappear height...
-#             if self.opacity == c.MIN_OPACITY:
-                #item x_pos == p1's x_pos
-#                 c.ITEM.x = c.P1.x
-
-                #item reappears
-#                 self.toggle_disappear()
-
-                #set item's dest_y to the player
-#                 c.ITEM.dest_y = c.P1.y
-
-            ##item falls with gravity
-#             self.apply_gravity(self.dt)
  
     def apply_gravity(self, time) -> None:
         """Calculates y position of falling item.
@@ -147,6 +100,9 @@ class Item(SPRITE):
     def is_left_of_p1(self) -> bool:
         return self.x < c.P1.x
 
+    def is_level_with_p1(self) -> bool:
+        return self.y == c.P1.y
+
     def is_on_platform(self) -> bool:
         return self.y == c.ITEM_PLATFORM_H
 
@@ -178,9 +134,31 @@ class Item(SPRITE):
         if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
             self.disappear = not self.disappear
 
-    def transfer_animation(self) -> None:
+    def transfer_item_animation(self) -> None:
         """The animation of giving the item to a player."""
-        pass
+        #if self is the item to transfer, perform animation sequence
+        if self == c.ITEM:
+
+            #always update animation
+            self.disappear_animation()
+
+            #item rise and disappear
+            print(self.is_visible(), self.is_on_platform(), self.is_left_of_p1(), self.is_at_disappear_limit())
+            if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
+                self.dest_y = self.y + self.disappear_limit
+                self.toggle_disappear()
+
+            #item over player
+            if not self.is_visible() and self.is_at_disappear_limit():
+                self.opacity = c.MIN_OPACITY
+                self.x, self.dest_x = c.P1.x, c.P1.x     # put item over P1
+
+            #item over player, much closer to it and appearing
+            if self.is_over_p1() and self.is_at_disappear_limit():
+                self.dest_y = c.P1.y
+                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y
+                self.toggle_disappear()
+
 
     def is_visible(self) -> bool:
         return self.opacity > c.MIN_OPACITY

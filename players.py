@@ -20,7 +20,7 @@ ANIM = pyglet.image.Animation.from_image_sequence
 SPRITE = pyglet.sprite.Sprite
 
 class Background(SPRITE):
-    background_img = IMG("quiz1.png")
+    background_img = IMG("grassland.png")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,7 +30,7 @@ class Player(SPRITE):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spot = self.x      #initially off screen, changed immediately
-        self.delta_x = 0        #intially zero, changed immediately
+        self.dx = 0        #intially zero, changed immediately
 
         #empty list returns false, don't need self.item
         self.item = False
@@ -43,7 +43,7 @@ class Player(SPRITE):
         self.point_index = 0
 
     def update(self, dt):
-        self.delta_x = self.x - self.spot
+        self.dx = self.x - self.spot
         #TODO, make util.Line.player_spots[-1] into "main_position"
         if c.GAME_JUST_STARTED or self.spot == util.Line.player_spots[-1]:
             self.speed = "run"
@@ -70,17 +70,16 @@ class Player(SPRITE):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""
         c.GAME_JUST_STARTED = False
 
-    def move(self):
-        """Moves the player. Returns None."""
+    def move(self) -> None:
+        """Moves the player."""
         if self.speed == "walk":
             self.walk()
         if self.speed == "run":
             self.run()
 
-    def walk(self):
-        """Walks the player left or right.
-            Returns None."""
-        delta = self.delta_x
+    def walk(self) -> None:
+        """Walks the player left or right."""
+        delta = self.dx
         #update sprite image
         if delta != 0 and self.moving == False:
             self.moving = True
@@ -100,7 +99,7 @@ class Player(SPRITE):
     def run(self):
         """Runs the player left or right.
             Returns None."""
-        delta = self.delta_x
+        delta = self.dx
         #update sprite image
         if delta != 0 and self.moving == False:
             self.moving = True
@@ -122,10 +121,10 @@ class Player(SPRITE):
         if delta < 0 and abs(delta) <= 3:
             self.x += 1
 
-    def delta_x(self):
-        """Get the distance between objects position and spot position.
-            Returns Integer."""
-        return self.x - self.spot
+#     def delta_x(self):
+#         """Get the distance between objects position and spot position.
+#             Returns Integer."""
+#         return self.x - self.spot
 
 class FloatingPlayer(Player):
     """Creates a player that floats cyclicly in the air."""    

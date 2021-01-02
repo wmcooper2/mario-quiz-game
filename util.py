@@ -4,6 +4,7 @@ import random
 
 #3rd party
 import pyglet
+from pyglet.window import key
 
 #custom
 from constants import constants as c
@@ -43,9 +44,13 @@ def player_movement() -> bool:
     """Checks if any player is moving."""
     return any([player.moving for player in c.PLAYERS])
 
-def remove_item_from_all_items() -> None:
+# def remove_item_from_all_items() -> None:
+def remove_item_from_all_items():
     """Removes item from c.ALL_ITEMS and places it in c.ITEMS."""
-    c.ITEM = c.ALL_ITEMS.pop(0)
+#     c.ITEM = c.ALL_ITEMS.pop(0)
+    item = c.ALL_ITEMS.pop(0)
+    c.ITEM = item
+    return item
 
 def reverse_rotate_player_list():
     """Rotates contents of players list to the right by one. Returns None."""
@@ -55,20 +60,15 @@ def reverse_rotate_player_list():
 def right_answer(player) -> None:
     """Gives a point to the player in the ready position."""
     player.points += 1
+    print(player, player.points)
 
 def rotate_items_left() -> None:
-    """Rotates contents of items list to the right by one.
-
-        Reverses order from what appears on screen.
-    """         
+    """Rotates contents of items list to the right by one."""         
     item = c.ALL_ITEMS.pop()
     c.ALL_ITEMS.insert(0, item)
 
 def rotate_items_right() -> None:
-    """Rotates contents of the items list to left the by one.
-
-        Reverse order from what appears on screen.
-    """      
+    """Rotates contents of the items list to left the by one."""      
     item = c.ALL_ITEMS.pop(0)
     c.ALL_ITEMS.append(item) 
 
@@ -82,13 +82,47 @@ def rotate_players_right() -> None:
     player = c.PLAYERS.pop()
     c.PLAYERS.insert(0, player)
 
-
-
-
-
 def wrong_answer(player) -> None:
     """Takes away a point from the player in the ready position."""
     player.points -= 1
+
+
+
+
+
+
+#KEY HANDLER CONVENIENCE FUNCTIONS
+def key_f() -> bool:
+    return c.KH[key.F]
+
+def key_1() -> bool:
+    return c.KH[key._1] 
+
+def key_left() -> bool:
+    return c.KH[key.LEFT] 
+
+def key_right() -> bool:
+    return c.KH[key.RIGHT] 
+
+def key_up() -> bool:
+    return c.KH[key.UP]
+
+def key_o() -> bool:
+    return c.KH[key.O]
+
+def key_x() -> bool:
+    return c.KH[key.X]
+
+def key_a() -> bool:
+    return c.KH[key.A]
+
+def key_d() -> bool:
+    return c.KH[key.D]
+
+def key_s() -> bool:
+    return c.KH[key.S]
+
+
 
 
 

@@ -3,29 +3,12 @@ import random
 
 #3rd party
 import pyglet
-from pyglet.window import key
+# from pyglet.window import key
 
 #custom
 from constants import constants as c
-from util import (
-    add_item,
-    add_items,
-    add_players,
-    any_movement,
-    item_movement,
-    mix_items,
-    mix_players,
-    player_movement,
-    remove_item_from_all_items,
-    reverse_rotate_player_list,
-    right_answer,
-    rotate_items_left,
-    rotate_items_right,
-    rotate_players_left,
-    rotate_players_right,
-#     transfer_item_to_p1,
-    Line)
-import players as sprites
+import util as u
+import players as sprites #TODO, change file name to sprites
 import problems
 import items #must come after sprites (resource mod is defined in sprites... move to main?) #not needed?
 from playerscores import scores_setup
@@ -64,13 +47,13 @@ c.FLOATING_PLAYERS = [
     big_boo]
 
 #local constants
-PLAYER_SPOTS = Line.player_spots
-ITEM_SPOTS = Line.item_spots
+PLAYER_SPOTS = u.Line.player_spots
+ITEM_SPOTS = u.Line.item_spots
 PROB = problems.Problem
-VBB = PROB.BLACK_BOX
+BB = PROB.BLACK_BOX
 
 #line setups
-lines = Line(screen_w=c.SCREEN_W, num_players=c.NUM_PLAYERS, num_items=c.NUM_ITEMS)
+lines = u.Line(screen_w=c.SCREEN_W, num_players=c.NUM_PLAYERS, num_items=c.NUM_ITEMS)
 lines.line_up()                         #player line up
 lines.item_line_up(c.ALL_ITEMS)         #item line up
 lines.top_row_line_up()                 #for scores and item at top of game_window
@@ -80,8 +63,8 @@ score_spots = lines.score_spots         #at top of game_window
 inventory_spot = lines.inventory_spot   #at top center of game_window
 
 #TODO, refactor the arg out
-add_items(new_item)                     #sets up c.ALL_ITEMS
-add_players(c.RANDOMIZE_PLAYERS)        #sets up c.PLAYERS
+u.add_items(new_item)                     #sets up c.ALL_ITEMS
+u.add_players(c.RANDOMIZE_PLAYERS)        #sets up c.PLAYERS
 scores_setup(score_spots)               #sets up scores at top of screen
 
 #Set Player 1, the player closest to the items
@@ -99,19 +82,19 @@ def update(dt) -> None:
     """
 
     #EFFECTS
-    if c.BOMBOMB_EFFECT:                                        #mix items
-        mix_items()
-        c.BOMBOMB_EFFECT = False                            #reset flag
-        item_clean_up()
-    if c.POW_BUTTON_EFFECT:                                 #all, minus one point
-        for player in c.PLAYERS:
-            player.points -= 1
-        c.POW_BUTTON_EFFECT = False                         #reset flag
-        item_clean_up()
-
+#     if c.BOMBOMB_EFFECT:                                        #mix items
+#         mix_items()
+#         c.BOMBOMB_EFFECT = False                            #reset flag
+#         item_clean_up()
+#     if c.POW_BUTTON_EFFECT:                                 #all, minus one point
+#         for player in c.PLAYERS:
+#             player.points -= 1
+#         c.POW_BUTTON_EFFECT = False                         #reset flag
+#         item_clean_up()
+# 
 #    if constants.FEATHER_EFFECT:
 #        print("change feather effect to something more interesting.")
-#        rotate_players_left()
+#        u.rotate_players_left()
 #        FEATHER_EFFECT = False                                 #reset flag
 #        item_clean_up()
 #    if constants.STAR_EFFECT:
@@ -159,48 +142,66 @@ def update(dt) -> None:
         item.update(dt)
 
     if c.ITEM is not None:
-    #TODO, fix y change speed
         c.ITEM.update(dt)
 
     #KEY HANDLERS
     #disappear Yammy
-    if c.KH[key.F]:
+    if u.key_f():
         yammy.toggle_disappear()
 
-    #player 1 gets an item
-    elif c.KH[key._1] and not any_movement() and not c.SHOWING_BLACK_BOX:
+    #Transfer item to player 1
+    elif u.key_1() and not u.any_movement() and not c.SHOWING_BLACK_BOX:
         yammy.wave_wand()
-        remove_item_from_all_items()
+#         u.remove_item_from_all_items()
+        player_item = u.remove_item_from_all_items()
 
-        #TODO, fix item transfer below
-#         transfer_item_to_p1()
-        add_item(new_item)
+        #add item to players inventory
+        c.P1.inventory = player_item
 
-    elif c.KH[key.LEFT] and not player_movement() and not c.SHOWING_BLACK_BOX:
-        rotate_players_left()
+        #item is currently kept in gameplay due to its reference in constants.py
+        #   but I need to move that reference to the player and remove from constants.py
+        #   do this when the item reaches the player on screen
+#         if c.ITEM.y == c.P1.y and player_item.is_over_p1():
+        if player_item.is_level_with_p1() and player_item.is_over_p1():
+            #assign item y to player y and same with x
+            #assign item y to player y
+            c.ITEM.y = P1.y
+            #assign item x to player x
+                #TODO
+            c.ITEM.x = P1.x
+            c.ITEM = None
 
-    elif c.KH[key.RIGHT] and not player_movement() and not c.SHOWING_BLACK_BOX:
-        rotate_players_right()
+        #TODO, remove parameter
+        u.add_item(new_item)
 
-    elif c.KH[key.UP] and not player_movement() and not c.SHOWING_BLACK_BOX:
-        mix_players()
+    elif u.key_left() and not u.player_movement() and not c.SHOWING_BLACK_BOX:
+        u.rotate_players_left()
 
-    elif c.KH[key.O] and c.P1.item and c.SHOWING_BLACK_BOX:
-        right_answer(c.P1)                        #plus one point
+    elif u.key_right() and not u.player_movement() and not c.SHOWING_BLACK_BOX:
+        u.rotate_players_right()
+
+    elif u.key_up() and not u.player_movement() and not c.SHOWING_BLACK_BOX:
+        u.mix_players()
+
+    #plus one point
+    #TODO, figure out how to give the item to the player, and persist in their inventory
+    elif u.key_o() and c.P1.item and c.SHOWING_BLACK_BOX:
+        u.right_answer(c.P1)
         item_clean_up()
 
-    elif c.KH[key.X] and c.P1.item and c.SHOWING_BLACK_BOX:
-        wrong_answer(c.P1)                        #minus one point
+    #minus one point
+    elif u.key_x() and c.P1.item and c.SHOWING_BLACK_BOX:
+        wrong_answer(c.P1)
         item_clean_up()
 
-    elif c.KH[key.A] and not item_movement():
-        rotate_items_left()
+    elif u.key_a() and not u.item_movement():
+        u.rotate_items_left()
 
-    elif c.KH[key.D] and not item_movement():
-        rotate_items_right()
+    elif u.key_d()  and not u.item_movement():
+        u.rotate_items_right()
 
-    elif c.KH[key.S] and not item_movement():
-        mix_items()
+    elif u.key_s() and not u.item_movement():
+        u.mix_items()
 
 def item_clean_up() -> None:
     """Removes item from c.P1 inventory and deletes it from the game."""
@@ -220,8 +221,8 @@ def item_clean_up() -> None:
 
 
 @c.GAME_WINDOW.event
-def on_draw():
-    """Draw the visual elements. Returns None."""
+def on_draw() -> None:
+    """Draw the visual elements."""
     c.GAME_WINDOW.clear()
     c.MAIN_BATCH.draw()
     c.P1 = c.PLAYERS[0]
@@ -235,9 +236,10 @@ def on_draw():
             # change the question in the problem
             # draw the guide
             # draw the question        
-        main_item = c.P1.inventory[0]
-        VBB.draw()
-        S_BB = True     #set flag
+#         main_item = c.P1.inventory[0]
+        main_item = c.P1.inventory
+#         BB.draw()
+#         S_BB = True     #set flag
 
         if c.NEW_QUESTION:
             c.NEW_QUESTION = False    #reset flag
