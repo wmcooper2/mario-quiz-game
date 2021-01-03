@@ -61,7 +61,8 @@ def mix_players() -> None:
 
 def player_movement() -> bool:
     """Checks if any player is moving."""
-    return any([player.moving for player in c.PLAYERS])
+#     return any([player.moving for player in c.PLAYERS])
+    return any([player.dx for player in c.PLAYERS])
 
 def player1_has_item() -> bool:
     """Does player1 have an item?"""

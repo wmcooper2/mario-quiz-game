@@ -95,6 +95,8 @@ class constants():
     ITEM_PLATFORM_W = 300
     ITEM_X_SPEED = 2        #set to 1 or 2 when not in debug mode
     ITEM_Y_SPEED = 1
+    PLAYER_X_SPEED = 2
+    PLAYER_Y_SPEED = 6
 
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90

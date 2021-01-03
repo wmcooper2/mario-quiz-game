@@ -177,8 +177,6 @@ class Item(c.SPRITE):
                     c.P1.inventory = c.ITEM             #assign x to player's x
                 c.ITEM = None                           #remove item from constants
 
-
-
     def is_visible(self) -> bool:
         """Is the opacity even slightly above 0? Then it's visible."""
         return self.opacity > self.min_opacity
@@ -207,9 +205,6 @@ class RedMushroom(Item):
         problems.showing_black_box = True
         self.problem.random_english_word()
 
-    def delete(self):
-        super(Item, self).delete()
-
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question."""
 
@@ -230,9 +225,6 @@ class GreenMushroom(Item):
         problems.showing_black_box = True
         self.problem.random_present_verb()
         
-    def delete(self):
-        super(Item, self).delete()
-
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question."""
     
@@ -260,9 +252,6 @@ class YoshiCoin(Item):
         """Presents a pronunciation problem. Returns None"""
         problems.showing_black_box = True
         self.problem.random_pronunciation()
-
-    def delete(self):
-        super(Item, self).delete()
 
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese)."""
@@ -292,9 +281,6 @@ class PirahnaPlant(Item):
         problems.showing_black_box = True
         self.problem.random_target_sentence()
 
-    def delete(self):
-        super(Item, self).delete()
-
 class SpinyBeetle(Item): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
 
@@ -321,9 +307,6 @@ class SpinyBeetle(Item):
         problems.showing_black_box = True
         self.problem.random_question()
 
-    def delete(self):
-        super(Item, self).delete()
-
 class PowButton(Item):
     """Pow Button takes away one point from everyone."""
         
@@ -343,9 +326,6 @@ class PowButton(Item):
         """Pow Button takes one point away from everyone. Returns None"""
 #         global pow_button_effect
         c.POW_BUTTON_EFFECT = True 
-
-    def delete(self):
-        super(Item, self).delete()
 
 class Bombomb(Item):
     """Bombomb randomly mixes the order of the items on the screen."""
@@ -373,9 +353,6 @@ class Bombomb(Item):
 #         global bombomb_effect
         c.BOMBOMB_EFFECT = True 
 
-    def delete(self):
-        super(Item, self).delete()
-
 class QuestionBlock(Item): #unfinished
     """Question block chooses a random effect."""
 
@@ -400,9 +377,6 @@ class QuestionBlock(Item): #unfinished
     def effect(self):
         """Choose a random effect from all of the available effects. Returns None."""
         print("question block effect")
-
-    def delete(self):
-        super(Item, self).delete()
 
 class Feather(Item): #unfinished
     """Feather allows the player to skip their turn when the item is used."""
@@ -429,9 +403,6 @@ class Feather(Item): #unfinished
         """Allows the player to skip a turn when the item is used. Returns None."""
         FEATHER_EFFECT = True
 
-    def delete(self):
-        super(Item, self).delete()
-
 class Star(Item): #unfinished
     """Star allows the player to avoid the negative affects of other items."""
 
@@ -457,7 +428,4 @@ class Star(Item): #unfinished
         """Star allows the player to avoid the negative affects of other items. Returns None."""
         print("star effect")
 
-    def delete(self):
-        super(Item, self).delete()
-    
     #need to set flags and call item clean up

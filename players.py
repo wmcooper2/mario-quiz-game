@@ -1,5 +1,6 @@
 #std lib
 import math
+from typing import Tuple
 
 #3rd party
 import pyglet
@@ -19,15 +20,20 @@ class Player(c.SPRITE):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        #location
         self.spot = self.x      #initially off screen, changed immediately
         self.dx = 0        #intially zero, changed immediately
 
-        #empty list returns false, don't need self.item
+        #speed
+        self.x_speed = c.PLAYER_X_SPEED
+        self.y_speed = c.PLAYER_Y_SPEED
+
+        #flags
+        self.rotating_players = False
         self.item = False
 
-        self.speed = "walk"
-        self.moving = False
-        self.rotating_players = False
+        #other
         self.inventory = []
         self.points = 0
         self.point_index = 0
@@ -36,8 +42,8 @@ class Player(c.SPRITE):
         """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         #TODO, make util.Line.player_spots[-1] into "main_position"
-        if c.GAME_JUST_STARTED or self.spot == util.Line.player_spots[-1]:
-            self.speed = "run"
+#         if c.GAME_JUST_STARTED or self.spot == util.Line.player_spots[-1]:
+#             self.speed = "run"
 #         if self.spot == util.Line.player_spots[-1]: #if the player is in the ready position
 #             self.speed = "run"
         self.move()
@@ -58,61 +64,31 @@ class Player(c.SPRITE):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""
         c.GAME_JUST_STARTED = False
 
-    def move(self) -> None:
-        """Moves the player."""
-        if self.speed == "walk":
-            self.walk()
-        if self.speed == "run":
-            self.run()
-
-    def walk(self) -> None:
-        """Walks the player left or right."""
-        delta = self.dx
-        #update sprite image
-        if delta != 0 and self.moving == False:
-            self.moving = True
-            if delta > 0:
+    def move(self) -> None: 
+        """Moves the players closer to dest_x and dest_y."""
+        dx = self.dx
+        if dx != 0:
+            if dx > 0 and self.image != self.walk_left_anim:
                 self.image = self.walk_left_anim
-            if delta < 0:
+            elif dx < 0 and self.image != self.walk_right_anim:
                 self.image = self.walk_right_anim
-        elif delta == 0:
+        elif dx == 0 and self.image != self.stand_left_anim:
             self.image = self.stand_left_anim 
-            self.moving = False
-        #move left or right
-        if delta > 0:
-            self.x -= 1
-        if delta < 0:
-            self.x += 1
 
-    def run(self):
-        """Runs the player left or right.
-            Returns None."""
-        delta = self.dx
-        #update sprite image
-        if delta != 0 and self.moving == False:
-            self.moving = True
-            if delta > 0:
-                self.image = self.run_left_anim
-            if delta < 0:
-                self.image = self.run_right_anim
-        elif delta == 0:
-            self.image = self.stand_left_anim 
-            self.moving = False
-            self.speed = "walk"
-        #move left or right
-        if delta > 0 and delta > 3:
-            self.x -= 3
-        if delta > 0 and delta <= 3:
-            self.x -= 1
-        if delta < 0 and abs(delta) > 3:
-            self.x += 3
-        if delta < 0 and abs(delta) <= 3:
-            self.x += 1
+        if dx > 0:
+            self.x -= self.x_speed
+        elif dx < 0:
+            self.x += self.x_speed
 
-#     def delta_x(self):
-#         """Get the distance between objects position and spot position.
-#             Returns Integer."""
-#         return self.x - self.spot
+        #if player within range of the speed "step", then just make delta == 0
+        close_x = self.within_margin()
+        if close_x:
+            self.x = self.spot
+
+    def within_margin(self) -> Tuple[bool, bool]:
+        """Checks if player within range of destination."""
+        return abs(self.dx) <= self.x_speed
+
 
 class FloatingPlayer(Player):
     """Creates a player that floats cyclicly in the air."""    
@@ -181,13 +157,19 @@ class FireLight(FloatingPlayer):
     stand_left = c.IMG("firelightwalkleft.png")
     util.center_floating_player(stand_left)
     stand_left_seq = c.GRID(stand_left, 1, 2)
-    stand_left_anim = c.ANIM(stand_left_seq, 0.1, True) 
+#     stand_left_anim = c.ANIM(stand_left_seq, 0.1, True) 
+
     walk_right = c.IMG("firelightwalkright.png")
     walk_right_seq = c.GRID(walk_right, 1, 2)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+
     walk_left = c.IMG("firelightwalkleft.png")
     walk_left_seq = c.GRID(walk_left, 1, 2)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+
+    #TEMP
+    stand_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+
     run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
     run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
     
