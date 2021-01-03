@@ -5,27 +5,17 @@ import math
 import pyglet
 
 #custom
-import util
 from constants import constants as c
+import util
 
-#setup image directory
-resource_dir = "./resources"
-pyglet.resource.path = [resource_dir]
-pyglet.resource.reindex()
 
-#convenience variables
-IMG = pyglet.resource.image
-GRID = pyglet.image.ImageGrid
-ANIM = pyglet.image.Animation.from_image_sequence
-SPRITE = pyglet.sprite.Sprite
-
-class Background(SPRITE):
-    background_img = IMG("grassland.png")
+class Background(c.SPRITE):
+    background_img = c.IMG("grassland.png")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-class Player(SPRITE):
+class Player(c.SPRITE):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -150,12 +140,12 @@ class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-class Yammy(SPRITE):
+class Yammy(c.SPRITE):
     
-    stand_right = IMG("yammystandright.png")    
-    action_right_img = IMG("yammyactionright.png")
-    action_right_seq = GRID(action_right_img, 1, 2)
-    action_right_anim = ANIM(action_right_seq, 0.2, False)
+    stand_right = c.IMG("yammystandright.png")    
+    action_right_img = c.IMG("yammyactionright.png")
+    action_right_seq = c.GRID(action_right_img, 1, 2)
+    action_right_anim = c.ANIM(action_right_seq, 0.2, False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -190,127 +180,127 @@ class Yammy(SPRITE):
 
 class FireLight(FloatingPlayer):
     
-    stand_left = IMG("firelightwalkleft.png")
+    stand_left = c.IMG("firelightwalkleft.png")
     util.center_floating_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1, 2)
-    stand_left_anim = ANIM(stand_left_seq, 0.1, True) 
-    walk_right = IMG("firelightwalkright.png")
-    walk_right_seq = GRID(walk_right, 1, 2)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left = IMG("firelightwalkleft.png")
-    walk_left_seq = GRID(walk_left, 1, 2)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1, 2)
+    stand_left_anim = c.ANIM(stand_left_seq, 0.1, True) 
+    walk_right = c.IMG("firelightwalkright.png")
+    walk_right_seq = c.GRID(walk_right, 1, 2)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left = c.IMG("firelightwalkleft.png")
+    walk_left_seq = c.GRID(walk_left, 1, 2)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Dragon(WalkingPlayer):
     
-    stand_left = IMG("dragonstandleft.png")
+    stand_left = c.IMG("dragonstandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1, 1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True) 
-    walk_right = IMG("dragonwalkright.png")
-    walk_right_seq = GRID(walk_right, 1, 2)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left = IMG("dragonwalkleft.png")
-    walk_left_seq = GRID(walk_left, 1, 2)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1, 1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True) 
+    walk_right = c.IMG("dragonwalkright.png")
+    walk_right_seq = c.GRID(walk_right, 1, 2)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left = c.IMG("dragonwalkleft.png")
+    walk_left_seq = c.GRID(walk_left, 1, 2)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigBoo(FloatingPlayer):
     
-    stand_left = IMG("bigboostandleft.png")
+    stand_left = c.IMG("bigboostandleft.png")
     util.center_floating_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1, 1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True) 
-    walk_right = IMG("bigboowalkright.png")
-    walk_right_seq = GRID(walk_right, 1, 1)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left = IMG("bigboowalkleft.png")
-    walk_left_seq = GRID(walk_left, 1, 1)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1, 1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True) 
+    walk_right = c.IMG("bigboowalkright.png")
+    walk_right_seq = c.GRID(walk_right, 1, 1)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left = c.IMG("bigboowalkleft.png")
+    walk_left_seq = c.GRID(walk_left, 1, 1)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class GreenKoopa(WalkingPlayer):
     
-    stand_left = IMG("greenkoopastandleft.png")
+    stand_left = c.IMG("greenkoopastandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1, 1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True) 
-    walk_right = IMG("greenkoopawalkright.png")
-    walk_right_seq = GRID(walk_right, 1, 2)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left = IMG("greenkoopawalkleft.png")
-    walk_left_seq = GRID(walk_left, 1, 2)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1, 1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True) 
+    walk_right = c.IMG("greenkoopawalkright.png")
+    walk_right_seq = c.GRID(walk_right, 1, 2)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left = c.IMG("greenkoopawalkleft.png")
+    walk_left_seq = c.GRID(walk_left, 1, 2)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class BigMole(WalkingPlayer):
     
-    stand_left = IMG("bigmolestandleft.png")
+    stand_left = c.IMG("bigmolestandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1,1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True) 
-    walk_right = IMG("bigmolewalkright.png")
-    walk_right_seq = GRID(walk_right, 1, 2)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left = IMG("bigmolewalkleft.png")
-    walk_left_seq = GRID(walk_left, 1, 2)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1,1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True) 
+    walk_right = c.IMG("bigmolewalkright.png")
+    walk_right_seq = c.GRID(walk_right, 1, 2)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left = c.IMG("bigmolewalkleft.png")
+    walk_left_seq = c.GRID(walk_left, 1, 2)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Mario(WalkingPlayer):
 
-    stand_left = IMG("bigmariostandleft.png")
+    stand_left = c.IMG("bigmariostandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1,1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True)
-    walk_right_img = IMG("bigmariowalkright.png")
-    walk_right_seq = GRID(walk_right_img, 1, 3)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left_img = IMG("bigmariowalkleft.png")
-    walk_left_seq = GRID(walk_left_img, 1, 3)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1,1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True)
+    walk_right_img = c.IMG("bigmariowalkright.png")
+    walk_right_seq = c.GRID(walk_right_img, 1, 3)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left_img = c.IMG("bigmariowalkleft.png")
+    walk_left_seq = c.GRID(walk_left_img, 1, 3)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 class Luigi(WalkingPlayer):
     
-#     stand_left = IMG("bigluigistandleft.png")
-    stand_left = IMG("bigluigistandleft.png")
+#     stand_left = c.IMG("bigluigistandleft.png")
+    stand_left = c.IMG("bigluigistandleft.png")
     util.center_walking_player(stand_left)
-    stand_left_seq = GRID(stand_left, 1,1)
-    stand_left_anim = ANIM(stand_left_seq, 1, True)
-    walk_right_img = IMG("bigluigiwalkright.png")
-    walk_right_seq = GRID(walk_right_img, 1, 2)
-    walk_right_anim = ANIM(walk_right_seq, 0.1, True)
-    walk_left_img = IMG("bigluigiwalkleft.png")
-    walk_left_seq = GRID(walk_left_img, 1, 2)
-    walk_left_anim = ANIM(walk_left_seq, 0.1, True)
-    run_right_anim = ANIM(walk_right_seq, 0.05, True)
-    run_left_anim = ANIM(walk_left_seq, 0.05, True)
+    stand_left_seq = c.GRID(stand_left, 1,1)
+    stand_left_anim = c.ANIM(stand_left_seq, 1, True)
+    walk_right_img = c.IMG("bigluigiwalkright.png")
+    walk_right_seq = c.GRID(walk_right_img, 1, 2)
+    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+    walk_left_img = c.IMG("bigluigiwalkleft.png")
+    walk_left_seq = c.GRID(walk_left_img, 1, 2)
+    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+    run_right_anim = c.ANIM(walk_right_seq, 0.05, True)
+    run_left_anim = c.ANIM(walk_left_seq, 0.05, True)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

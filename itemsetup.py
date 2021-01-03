@@ -69,7 +69,8 @@ def new_item():
         item = (items.YoshiCoin(img=items.YoshiCoin.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == c.PIRAHNA_PLANT:
-        item = (items.PirahnaPlant(img=items.PirahnaPlant.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
+#         item = (items.PirahnaPlant(img=items.PirahnaPlant.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
+        item = (items.PirahnaPlant(img=items.PirahnaPlant.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
         item.scale = 1.5
     elif item_choice == c.SPINY_BEETLE: 
         item = (items.SpinyBeetle(img=items.SpinyBeetle.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))

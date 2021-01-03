@@ -3,7 +3,6 @@ import random
 
 #3rd party
 import pyglet
-# from pyglet.window import key
 
 #custom
 from constants import constants as c
@@ -169,6 +168,9 @@ def update(dt) -> None:
             #assign item x to player x
                 #TODO
             c.ITEM.x = P1.x
+            # set the item's update loop to update its position with the player and not the normal way.
+
+            #reset the main item constant used for the transfer animation and to keep the item in the game while it is between the platform and the player
             c.ITEM = None
 
         #TODO, remove parameter

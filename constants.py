@@ -5,7 +5,20 @@ import enum
 import pyglet
 from pyglet.window import key
 
+
+#setup image directory
+resource_dir = "./resources"
+pyglet.resource.path = [resource_dir]
+pyglet.resource.reindex()
+
 class constants():
+
+
+#CONVENIENCE VARIABLES
+    IMG = pyglet.resource.image
+    GRID = pyglet.image.ImageGrid
+    ANIM = pyglet.image.Animation.from_image_sequence
+    SPRITE = pyglet.sprite.Sprite
 
 #FLAGS
     #DEBUG
@@ -62,10 +75,10 @@ class constants():
 
 #DIFFICULTY LEVEL
     SUPER_EASY = False
-    EASY = True
+    EASY = False
     MEDIUM = False
     HARD = False
-    SUPER_HARD = False
+    SUPER_HARD = True
 
 #PROBABILITIES
     #for 7 items, waiting to debug the 3 new ones (star, feather, question block)

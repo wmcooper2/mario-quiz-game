@@ -6,14 +6,10 @@ import util
 import players                  #needed for the players' images
 from constants import constants as c
 
-IMG = pyglet.resource.image
-GRID = pyglet.image.ImageGrid
-SPRITE = pyglet.sprite.Sprite
+class Coin(c.SPRITE):
 
-class Coin(SPRITE):
-
-    coin_img = IMG("yellowcoin.png")
-    coin_seq = GRID(coin_img, 1, 3)
+    coin_img = c.IMG("yellowcoin.png")
+    coin_seq = c.GRID(coin_img, 1, 3)
     coin = coin_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -22,10 +18,10 @@ class Coin(SPRITE):
     def delete(self):
         super().delete()
 
-class Skull(SPRITE):
+class Skull(c.SPRITE):
 
-    skull_img = IMG("skull.png") 
-    skull_seq = GRID(skull_img, 1, 1)
+    skull_img = c.IMG("skull.png") 
+    skull_seq = c.GRID(skull_img, 1, 1)
     skull = skull_seq[0]
 
     def __init__(self, *args, **kwargs):
@@ -34,7 +30,7 @@ class Skull(SPRITE):
     def delete(self):
         super().delete()
 
-class ScoreSprite(SPRITE):
+class ScoreSprite(c.SPRITE):
     
     def __init__(self, score_sprite=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
