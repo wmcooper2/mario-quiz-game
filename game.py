@@ -10,7 +10,7 @@ import util as u
 import players as sprites #TODO, change file name to sprites
 import problems
 import items #must come after sprites (resource mod is defined in sprites... move to main?) #not needed?
-from playerscores import scores_setup
+from playerscores import make_sprite
 from itemsetup import new_item # must stay here... strange error
 
 #SPRITES
@@ -46,25 +46,18 @@ c.FLOATING_PLAYERS = [
     big_boo]
 
 #local constants
-PLAYER_SPOTS = u.Line.player_spots
-ITEM_SPOTS = u.Line.item_spots
 PROB = problems.Problem
 BB = PROB.BLACK_BOX
 
 #line setups
-lines = u.Line(screen_w=c.SCREEN_W, num_players=c.NUM_PLAYERS, num_items=c.NUM_ITEMS)
-lines.line_up()                         #player line up
-lines.item_line_up(c.ALL_ITEMS)         #item line up
-lines.top_row_line_up()                 #for scores and item at top of game_window
-player_spots = lines.player_spots       #at players platform
-item_spots = lines.item_spots           #at item platform
-score_spots = lines.score_spots         #at top of game_window
-inventory_spot = lines.inventory_spot   #at top center of game_window
+u.set_player_spots()
+u.set_item_spots(c.ALL_ITEMS)
+u.set_score_spots()
 
 #TODO, refactor the arg out
 u.add_items(new_item)                     #sets up c.ALL_ITEMS
 u.add_players(c.RANDOMIZE_PLAYERS)        #sets up c.PLAYERS
-scores_setup(score_spots)               #sets up scores at top of screen
+u.scores_setup(c.SCORE_SPOTS, make_sprite)             #sets up scores at top of screen
 
 #Set Player 1, the player closest to the items
 c.P1 = c.PLAYERS[0]
@@ -84,26 +77,21 @@ def update(dt) -> None:
 #     if c.BOMBOMB_EFFECT:                                        #mix items
 #         mix_items()
 #         c.BOMBOMB_EFFECT = False                            #reset flag
-#         u.item_clean_up()
 #     if c.POW_BUTTON_EFFECT:                                 #all, minus one point
 #         for player in c.PLAYERS:
 #             player.points -= 1
 #         c.POW_BUTTON_EFFECT = False                         #reset flag
-#         u.item_clean_up()
 # 
 #    if constants.FEATHER_EFFECT:
 #        print("change feather effect to something more interesting.")
 #        u.rotate_players_left()
 #        FEATHER_EFFECT = False                                 #reset flag
-#        u.item_clean_up()
 #    if constants.STAR_EFFECT:
 #        print("change star effect to something more interesting.")
 #        STAR_EFFECT = False                                    #reset flag
-#        u.item_clean_up()
 #    if constants.QUESTION_BLOCK_EFFECT:
 #        print("change star effect to something more interesting.")
 #        QUESTION_BLOCK_EFFECT = False                          #reset flag
-#        u.item_clean_up()
 
 
     #YAMMY
@@ -114,7 +102,7 @@ def update(dt) -> None:
 
     #update player positions
     for player in c.PLAYERS:
-        player.spot = PLAYER_SPOTS[c.PLAYERS.index(player)]
+        player.spot = c.PLAYER_SPOTS[c.PLAYERS.index(player)]
         player.update(dt)
 
         #player automatically uses item
@@ -137,7 +125,7 @@ def update(dt) -> None:
     #ITEMS
     #update items x_pos and y_pos
     for item in c.ALL_ITEMS:
-        item.dest_x = ITEM_SPOTS[c.ALL_ITEMS.index(item)]
+        item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
         item.update(dt)
 
     if c.ITEM is not None:
@@ -153,7 +141,6 @@ def update(dt) -> None:
         yammy.wave_wand()
         temp = u.remove_item_from_all_items()
         temp.transfer_item()
-
         #TODO, remove parameter
         u.add_item(new_item)
 
@@ -167,15 +154,12 @@ def update(dt) -> None:
         u.mix_players()
 
     #plus one point
-    #TODO, figure out how to give the item to the player, and persist in their inventory
     elif u.key_o() and u.player1_has_item():
         u.right_answer(c.P1)
-        u.item_clean_up()
 
     #minus one point
     elif u.key_x() and u.player1_has_item():
         u.wrong_answer(c.P1)
-        u.item_clean_up()
 
     elif u.key_a() and not u.item_movement():
         u.rotate_items_left()

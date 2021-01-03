@@ -2,7 +2,6 @@
 import pyglet
 
 #custom
-import util
 import players                  #needed for the players' images
 from constants import constants as c
 
@@ -36,7 +35,9 @@ class ScoreSprite(c.SPRITE):
         super().__init__(*args, **kwargs)
         self.score_sprite = score_sprite
         self.points = 0
-        self.score_y = c.SCORE_SPRITE_Y - 30
+#         self.score_y = c.SCORE_SPRITE_Y - 30
+        self.score_y = c.SCORE_SPRITE_Y
+#         self.score_x = ???
 
         self.big_score = []
         self.big_score_spots = []
@@ -215,11 +216,3 @@ def make_sprite(player, score_x):
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     return score_sprite
-
-def scores_setup(spots) -> None:
-    """Setup the score sprites at the top of the screen."""
-    for player in c.PLAYERS:
-        score_x = spots[c.PLAYERS.index(player)]
-        sprite = make_sprite(player, score_x)
-        c.SCORE_DISPLAY.append(sprite) 
-        player.point_index = c.SCORE_DISPLAY.index(sprite) 

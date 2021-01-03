@@ -57,13 +57,23 @@ class constants():
     BOMBOMB = "bombomb"
 
 #IMPORTANT LISTS
+    #items
     ALL_ITEMS = []
-    PLAYERS = []
-    ALL_PLAYERS = []
-    SCORE_DISPLAY = []
-    WALKING_PLAYERS = []
-    FLOATING_PLAYERS = []
+    INVENTORY_SPOT = []
+    ITEM_SPOTS = []
     QUESTION_ITEM = []
+
+    #players
+    ALL_PLAYERS = []
+    FLOATING_PLAYERS = []
+    PLAYERS = []
+    PLAYER_SPOTS = []
+    WALKING_PLAYERS = []
+
+    #scores
+    SCORE_DISPLAY = []
+    SCORE_SPOTS = []
+    TOP_ROW_SPOTS = []
 
 #SETTINGS
     NUM_PLAYERS = 6
@@ -95,7 +105,7 @@ class constants():
     ITEM_PLATFORM_W = 300
     ITEM_X_SPEED = 2        #set to 1 or 2 when not in debug mode
     ITEM_Y_SPEED = 1
-    PLAYER_X_SPEED = 2
+    PLAYER_X_SPEED = 3
     PLAYER_Y_SPEED = 6
 
 #GAMEPLAY SETTINGS
@@ -111,8 +121,10 @@ class constants():
     OFF_SCREEN_L = -100
     FLOAT_H = 100
     WALK_H = 63
-    SCORE_SPRITE_Y = SCREEN_H - 36
     MAIN_TIME = 0
+#     SCORE_SPRITE_Y = SCREEN_H - 36
+    SCORE_SPRITE_Y = 50 - 36
+#     SCORE_DISPLAY_Y = SCREEN_H - 36
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
     P1 = None

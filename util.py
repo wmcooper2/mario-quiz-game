@@ -16,24 +16,6 @@ def any_movement() -> bool:
     """Checks if anything is moving."""
     return any([player_movement(), item_movement()])
 
-def item_clean_up() -> None:
-    """Removes item from c.P1 inventory and deletes it from the game."""
-    pass
-#     item = c.P1.inventory[0]
-#     c.SHOWING_BLACK_BOX = False     #reset flag, stop showing box
-
-    #empty list returns false...
-#     c.P1.item = False               #reset flag
-
-#     c.P1.inventory.remove(item)     #remove the item from c.P1's inventory
-#     item.delete()                   #item's instance is deleted
-
-    #show points in terminal (move to the update/draw blocks)
-#     for player in c.PLAYERS:
-#         print(player.__class__, " has ", player.points, " points.")
-#         print("point_index = ", player.point_index)
-
-
 #TODO, what about the movement of c.ITEM ?
 def item_movement() -> bool:
     """Checks if any item is moving."""
@@ -61,7 +43,6 @@ def mix_players() -> None:
 
 def player_movement() -> bool:
     """Checks if any player is moving."""
-#     return any([player.moving for player in c.PLAYERS])
     return any([player.dx for player in c.PLAYERS])
 
 def player1_has_item() -> bool:
@@ -189,45 +170,38 @@ def center_ground_sprite(obj):
     obj.anchor_x = obj.width // 2
     obj.anchor_y = 0
 
-class Line():
-    """Line setup for items, players, scores, etc."""
-    top_row_spots = []          #all positions at top of game_window
-    inventory_spot = []         #center top of game_window
-    player_spots = []           #filled by Line.line_up() 
-    item_spots = []             #filled by Line.item_line_up()
-    score_spots = []            #the xpos of the players' score sprites 
-#     mixing_player_spots = False
+def set_player_spots() -> None:
+    """Sets player positions on the screen."""
+    for place in range(c.NUM_PLAYERS):
+        if len(c.PLAYER_SPOTS) == 0:
+            first_spot = (c.SCREEN_W // 2) - 150
+            c.PLAYER_SPOTS.append(first_spot)
+        else:
+            next_spot = (c.SCREEN_W // 2) - 150 + (100 * place)
+            c.PLAYER_SPOTS.append(next_spot)
 
-    def __init__(self, num_players=0, screen_w=0, num_items=0, *args, **kwargs):
-        self.num_players = num_players
-        self.screen_w = screen_w
-        self.num_items = num_items
-        self.columns = []
+def set_item_spots(items) -> None:
+    """Sets item positions on the screen."""
+    for item in range(c.NUM_ITEMS):
+        if len(c.ITEM_SPOTS) == 0:
+            first_spot = (c.SCREEN_W // 2) - c.ITEM_START_LEFT
+            c.ITEM_SPOTS.append(first_spot)
+        else:
+            next_spot = (c.SCREEN_W // 2) - c.ITEM_START_LEFT - (24 * item) 
+            c.ITEM_SPOTS.append(next_spot)
 
-    def top_row_line_up(self):
-        """Sets the positions of the top row on the screen (scores and item inventory). Returns None."""
-        for spot in range(7):
-            self.top_row_spots.append((self.screen_w // 8) * spot + 125) 
-        if self.num_players >= 4:
-            self.inventory_spot.append(self.top_row_spots[3])
-        self.score_spots = self.top_row_spots[0:3] + self.top_row_spots[4:8] 
+def set_score_spots() -> None:
+    """Sets score positions on the screen."""
+    for spot in range(7):
+        c.TOP_ROW_SPOTS.append((c.SCREEN_W // 8) * spot + 125) 
+    if c.NUM_PLAYERS >= 4:
+        c.INVENTORY_SPOT.append(c.TOP_ROW_SPOTS[3])
+    c.SCORE_SPOTS = c.TOP_ROW_SPOTS[0:3] + c.TOP_ROW_SPOTS[4:8] 
 
-    def line_up(self):
-        """Sets the available player positions on the screen. Returns None."""
-        for place in range(self.num_players):
-            if len(self.player_spots) == 0:
-                first_spot = (self.screen_w // 2) - 150
-                self.player_spots.append(first_spot)
-            else:
-                next_spot = (self.screen_w // 2) - 150 + (100 * place)
-                self.player_spots.append(next_spot)
-
-    def item_line_up(self, items):
-        """Sets the available item positions on the screen. Returns None."""
-        for item in range(self.num_items):
-            if len(self.item_spots) == 0:
-                first_spot = (self.screen_w // 2) - c.ITEM_START_LEFT
-                self.item_spots.append(first_spot)
-            else:
-                next_spot = (self.screen_w // 2) - c.ITEM_START_LEFT - (24 * item) 
-                self.item_spots.append(next_spot)
+def scores_setup(spots, make_sprite) -> None:
+    """Setup the score sprites at the top of the screen."""
+    for player in c.PLAYERS:
+        score_x = spots[c.PLAYERS.index(player)]
+        sprite = make_sprite(player, score_x)
+        c.SCORE_DISPLAY.append(sprite) 
+        player.point_index = c.SCORE_DISPLAY.index(sprite) 
