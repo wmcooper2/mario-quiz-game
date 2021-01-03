@@ -41,6 +41,18 @@ class Player(c.SPRITE):
 #             self.speed = "run"
         self.move()
 
+
+
+        #TODO
+#         if self.inventory and self.inventory.x == self.x and self.inventory.y == self.y:
+        if self.inventory:
+            print(f"{self} {self.inventory}")
+#             item = self.inventory
+#             print(f"I have the item: {item.x} {item.y}, {self.x} {self.y}")
+#             if item.x == self.x and item.y == self.y:
+#                 item.x, item.y = self.x, self.y
+
+
 #     def has_item(self):
 #         """Checks if the player has an item in their inventory. Returns None."""
 #         if len(self.inventory) == 0:
