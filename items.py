@@ -24,6 +24,7 @@ class Item(c.SPRITE):
         #speed
         self.y_speed = c.ITEM_Y_SPEED * 2
         self.x_speed = c.ITEM_X_SPEED
+        self.gravity = 9.8
 
         #opacity
         self.disappear_rate = 4
@@ -49,7 +50,7 @@ class Item(c.SPRITE):
         self.change_image()
         self.move() 
         self.disappear_animation()
-        self.transfer_item_animation()
+        self.transfer_item()
  
     def apply_gravity(self, time) -> None:
         """Calculates y position of falling item.
@@ -61,7 +62,7 @@ class Item(c.SPRITE):
         """
         if time > 5:
             time = 0
-        self.y += math.floor(-(0.5 * 5) * (time ** 2))
+        self.y += math.floor(-(0.5 * self.gravity) * (time ** 2))
 
     def change_image(self) -> None:
         """Changes the sprite's image."""
@@ -95,9 +96,11 @@ class Item(c.SPRITE):
         """Is the item to the left of player 1?"""
         return self.x < c.P1.x
 
-    def is_level_with_p1(self) -> bool:
-        """Is the item perfectly level with player 1?"""
-        return self.y == c.P1.y
+    def is_at_or_below_p1(self) -> bool:
+#         """Is the item perfectly level with player 1?"""
+        """Is item at or below player 1 on y-axis?"""
+#         return self.y == c.P1.y
+        return self.y <= c.P1.y
 
     def is_on_platform(self) -> bool:
         """Is the item on the platform?"""
@@ -106,6 +109,10 @@ class Item(c.SPRITE):
     def is_over_p1(self) -> bool:
         """Is the item directly overhead player 1?"""
         return self.x == c.P1.x 
+
+    def match_p1_coords(self) -> None:
+        """Sets item x/y to player 1's x/y."""
+        self.x, self.y = c.P1.x, c.P1.y
 
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""
@@ -127,21 +134,22 @@ class Item(c.SPRITE):
         if close_y:
             self.y = self.dest_y
 
+    def move_to_p1_x_axis(self) -> None:
+        """Move item to same x axis."""
+        self.x, self.dest_x = c.P1.x, c.P1.x
+
     def toggle_disappear(self) -> None:
         """Toggle self.disappear flag."""
         if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
             self.disappear = not self.disappear
 
-    def transfer_item_animation(self) -> None:
+    def transfer_item(self) -> None:
         """The animation of giving the item to a player."""
         #if self is the item to transfer, perform animation sequence
         if self == c.ITEM:
-
-            #always update animation
-            self.disappear_animation()
+            self.disappear_animation()  #always update animation
 
             #item rise and disappear
-#             print(self.is_visible(), self.is_on_platform(), self.is_left_of_p1(), self.is_at_disappear_limit())
             if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
                 self.dest_y = self.y + self.disappear_limit
                 self.toggle_disappear()
@@ -149,16 +157,30 @@ class Item(c.SPRITE):
             #item over player
             if not self.is_visible() and self.is_at_disappear_limit():
                 self.opacity = self.min_opacity
-                self.x, self.dest_x = c.P1.x, c.P1.x     # put item over P1
+                self.move_to_p1_x_axis()
 
             #item over player, much closer to it and appearing
             if self.is_over_p1() and self.is_at_disappear_limit():
                 self.dest_y = c.P1.y
-                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y
+
+                # over shoot the dest_y to allow the floating players to grab the items
+                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y - c.SCREEN_H
                 self.toggle_disappear()
+
+            if self.is_at_or_below_p1() and self.is_over_p1():
+                self.match_p1_coords()
+                #TODO, the player must answer the question correctly in order to get the item.
+                if c.P1.inventory:
+                    c.P1.inventory.delete()             #remove item from game
+                    c.P1.inventory = c.ITEM             #assign x to player's x
+                else:
+                    c.P1.inventory = c.ITEM             #assign x to player's x
+                c.ITEM = None                           #remove item from constants
+
 
 
     def is_visible(self) -> bool:
+        """Is the opacity even slightly above 0? Then it's visible."""
         return self.opacity > self.min_opacity
 
     def within_margin(self) -> Tuple[bool, bool]:
@@ -166,7 +188,7 @@ class Item(c.SPRITE):
         return (abs(self.dx) <= self.x_speed, abs(self.dy) <= self.y_speed)
 
 class RedMushroom(Item):
-    """Red Mushroom is a random English vocabulary question. Returns None."""
+    """Red Mushroom is a random English vocabulary question."""
     
     stand_left = c.IMG("redmushroom.png")
     u.center_ground_sprite(stand_left)
@@ -189,7 +211,7 @@ class RedMushroom(Item):
         super(Item, self).delete()
 
 class GreenMushroom(Item):
-    """Green Mushroom is a random verb form question. Returns None."""
+    """Green Mushroom is a random verb form question."""
 
     stand_left = c.IMG("greenmushroom.png")
     u.center_ground_sprite(stand_left)
@@ -212,7 +234,7 @@ class GreenMushroom(Item):
         super(Item, self).delete()
 
 class YoshiCoin(Item):
-    """Yoshi Coin is a pronunciation question. Returns None."""
+    """Yoshi Coin is a pronunciation question."""
     
     stand_right = c.IMG("yoshicoinright.png")
     u.center_ground_sprite(stand_right)
@@ -243,7 +265,7 @@ class YoshiCoin(Item):
         super(Item, self).delete()
 
 class PirahnaPlant(Item):
-    """Pirahna Plant is a sentence translation problem (English to Japanese). Returns None."""
+    """Pirahna Plant is a sentence translation problem (English to Japanese)."""
 
     stand_right = c.IMG("pirahnaplantsmall.png")
     u.center_ground_sprite(stand_right)
@@ -274,7 +296,7 @@ class PirahnaPlant(Item):
         super(Item, self).delete()
 
 class SpinyBeetle(Item): 
-    """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu. Returns None."""
+    """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
 
     stand_right = c.IMG("spinybeetlestandright.png")
     u.center_ground_sprite(stand_right)
@@ -303,7 +325,7 @@ class SpinyBeetle(Item):
         super(Item, self).delete()
 
 class PowButton(Item):
-    """Pow Button takes away one point from everyone. Returns None."""
+    """Pow Button takes away one point from everyone."""
         
     stand_left = c.IMG("powbutton.png")
     u.center_ground_sprite(stand_left)
@@ -326,7 +348,7 @@ class PowButton(Item):
         super(Item, self).delete()
 
 class Bombomb(Item):
-    """Bombomb randomly mixes the order of the items on the screen. Returns None."""
+    """Bombomb randomly mixes the order of the items on the screen."""
 
     stand_right = c.IMG("bombombstandright.png")
     u.center_ground_sprite(stand_right)
@@ -355,7 +377,7 @@ class Bombomb(Item):
         super(Item, self).delete()
 
 class QuestionBlock(Item): #unfinished
-    """Question block chooses a random effect. Returns None."""
+    """Question block chooses a random effect."""
 
     stand_right = c.IMG("questionblock.png")
     u.center_ground_sprite(stand_right)
@@ -383,7 +405,7 @@ class QuestionBlock(Item): #unfinished
         super(Item, self).delete()
 
 class Feather(Item): #unfinished
-    """Feather allows the player to skip their turn when the item is used. Returns None."""
+    """Feather allows the player to skip their turn when the item is used."""
 
     stand_right = c.IMG("feather.png")
     u.center_ground_sprite(stand_right)
@@ -411,7 +433,7 @@ class Feather(Item): #unfinished
         super(Item, self).delete()
 
 class Star(Item): #unfinished
-    """Star allows the player to avoid the negative affects of other items. Returns None."""
+    """Star allows the player to avoid the negative affects of other items."""
 
     stand_right = c.IMG("star.png")
     u.center_ground_sprite(stand_right)

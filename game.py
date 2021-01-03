@@ -151,31 +151,8 @@ def update(dt) -> None:
     #Transfer item to player 1
     elif u.key_1() and not u.any_movement() and not c.SHOWING_BLACK_BOX:
         yammy.wave_wand()
-#         u.remove_item_from_all_items()
-        player_item = u.remove_item_from_all_items()
-
-        #add item to players inventory
-        c.P1.inventory = player_item
-
-        #item is currently kept in gameplay due to its reference in constants.py
-        #   but I need to move that reference to the player and remove from constants.py
-        #   do this when the item reaches the player on screen
-#         if c.ITEM.y == c.P1.y and player_item.is_over_p1():
-        #if the item is touching the player...
-        #TODO
-        print(player_item.is_level_with_p1(), player_item.is_over_p1())
-        if player_item.is_level_with_p1() and player_item.is_over_p1():
-            #assign item x/y to player x/y
-            c.ITEM.x, c.ITEM.y = c.P1.x, c.P1.y
-
-            #assign item x to player x
-#             c.P1.inventory.append(c.ITEM)
-            c.P1.inventory = c.ITEM
-            print("gave item to player")
-            # set the item's update loop to update its position with the player and not the normal way.
-
-            #reset the main item constant used for the transfer animation and to keep the item in the game while it is between the platform and the player
-            c.ITEM = None
+        temp = u.remove_item_from_all_items()
+        temp.transfer_item()
 
         #TODO, remove parameter
         u.add_item(new_item)

@@ -33,6 +33,7 @@ class Player(c.SPRITE):
         self.point_index = 0
 
     def update(self, dt):
+        """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         #TODO, make util.Line.player_spots[-1] into "main_position"
         if c.GAME_JUST_STARTED or self.spot == util.Line.player_spots[-1]:
@@ -41,24 +42,9 @@ class Player(c.SPRITE):
 #             self.speed = "run"
         self.move()
 
-
-
-        #TODO
-#         if self.inventory and self.inventory.x == self.x and self.inventory.y == self.y:
         if self.inventory:
-            print(f"{self} {self.inventory}")
-#             item = self.inventory
-#             print(f"I have the item: {item.x} {item.y}, {self.x} {self.y}")
-#             if item.x == self.x and item.y == self.y:
-#                 item.x, item.y = self.x, self.y
-
-
-#     def has_item(self):
-#         """Checks if the player has an item in their inventory. Returns None."""
-#         if len(self.inventory) == 0:
-#             return False
-#         elif len(self.inventory) > 0:
-#             return True
+            item = self.inventory
+            item.x, item.y = self.x, self.y
 
     def use_item(self):
         """Player uses the item in their inventory. Returns None."""
