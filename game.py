@@ -84,26 +84,26 @@ def update(dt) -> None:
 #     if c.BOMBOMB_EFFECT:                                        #mix items
 #         mix_items()
 #         c.BOMBOMB_EFFECT = False                            #reset flag
-#         item_clean_up()
+#         u.item_clean_up()
 #     if c.POW_BUTTON_EFFECT:                                 #all, minus one point
 #         for player in c.PLAYERS:
 #             player.points -= 1
 #         c.POW_BUTTON_EFFECT = False                         #reset flag
-#         item_clean_up()
+#         u.item_clean_up()
 # 
 #    if constants.FEATHER_EFFECT:
 #        print("change feather effect to something more interesting.")
 #        u.rotate_players_left()
 #        FEATHER_EFFECT = False                                 #reset flag
-#        item_clean_up()
+#        u.item_clean_up()
 #    if constants.STAR_EFFECT:
 #        print("change star effect to something more interesting.")
 #        STAR_EFFECT = False                                    #reset flag
-#        item_clean_up()
+#        u.item_clean_up()
 #    if constants.QUESTION_BLOCK_EFFECT:
 #        print("change star effect to something more interesting.")
 #        QUESTION_BLOCK_EFFECT = False                          #reset flag
-#        item_clean_up()
+#        u.item_clean_up()
 
 
     #YAMMY
@@ -162,12 +162,11 @@ def update(dt) -> None:
         #   do this when the item reaches the player on screen
 #         if c.ITEM.y == c.P1.y and player_item.is_over_p1():
         if player_item.is_level_with_p1() and player_item.is_over_p1():
-            #assign item y to player y and same with x
-            #assign item y to player y
-            c.ITEM.y = P1.y
+            #assign item x/y to player x/y
+            c.ITEM.x, c.ITEM.y = c.P1.x, c.P1.y
+
             #assign item x to player x
-                #TODO
-            c.ITEM.x = P1.x
+            c.P1.inventory.append(c.ITEM)
             # set the item's update loop to update its position with the player and not the normal way.
 
             #reset the main item constant used for the transfer animation and to keep the item in the game while it is between the platform and the player
@@ -187,14 +186,14 @@ def update(dt) -> None:
 
     #plus one point
     #TODO, figure out how to give the item to the player, and persist in their inventory
-    elif u.key_o() and c.P1.item and c.SHOWING_BLACK_BOX:
+    elif u.key_o() and u.player1_has_item():
         u.right_answer(c.P1)
-        item_clean_up()
+        u.item_clean_up()
 
     #minus one point
-    elif u.key_x() and c.P1.item and c.SHOWING_BLACK_BOX:
-        wrong_answer(c.P1)
-        item_clean_up()
+    elif u.key_x() and u.player1_has_item():
+        u.wrong_answer(c.P1)
+        u.item_clean_up()
 
     elif u.key_a() and not u.item_movement():
         u.rotate_items_left()
@@ -205,22 +204,7 @@ def update(dt) -> None:
     elif u.key_s() and not u.item_movement():
         u.mix_items()
 
-def item_clean_up() -> None:
-    """Removes item from c.P1 inventory and deletes it from the game."""
-    item = c.P1.inventory[0]
-    c.SHOWING_BLACK_BOX = False     #reset flag, stop showing box
-
-    #empty list returns false...
-#     c.P1.item = False               #reset flag
-
-    c.P1.inventory.remove(item)     #remove the item from c.P1's inventory
-    item.delete()                   #item's instance is deleted
-
-    #show points in terminal (move to the update/draw blocks)
-#     for player in c.PLAYERS:
-#         print(player.__class__, " has ", player.points, " points.")
-#         print("point_index = ", player.point_index)
-
+#TODO, rotate players after certain key presses, but not all
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:

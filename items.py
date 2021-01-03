@@ -8,7 +8,7 @@ import pyglet
 #custom
 from constants import constants as c
 import problems
-import util
+import util as u
 
 class Item(c.SPRITE):
     
@@ -141,7 +141,7 @@ class Item(c.SPRITE):
             self.disappear_animation()
 
             #item rise and disappear
-            print(self.is_visible(), self.is_on_platform(), self.is_left_of_p1(), self.is_at_disappear_limit())
+#             print(self.is_visible(), self.is_on_platform(), self.is_left_of_p1(), self.is_at_disappear_limit())
             if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
                 self.dest_y = self.y + self.disappear_limit
                 self.toggle_disappear()
@@ -169,7 +169,7 @@ class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question. Returns None."""
     
     stand_left = c.IMG("redmushroom.png")
-    util.center_ground_sprite(stand_left)
+    u.center_ground_sprite(stand_left)
     stand_left_seq = c.GRID(stand_left, 1, 1)
     stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
 
@@ -192,7 +192,7 @@ class GreenMushroom(Item):
     """Green Mushroom is a random verb form question. Returns None."""
 
     stand_left = c.IMG("greenmushroom.png")
-    util.center_ground_sprite(stand_left)
+    u.center_ground_sprite(stand_left)
     stand_left_seq = c.GRID(stand_left, 1, 1)
     stand_left_anim = c.ANIM(stand_left_seq, 1, True)
 
@@ -215,17 +215,17 @@ class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question. Returns None."""
     
     stand_right = c.IMG("yoshicoinright.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 5)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("yoshicoinleft.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 5)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("yoshicoinright.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 5)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
@@ -246,17 +246,17 @@ class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese). Returns None."""
 
     stand_right = c.IMG("pirahnaplantsmall.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 2)
     stand_right_anim = c.ANIM(stand_right_seq, 0.1, True)
 
     walk_left = c.IMG("pirahnaplantsmall.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 2)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("pirahnaplantsmall.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 2)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
@@ -277,17 +277,17 @@ class SpinyBeetle(Item):
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu. Returns None."""
 
     stand_right = c.IMG("spinybeetlestandright.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 1)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("spinybeetlewalkleft.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 2)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("spinybeetlewalkright.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 2)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
     
@@ -306,7 +306,7 @@ class PowButton(Item):
     """Pow Button takes away one point from everyone. Returns None."""
         
     stand_left = c.IMG("powbutton.png")
-    util.center_ground_sprite(stand_left)
+    u.center_ground_sprite(stand_left)
     stand_left_seq = c.GRID(stand_left, 1, 1)
     stand_left_anim = c.ANIM(stand_left_seq, 1, False)
 
@@ -329,17 +329,17 @@ class Bombomb(Item):
     """Bombomb randomly mixes the order of the items on the screen. Returns None."""
 
     stand_right = c.IMG("bombombstandright.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 1)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("bombombwalkleft.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 2)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("bombombwalkright.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 2)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
     
@@ -358,17 +358,17 @@ class QuestionBlock(Item): #unfinished
     """Question block chooses a random effect. Returns None."""
 
     stand_right = c.IMG("questionblock.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 4)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("questionblock.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 4)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("questionblock.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 4)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
     
@@ -386,17 +386,17 @@ class Feather(Item): #unfinished
     """Feather allows the player to skip their turn when the item is used. Returns None."""
 
     stand_right = c.IMG("feather.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 1)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("feather.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 1)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("feather.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 1)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
     
@@ -414,17 +414,17 @@ class Star(Item): #unfinished
     """Star allows the player to avoid the negative affects of other items. Returns None."""
 
     stand_right = c.IMG("star.png")
-    util.center_ground_sprite(stand_right)
+    u.center_ground_sprite(stand_right)
     stand_right_seq = c.GRID(stand_right, 1, 1)
     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
 
     walk_left = c.IMG("star.png")
-    util.center_ground_sprite(walk_left)
+    u.center_ground_sprite(walk_left)
     walk_left_seq = c.GRID(walk_left, 1, 1)
     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
 
     walk_right = c.IMG("star.png")
-    util.center_ground_sprite(walk_right)
+    u.center_ground_sprite(walk_right)
     walk_right_seq = c.GRID(walk_right, 1, 1)
     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
     

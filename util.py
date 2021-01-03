@@ -1,6 +1,7 @@
 #std lib
 import math
 import random
+from typing import Any
 
 #3rd party
 import pyglet
@@ -14,6 +15,24 @@ from constants import constants as c
 def any_movement() -> bool:
     """Checks if anything is moving."""
     return any([player_movement(), item_movement()])
+
+def item_clean_up() -> None:
+    """Removes item from c.P1 inventory and deletes it from the game."""
+    pass
+#     item = c.P1.inventory[0]
+#     c.SHOWING_BLACK_BOX = False     #reset flag, stop showing box
+
+    #empty list returns false...
+#     c.P1.item = False               #reset flag
+
+#     c.P1.inventory.remove(item)     #remove the item from c.P1's inventory
+#     item.delete()                   #item's instance is deleted
+
+    #show points in terminal (move to the update/draw blocks)
+#     for player in c.PLAYERS:
+#         print(player.__class__, " has ", player.points, " points.")
+#         print("point_index = ", player.point_index)
+
 
 #TODO, what about the movement of c.ITEM ?
 def item_movement() -> bool:
@@ -44,10 +63,12 @@ def player_movement() -> bool:
     """Checks if any player is moving."""
     return any([player.moving for player in c.PLAYERS])
 
-# def remove_item_from_all_items() -> None:
-def remove_item_from_all_items():
+def player1_has_item() -> bool:
+    """Does player1 have an item?"""
+    return bool(c.P1.inventory)
+
+def remove_item_from_all_items() -> Any:
     """Removes item from c.ALL_ITEMS and places it in c.ITEMS."""
-#     c.ITEM = c.ALL_ITEMS.pop(0)
     item = c.ALL_ITEMS.pop(0)
     c.ITEM = item
     return item
@@ -60,7 +81,6 @@ def reverse_rotate_player_list():
 def right_answer(player) -> None:
     """Gives a point to the player in the ready position."""
     player.points += 1
-    print(player, player.points)
 
 def rotate_items_left() -> None:
     """Rotates contents of items list to the right by one."""         
