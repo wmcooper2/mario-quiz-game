@@ -12,7 +12,7 @@ import util as u
 
 class Item(c.SPRITE):
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, scale=1, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         #location
@@ -33,12 +33,13 @@ class Item(c.SPRITE):
         self.max_opacity = 255
         self.min_opacity = 0
 
-        #problem
-#         self.problem = problems.Problem()
-
         #flags
         self.special = False
         self.item_not_used = True
+
+        #other
+#         self.problem = problems.Problem()
+        self.scale = scale
 
     def update(self, dt) -> None:
         """Item's main update."""

@@ -11,9 +11,38 @@ resource_dir = "./resources"
 pyglet.resource.path = [resource_dir]
 pyglet.resource.reindex()
 
+class player_speed(enum.Enum):
+    walk = 0
+    run = 1
+
+class Items(enum.Enum):
+    RED_MUSHROOM = 0
+    GREEN_MUSHROOM = 1
+    YOSHI_COIN = 2
+    PIRAHNA_PLANT = 3
+    SPINY_BEETLE = 4
+    POW_BUTTON = 5
+    BOMBOMB = 6
+    FEATHER = 7
+    STAR = 8
+    QUESTION_BLOCK = 9
+
+#DIFFICULTY LEVEL
+class Difficulty(enum.Enum):
+    SUPER_EASY = 0
+    EASY = 1
+    MEDIUM = 2
+    HARD = 3
+    SUPER_HARD = 4
+
+#     SUPER_EASY = False
+#     EASY = False
+#     MEDIUM = False
+#     HARD = False
+#     SUPER_HARD = True
+
+
 class constants():
-
-
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
     GRID = pyglet.image.ImageGrid
@@ -48,14 +77,6 @@ class constants():
     BOMBOMB_EFFECT = False
     POW_BUTTON_EFFECT = False
 
-    RED_MUSHROOM = "red mushroom"
-    GREEN_MUSHROOM = "green mushroom" 
-    YOSHI_COIN = "yoshi coin"
-    PIRAHNA_PLANT = "pirahna plant"
-    SPINY_BEETLE = "spiny beetle"
-    POW_BUTTON = "pow button"
-    BOMBOMB = "bombomb"
-
 #IMPORTANT LISTS
     #items
     ALL_ITEMS = []
@@ -82,13 +103,16 @@ class constants():
     PAGE_RANGE = [0, 500]
     MIN_OPACITY = 0
     MAX_OPACITY = 255
-
-#DIFFICULTY LEVEL
-    SUPER_EASY = False
-    EASY = False
-    MEDIUM = False
-    HARD = False
-    SUPER_HARD = True
+    FONT = "Comic Sans MS"
+    DIFFICULTY = Difficulty.SUPER_HARD
+    ITEM_SCALE = 1.5
+    ITEM_START_LEFT = 216   #be careful changing this value
+    ITEM_PLATFORM_H = 264
+    ITEM_PLATFORM_W = 300
+    ITEM_X_SPEED = 2        #set to 1 or 2 when not in debug mode
+    ITEM_Y_SPEED = 1
+    PLAYER_X_SPEED = 3
+    PLAYER_Y_SPEED = 6
 
 #PROBABILITIES
     #for 7 items, waiting to debug the 3 new ones (star, feather, question block)
@@ -99,14 +123,6 @@ class constants():
     MEDIUM_RANGE =      [5, 10, 20, 35, 50, 75, 100]            # 5,  5, 10, 15, 15, 25, 25
     HARD_RANGE =        [15, 30, 45, 60, 75, 90, 100]           #15, 15, 15, 15, 15, 15, 10
     SUPER_HARD_RANGE =  [10, 20, 40, 60, 80, 90, 100]           #10, 10, 20, 20, 20, 10, 10
-
-    ITEM_START_LEFT = 216   #be careful changing this value
-    ITEM_PLATFORM_H = 264
-    ITEM_PLATFORM_W = 300
-    ITEM_X_SPEED = 2        #set to 1 or 2 when not in debug mode
-    ITEM_Y_SPEED = 1
-    PLAYER_X_SPEED = 3
-    PLAYER_Y_SPEED = 6
 
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90
@@ -124,6 +140,7 @@ class constants():
     MAIN_TIME = 0
 #     SCORE_SPRITE_Y = SCREEN_H - 36
     SCORE_SPRITE_Y = 50 - 36
+#     SCORE_SPRITE_X = 
 #     SCORE_DISPLAY_Y = SCREEN_H - 36
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
@@ -136,8 +153,3 @@ class constants():
 
 #DEBUG TOOLS
     SPRITE_DATA = ["opacity", "x", "y", "dx", "dy", "dest_x", "dest_y"]
-
-class player_speed(enum.Enum):
-    walk = 0
-    run = 1
-

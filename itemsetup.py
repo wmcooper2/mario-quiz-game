@@ -1,5 +1,6 @@
 #std lib
 import random
+from typing import Any, List
 
 #3rd party
 import pyglet
@@ -7,84 +8,62 @@ import pyglet
 #custom
 import items
 from constants import constants as c
+from constants import Items as i
+from constants import Difficulty as d
 
-item_choices = [  
-                    c.RED_MUSHROOM, 
-                    c.GREEN_MUSHROOM, 
-                    c.YOSHI_COIN,
-                    c.PIRAHNA_PLANT,
-                    c.SPINY_BEETLE,
-                    c.POW_BUTTON,                     # non-question
-                    c.BOMBOMB,                        # non-question
-#                    "feather",                      # non-question
-#                    "star",                         # non-question
-#                    "question block",               # unknown
-]
-    
-def item_probability(probabilities):
-    """returns a choice of item based on the passed in probability list. Returns String."""
-    list_ = probabilities
+def choose_item(difficulty: List[int]) -> Any:
+    """Choose an item."""
+    if difficulty == d.SUPER_EASY:
+        return probability(c.SUPER_EASY_RANGE)
+    elif difficulty == d.EASY:
+        return probability(c.EASY_RANGE)
+    elif difficulty == d.MEDIUM:
+        return probability(c.MEDIUM_RANGE)
+    elif difficulty == d.HARD:
+        return probability(c.HARD_RANGE)
+    elif difficulty == d.SUPER_HARD:
+        return probability(c.SUPER_HARD_RANGE)
+
+def probability(choices) -> Any:
+    """returns a choice of item based on the passed in probability list."""
     choice = random.randrange(1, 100, 1)
-    if choice >= list_[5] and choice <= list_[6]:                  
-        item = c.RED_MUSHROOM
-    elif choice >= list_[4] and choice < list_[5]:               
-        item = c.GREEN_MUSHROOM 
-    elif choice >= list_[3] and choice < list_[4]:                
-        item = c.YOSHI_COIN 
-    elif choice >= list_[2] and choice < list_[3]:               
-        item = c.PIRAHNA_PLANT 
-    elif choice >= list_[1] and choice < list_[2]:              
-        item = c.SPINY_BEETLE 
-    elif choice >= list_[0] and choice < list_[1]:             
-        item = c.POW_BUTTON 
-    elif choice > 0 and choice < list_[0]:            
-        item = c.BOMBOMB 
-    return item
+    if choice >= choices[5] and choice <= choices[6]:                  
+        return i.RED_MUSHROOM
+    elif choice >= choices[4] and choice < choices[5]:               
+        return i.GREEN_MUSHROOM 
+    elif choice >= choices[3] and choice < choices[4]:                
+        return i.YOSHI_COIN 
+    elif choice >= choices[2] and choice < choices[3]:               
+        return i.PIRAHNA_PLANT 
+    elif choice >= choices[1] and choice < choices[2]:              
+        return i.SPINY_BEETLE 
+    elif choice >= choices[0] and choice < choices[1]:             
+        return i.POW_BUTTON 
+    elif choice > 0 and choice < choices[0]:            
+        return i.BOMBOMB 
     
-def new_item():
+def new_item() -> Any:
     """Adds new item to all_items. Returns Sprite object."""
-    #default item is RedMushroom
-    item = (items.RedMushroom(img=items.RedMushroom.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-    item.scale = 1.5
-    item_choice = c.RED_MUSHROOM
+    difficulty = c.DIFFICULTY
+    choice = choose_item(difficulty)
 
-    if c.SUPER_EASY:
-        item_choice = item_probability(c.SUPER_EASY_RANGE)
-    elif c.EASY:
-        item_choice = item_probability(c.EASY_RANGE)
-    elif c.MEDIUM:
-        item_choice = item_probability(c.MEDIUM_RANGE)
-    elif c.HARD:
-        item_choice = item_probability(c.HARD_RANGE)
-    elif c.SUPER_HARD:
-        item_choice = item_probability(c.SUPER_HARD_RANGE)
-    
-    if item_choice == c.RED_MUSHROOM: 
-        item = (items.RedMushroom(img=items.RedMushroom.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice ==  c.GREEN_MUSHROOM:
-        item = (items.GreenMushroom(img=items.GreenMushroom.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice == c.YOSHI_COIN: 
-        item = (items.YoshiCoin(img=items.YoshiCoin.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice == c.PIRAHNA_PLANT:
-#         item = (items.PirahnaPlant(img=items.PirahnaPlant.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item = (items.PirahnaPlant(img=items.PirahnaPlant.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice == c.SPINY_BEETLE: 
-        item = (items.SpinyBeetle(img=items.SpinyBeetle.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice == c.POW_BUTTON: 
-        item = (items.PowButton(img=items.PowButton.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-    elif item_choice == c.BOMBOMB:
-        item = (items.Bombomb(img=items.Bombomb.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-        item.scale = 1.5
-#    elif item_choice == "feather": 
-#        item = (items.Feather(img=items.Feather.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-#    elif item_choice == "star": 
-#        item = (items.Star(img=items.Star.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-#    elif item_choice == "question block": 
-#        item = (items.QuestionBlock(img=items.QuestionBlock.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH))
-    return item
+    if choice == i.RED_MUSHROOM: 
+        return (items.RedMushroom(img=items.RedMushroom.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.GREEN_MUSHROOM:
+        return (items.GreenMushroom(img=items.GreenMushroom.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.YOSHI_COIN: 
+        return (items.YoshiCoin(img=items.YoshiCoin.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.PIRAHNA_PLANT:
+        return (items.PirahnaPlant(img=items.PirahnaPlant.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.SPINY_BEETLE: 
+        return (items.SpinyBeetle(img=items.SpinyBeetle.walk_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.POW_BUTTON: 
+        return (items.PowButton(img=items.PowButton.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+    elif choice == i.BOMBOMB:
+        return (items.Bombomb(img=items.Bombomb.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+#    elif choice == i.FEATHER: 
+#        return (items.Feather(img=items.Feather.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+#    elif choice == i.STAR: 
+#        return (items.Star(img=items.Star.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))
+#    elif choice == i.QUESTION_BLOCK: 
+#        return (items.QuestionBlock(img=items.QuestionBlock.stand_right_anim, x=c.OFF_SCREEN_L, y=c.ITEM_PLATFORM_H, batch=c.MAIN_BATCH, scale=c.ITEM_SCALE))

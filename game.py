@@ -7,22 +7,23 @@ import pyglet
 #custom
 from constants import constants as c
 import util as u
-import players as sprites #TODO, change file name to sprites
+# import players as sprites #TODO, change file name to sprites
+import sprites as s
 import problems
 import items #must come after sprites (resource mod is defined in sprites... move to main?) #not needed?
-from playerscores import make_sprite
+from scores import mini_sprite
 from itemsetup import new_item # must stay here... strange error
 
 #SPRITES
-background = sprites.Background(img=sprites.Background.background_img, batch=c.MAIN_BATCH)
-yammy = sprites.make_yammy()
-mario = sprites.make_mario()
-luigi = sprites.make_luigi()
-fire_light = sprites.make_firelight()
-dragon = sprites.make_dragon()
-big_boo = sprites.make_big_boo()
-green_koopa = sprites.make_green_koopa()
-big_mole = sprites.make_big_mole()
+background = s.Background(img=s.Background.background_img, batch=c.MAIN_BATCH)
+yammy = s.yammy_sprite()
+mario = s.mario_sprite()
+luigi = s.luigi_sprite()
+fire_light = s.firelight_sprite()
+dragon = s.dragon_sprite()
+big_boo = s.bigboo_sprite()
+green_koopa = s.greenkoopa_sprite()
+big_mole = s.bigmole_sprite()
 
 c.ALL_PLAYERS = [
     mario,
@@ -57,7 +58,7 @@ u.set_score_spots()
 #TODO, refactor the arg out
 u.add_items(new_item)                     #sets up c.ALL_ITEMS
 u.add_players(c.RANDOMIZE_PLAYERS)        #sets up c.PLAYERS
-u.scores_setup(c.SCORE_SPOTS, make_sprite)             #sets up scores at top of screen
+u.scores_setup(c.SCORE_SPOTS, mini_sprite)             #sets up scores at top of screen
 
 #Set Player 1, the player closest to the items
 c.P1 = c.PLAYERS[0]
