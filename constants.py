@@ -35,13 +35,6 @@ class Difficulty(enum.Enum):
     HARD = 3
     SUPER_HARD = 4
 
-#     SUPER_EASY = False
-#     EASY = False
-#     MEDIUM = False
-#     HARD = False
-#     SUPER_HARD = True
-
-
 class constants():
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image

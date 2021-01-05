@@ -6,8 +6,8 @@ import pyglet
 
 #custom
 # import players                  #needed for the players' images
-import sprites as s
 from constants import constants as c
+import sprites as s
 
 class Coin(c.SPRITE):
     coin_img = c.IMG("yellowcoin.png")
@@ -174,8 +174,7 @@ def mini_sprite(player: Any, x_pos: int):
     """Make a mini sprite from 'player'. Returns Sprite object."""
     if isinstance(player, s.FireLight):
         score_sprite=ScoreSprite(
-#             img=s.FireLight.stand_left_seq[0],
-            img=s.FireLight.walk_left_anim,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             score_x=40,
@@ -183,13 +182,13 @@ def mini_sprite(player: Any, x_pos: int):
         score_sprite.y -= 5                             #readjusted for score_display only
     elif isinstance(player, s.Dragon):
         score_sprite=ScoreSprite(
-            img=s.Dragon.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     elif isinstance(player, s.BigBoo):
         score_sprite=ScoreSprite(
-            img=s.BigBoo.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
@@ -197,25 +196,25 @@ def mini_sprite(player: Any, x_pos: int):
         score_sprite.scale = 0.5
     elif isinstance(player, s.GreenKoopa):
         score_sprite=ScoreSprite(
-            img=s.GreenKoopa.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     elif isinstance(player, s.BigMole):
         score_sprite=ScoreSprite(
-            img=s.BigMole.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     elif isinstance(player, s.Mario):
         score_sprite=ScoreSprite(
-            img=s.Mario.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)
     elif isinstance(player, s.Luigi):
         score_sprite=ScoreSprite(
-            img=s.Luigi.stand_left,
+            img=player.img,
             x=x_pos,
             y=c.SCORE_SPRITE_Y,
             batch=c.MAIN_BATCH)

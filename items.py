@@ -65,6 +65,15 @@ class Item(c.SPRITE):
             time = 0
         self.y += math.floor(-(0.5 * self.gravity) * (time ** 2))
 
+#     def center_ground_sprite(obj):
+#         obj.anchor_x = obj.width // 2
+#         obj.anchor_y = 0
+
+    def center_ground_sprite(self) -> None:
+        """Center the sprites anchor to the middle-bottom of the image."""
+        self.anchor_x = self.width // 2
+        self.anchor_y = 0
+
     def change_image(self) -> None:
         """Changes the sprite's image."""
         dx = self.dx
@@ -188,18 +197,28 @@ class Item(c.SPRITE):
 
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question."""
-    
-    stand_left = c.IMG("redmushroom.png")
-    u.center_ground_sprite(stand_left)
-    stand_left_seq = c.GRID(stand_left, 1, 1)
-    stand_left_anim = pyglet.image.Animation.from_image_sequence(stand_left_seq, 1, True)
-
-    stand_right_anim = stand_left_anim
-    walk_left_anim = stand_left_anim
-    walk_right_anim = stand_left_anim
+#     self.stand_left = c.IMG("redmushroom.png")
+#     self.center_ground_sprite(self.stand_left)
+#     self.stand_left_seq = c.GRID(self.stand_left, 1, 1)
+#     self.stand_left_anim = c.ANIM(self.stand_left_seq, 1, True)
+#     self.stand_right_anim = self.stand_left_anim
+#     self.walk_left_anim = self.stand_left_anim
+#     self.walk_right_anim = self.stand_left_anim
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_left = c.IMG("redmushroom.png")
+        self.center_ground_sprite()
+        self.stand_left_seq = c.GRID(self.stand_left, 1, 1)
+        self.stand_left_anim = c.ANIM(self.stand_left_seq, 1, True)
+        self.stand_right_anim = self.stand_left_anim
+        self.walk_left_anim = self.stand_left_anim
+        self.walk_right_anim = self.stand_left_anim
+        self.img=self.stand_right_anim
+        self.x=c.OFF_SCREEN_L
+        self.y=c.ITEM_PLATFORM_H
+        self.batch=c.MAIN_BATCH
+        self.scale=c.ITEM_SCALE
 
     def effect(self):
         """Presents a random English word. Returns None"""
@@ -208,46 +227,60 @@ class RedMushroom(Item):
 
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question."""
-
-    stand_left = c.IMG("greenmushroom.png")
-    u.center_ground_sprite(stand_left)
-    stand_left_seq = c.GRID(stand_left, 1, 1)
-    stand_left_anim = c.ANIM(stand_left_seq, 1, True)
-
-    stand_right_anim = stand_left_anim
-    walk_left_anim = stand_left_anim
-    walk_right_anim = stand_left_anim
+#     stand_left = c.IMG("greenmushroom.png")
+#     self.center_ground_sprite(stand_left)
+#     stand_left_seq = c.GRID(stand_left, 1, 1)
+#     stand_left_anim = c.ANIM(stand_left_seq, 1, True)
+#     stand_right_anim = stand_left_anim
+#     walk_left_anim = stand_left_anim
+#     walk_right_anim = stand_left_anim
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_left = c.IMG("greenmushroom.png")
+        self.center_ground_sprite()
+        self.stand_left_seq = c.GRID(self.stand_left, 1, 1)
+        self.stand_left_anim = c.ANIM(self.stand_left_seq, 1, True)
+        self.stand_right_anim = self.stand_left_anim
+        self.walk_left_anim = self.stand_left_anim
+        self.walk_right_anim = self.stand_left_anim
 
     def effect(self):
         """Presents a verb form problem. Returns None"""
         problems.showing_black_box = True
         self.problem.random_present_verb()
-        
+
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question."""
-    
-    stand_right = c.IMG("yoshicoinright.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 5)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("yoshicoinleft.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 5)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("yoshicoinright.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 5)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-
-    stand_left_anim = walk_left_anim
+#     stand_right = c.IMG("yoshicoinright.png")
+#     self.center_ground_sprite(stand_right)
+#     stand_right_seq = c.GRID(stand_right, 1, 5)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("yoshicoinleft.png")
+#     self.center_ground_sprite(walk_left)
+#     walk_left_seq = c.GRID(walk_left, 1, 5)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("yoshicoinright.png")
+#     self.center_ground_sprite(walk_right)
+#     walk_right_seq = c.GRID(walk_right, 1, 5)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+#     stand_left_anim = walk_left_anim
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("yoshicoinright.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 5)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("yoshicoinleft.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 5)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("yoshicoinright.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 5)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
+        self.stand_left_anim = self.walk_left_anim
 
     def effect(self):
         """Presents a pronunciation problem. Returns None"""
@@ -256,26 +289,35 @@ class YoshiCoin(Item):
 
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese)."""
-
-    stand_right = c.IMG("pirahnaplantsmall.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 2)
-    stand_right_anim = c.ANIM(stand_right_seq, 0.1, True)
-
-    walk_left = c.IMG("pirahnaplantsmall.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 2)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("pirahnaplantsmall.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 2)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-
-    stand_left_anim = stand_right_anim
-
+#     stand_right = c.IMG("pirahnaplantsmall.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 2)
+#     stand_right_anim = c.ANIM(stand_right_seq, 0.1, True)
+#     walk_left = c.IMG("pirahnaplantsmall.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 2)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("pirahnaplantsmall.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 2)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
+#     stand_left_anim = stand_right_anim
+ 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("pirahnaplantsmall.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 2)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 0.1, True)
+        self.walk_left = c.IMG("pirahnaplantsmall.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("pirahnaplantsmall.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
+        self.stand_left_anim = self.stand_right_anim
 
     def effect(self):
         """Presents a sentence translation problem (English to Japanese). Returns None"""
@@ -284,24 +326,33 @@ class PirahnaPlant(Item):
 
 class SpinyBeetle(Item): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
+#     stand_right = c.IMG("spinybeetlestandright.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 1)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("spinybeetlewalkleft.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 2)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("spinybeetlewalkright.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 2)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
-    stand_right = c.IMG("spinybeetlestandright.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 1)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("spinybeetlewalkleft.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 2)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("spinybeetlewalkright.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 2)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("spinybeetlestandright.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 1)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("spinybeetlewalkleft.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("spinybeetlewalkright.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
 
     def effect(self):
         """Presents a question from yomitore, qa 100, and custom questions. Returns None"""
@@ -310,70 +361,91 @@ class SpinyBeetle(Item):
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone."""
-        
-    stand_left = c.IMG("powbutton.png")
-    u.center_ground_sprite(stand_left)
-    stand_left_seq = c.GRID(stand_left, 1, 1)
-    stand_left_anim = c.ANIM(stand_left_seq, 1, False)
-
-    stand_right_anim = stand_left_anim
-    walk_left_anim = stand_left_anim
-    walk_right_anim = stand_left_anim
+#     stand_left = c.IMG("powbutton.png")
+#     self.center_ground_sprite()
+#     stand_left_seq = c.GRID(stand_left, 1, 1)
+#     stand_left_anim = c.ANIM(stand_left_seq, 1, False)
+#     stand_right_anim = stand_left_anim
+#     walk_left_anim = stand_left_anim
+#     walk_right_anim = stand_left_anim
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_left = c.IMG("powbutton.png")
+        self.center_ground_sprite()
+        self.stand_left_seq = c.GRID(self.stand_left, 1, 1)
+        self.stand_left_anim = c.ANIM(self.stand_left_seq, 1, False)
+        self.stand_right_anim = self.stand_left_anim
+        self.walk_left_anim = self.stand_left_anim
+        self.walk_right_anim = self.stand_left_anim
 
     def effect(self):
         """Pow Button takes one point away from everyone. Returns None"""
-#         global pow_button_effect
         c.POW_BUTTON_EFFECT = True 
 
 class Bombomb(Item):
     """Bombomb randomly mixes the order of the items on the screen."""
+#     stand_right = c.IMG("bombombstandright.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 1)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("bombombwalkleft.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 2)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("bombombwalkright.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 2)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
-    stand_right = c.IMG("bombombstandright.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 1)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("bombombwalkleft.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 2)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("bombombwalkright.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 2)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.stand_right = c.IMG("bombombstandright.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 1)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("bombombwalkleft.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("bombombwalkright.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
+    
     def effect(self):
         """Randomly mix the order of items on the screen. Returns None."""
-#         global bombomb_effect
         c.BOMBOMB_EFFECT = True 
 
 class QuestionBlock(Item): #unfinished
     """Question block chooses a random effect."""
+#     stand_right = c.IMG("questionblock.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 4)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("questionblock.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 4)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("questionblock.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 4)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
-    stand_right = c.IMG("questionblock.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 4)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("questionblock.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 4)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("questionblock.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 4)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("questionblock.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 4)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("questionblock.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 4)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("questionblock.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 4)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
 
     def effect(self):
         """Choose a random effect from all of the available effects. Returns None."""
@@ -381,24 +453,33 @@ class QuestionBlock(Item): #unfinished
 
 class Feather(Item): #unfinished
     """Feather allows the player to skip their turn when the item is used."""
+#     stand_right = c.IMG("feather.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 1)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("feather.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 1)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("feather.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 1)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
-    stand_right = c.IMG("feather.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 1)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("feather.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 1)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("feather.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 1)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("feather.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 1)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("feather.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 1)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("feather.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 1)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
 
     def effect(self):
         """Allows the player to skip a turn when the item is used. Returns None."""
@@ -406,27 +487,34 @@ class Feather(Item): #unfinished
 
 class Star(Item): #unfinished
     """Star allows the player to avoid the negative affects of other items."""
+#     stand_right = c.IMG("star.png")
+#     self.center_ground_sprite()
+#     stand_right_seq = c.GRID(stand_right, 1, 1)
+#     stand_right_anim = c.ANIM(stand_right_seq, 1, True)
+#     walk_left = c.IMG("star.png")
+#     self.center_ground_sprite()
+#     walk_left_seq = c.GRID(walk_left, 1, 1)
+#     walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
+#     walk_right = c.IMG("star.png")
+#     self.center_ground_sprite()
+#     walk_right_seq = c.GRID(walk_right, 1, 1)
+#     walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
 
-    stand_right = c.IMG("star.png")
-    u.center_ground_sprite(stand_right)
-    stand_right_seq = c.GRID(stand_right, 1, 1)
-    stand_right_anim = c.ANIM(stand_right_seq, 1, True)
-
-    walk_left = c.IMG("star.png")
-    u.center_ground_sprite(walk_left)
-    walk_left_seq = c.GRID(walk_left, 1, 1)
-    walk_left_anim = c.ANIM(walk_left_seq, 0.1, True)
-
-    walk_right = c.IMG("star.png")
-    u.center_ground_sprite(walk_right)
-    walk_right_seq = c.GRID(walk_right, 1, 1)
-    walk_right_anim = c.ANIM(walk_right_seq, 0.1, True)
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.stand_right = c.IMG("star.png")
+        self.center_ground_sprite()
+        self.stand_right_seq = c.GRID(self.stand_right, 1, 1)
+        self.stand_right_anim = c.ANIM(self.stand_right_seq, 1, True)
+        self.walk_left = c.IMG("star.png")
+        self.center_ground_sprite()
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 1)
+        self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.walk_right = c.IMG("star.png")
+        self.center_ground_sprite()
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 1)
+        self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
 
     def effect(self):
         """Star allows the player to avoid the negative affects of other items. Returns None."""
         print("star effect")
-
-    #need to set flags and call item clean up
