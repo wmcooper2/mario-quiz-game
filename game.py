@@ -1,4 +1,5 @@
 #std lib
+from pprint import pprint
 import random
 
 #3rd party
@@ -7,16 +8,15 @@ import pyglet
 #custom
 from constants import constants as c
 from draw_loop import draw_game_board
+from effects import handle_item_effects
+import items as i
 from key_presses import handle_key_presses
 import util as u
 import sprites as s
-import items #must come after sprites (resource mod is defined in sprites... move to main?) #not needed?
 
-#TODO, remove this somehow
-# from itemsetup import new_item # must stay here... strange error
-
-#TODO, refactor new_item function out of this module
 #TODO, if player moves while item in air, then wierd stuff happens
+#TODO, items move to bottom of screen
+#TODO, game crashes on item transfer
 #TODO, make a way to check if player is walking type so that I don't have to waste memory or complicate things by adding another list here for walking vs floating players.
 
 #SPRITES
@@ -50,55 +50,57 @@ c.FLOATING_PLAYERS = [
     fire_light,
     big_boo]
 
-#line setups
-u.setup_positions_on_screen()
-# u.set_player_spots()
-# u.set_item_spots(c.ALL_ITEMS)
-# u.set_score_spots()
-# u.add_items(new_item)                     #sets up c.ALL_ITEMS
-u.add_items()                               #sets up c.ALL_ITEMS
-# u.add_players(c.RANDOMIZE_PLAYERS)        #sets up c.PLAYERS
-# u.scores_setup(c.SCORE_SPOTS, mini_sprite)
+# u.setup_positions_on_screen()
+u.set_player_spots()
+u.set_item_spots()
+i.add_items()
+u.set_score_spots()
+u.add_players(c.RANDOMIZE_PLAYERS)
+u.scores_setup(c.SCORE_SPOTS)
+c.P1 = c.PLAYERS[0]     #Set Player 1
 
-#Set Player 1, the player closest to the items
-c.P1 = c.PLAYERS[0]
+# ================================================================================
+# print("item_spots:", c.ITEM_SPOTS)
+# 
+# print("all_items:", len(c.ALL_ITEMS))
+# for item in c.ALL_ITEMS:
+#     print(item, item.x, item.dest_x) #no anchor_x here
+# 
+# 
+# temp = u.remove_item_from_all_items()
+# print("temp:", temp, temp.x, temp.dest_x)
+# print("c.ITEM:", c.ITEM)
+# 
+# 
+# print("all_items:", len(c.ALL_ITEMS))
+# for item in c.ALL_ITEMS:
+#     print(item, item.x, item.dest_x) #no anchor_x here
+# 
+# temp.transfer_item()
+# print("temp:", temp, temp.x, temp.dest_x)
+# print("c.ITEM:", c.ITEM)
+# 
+# i.add_item()
+# print("all_items:", len(c.ALL_ITEMS))
+# for item in c.ALL_ITEMS:
+#     print(item, item.x, item.dest_x) #no anchor_x here
+# print("temp:", temp, temp.x, temp.dest_x)
+# print("c.ITEM:", c.ITEM)
+# 
+# # temp.delete()
+# # c.ITEM.delete()
+#  
+# quit()
+# 
+# ================================================================================
 
-def update(dt) -> None:
-    """Game update loop.
-        Updates occur in this order;
-            Item effects
-            Yammy
-            All players' x_pos
-            Floating players y_pos
-            c.ALL_ITEMS x_pos and y_pos
-            c.ITEM x_pos and y_pos
-    """
 
-    #EFFECTS
-#     if c.BOMBOMB_EFFECT:                                        #mix items
-#         u.mix(c.ALL_ITEMS)
-#         c.BOMBOMB_EFFECT = False                            #reset flag
-#     if c.POW_BUTTON_EFFECT:                                 #all, minus one point
-#         for player in c.PLAYERS:
-#             player.points -= 1
-#         c.POW_BUTTON_EFFECT = False                         #reset flag
-#    if c.FEATHER_EFFECT:
-#        print("change feather effect to something more interesting.")
-#        u.rotate_players_left()
-#        FEATHER_EFFECT = False                                 #reset flag
-#    if c.STAR_EFFECT:
-#        print("change star effect to something more interesting.")
-#        STAR_EFFECT = False                                    #reset flag
-#    if c.QUESTION_BLOCK_EFFECT:
-#        print("change star effect to something more interesting.")
-#        QUESTION_BLOCK_EFFECT = False                          #reset flag
 
-    #YAMMY
-    yammy.update()
 
-    #ALL PLAYERS
+
+
+def update_players(dt) -> None:
     c.P1 = c.PLAYERS[0]     #reset player 1
-
     #update player positions
     for player in c.PLAYERS:
         player.spot = c.PLAYER_SPOTS[c.PLAYERS.index(player)]
@@ -117,23 +119,25 @@ def update(dt) -> None:
 #             score_object.update(score_object, player)           #player_score is in a different instance than player
 
     #FLOATING PLAYERS
-    #update floating players y_pos
     for player in c.FLOATING_PLAYERS:
         player.float()
 
-    #ITEMS
-    #update items x_pos and y_pos
+def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
-        if item is not None:
-            item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
-            item.update(dt)
-
-    if c.ITEM is not None:
+        item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
+        item.update(dt)
+    if c.ITEM != None:
         c.ITEM.update(dt)
 
-    #KEY HANDLERS
-    #need to pass yammy
-    handle_key_presses(yammy)
+
+
+def update(dt) -> None:
+    """Game update loop."""
+#     handle_item_effects()
+    yammy.update()
+    update_players(dt)
+    update_items(dt)
+    handle_key_presses(yammy)   #need to pass yammy
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:

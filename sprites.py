@@ -17,13 +17,12 @@ class Background(c.SPRITE):
         super().__init__(*args, **kwargs)
 
 class Player(c.SPRITE):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         #location
-        self.spot = self.x      #initially off screen, changed immediately
-        self.dx = 0        #intially zero, changed immediately
+        self.spot = self.x  #initially off screen, changed immediately
+        self.dx = 0         #intially zero, changed immediately
         self.dy = 0
 
         #speed
