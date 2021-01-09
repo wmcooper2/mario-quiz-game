@@ -170,7 +170,7 @@ class ScoreSprite(c.SPRITE):
         self.big_score.append(pyglet.text.Label(text="x", x=self.big_score_spots[1], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=c.MAIN_BATCH))
         self.big_score.append(pyglet.text.Label(text=str(abs(self.points)), x=self.big_score_spots[2], y=self.score_y, font_name="Comic Sans MS", font_size=24, batch=c.MAIN_BATCH))
 
-def mini_sprite(player: Any, x_pos: int):
+def mini_sprite(player: Any, x_pos: int) -> Any:
     """Make a mini sprite from 'player'. Returns Sprite object."""
     if isinstance(player, s.FireLight):
         score_sprite=ScoreSprite(
