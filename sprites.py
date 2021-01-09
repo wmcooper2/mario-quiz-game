@@ -10,12 +10,6 @@ from constants import constants as c
 import util as u
 
 
-class Background(c.SPRITE):
-    background_img = c.IMG("grassland.png")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
 class Player(c.SPRITE):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -118,24 +112,17 @@ class WalkingPlayer(Player):
         super().__init__(*args, **kwargs)
         
 class Yammy(c.SPRITE):
-#     stand_right = c.IMG("yammystandright.png")    
-#     action_right_img = c.IMG("yammyactionright.png")
-#     action_right_seq = c.GRID(action_right_img, 1, 2)
-#     action_right_anim = c.ANIM(action_right_seq, 0.2, False)
-
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.stand_right = c.IMG("yammystandright.png")    
-        self.stand_right = img
-        self.action_right_img = c.IMG("yammyactionright.png")
-        self.action_right_seq = c.GRID(self.action_right_img, 1, 2)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("yammystandright.png")
+        self.action_right = c.IMG("yammyactionright.png")
+        self.action_right_seq = c.GRID(self.action_right, 1, 2)
         self.action_right_anim = c.ANIM(self.action_right_seq, 0.2, False)
         self.disappear = False
         self.disappear_rate = 3
         self.max_opacity = 255
         self.min_opacity = 0
 
-#         self.img=self.stand_right
+        super().__init__(self.right, *args, **kwargs)
         self.x=30
         self.y=c.ITEM_PLATFORM_H
         self.batch=c.MAIN_BATCH
@@ -169,10 +156,8 @@ class Yammy(c.SPRITE):
 
 #FLOATERS
 class FireLight(FloatingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("firelightwalkleft.png")
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("firelightwalkleft.png")
         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 2)
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)  #not animated while standing 
@@ -182,20 +167,16 @@ class FireLight(FloatingPlayer):
         self.walk_left = c.IMG("firelightwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-    #     left_anim = c.ANIM(walk_left_seq, 0.1, True)  #Player animates while standing
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
-#         self.img=self.walk_left_anim
+
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
         self.batch=c.MAIN_BATCH
         self.scale = 1.5
 
 class BigBoo(FloatingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("bigboostandleft.png")
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("bigboostandleft.png")
         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
@@ -205,19 +186,16 @@ class BigBoo(FloatingPlayer):
         self.walk_left = c.IMG("bigboowalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 1)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
-#         self.img=self.left
+
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
         self.batch=c.MAIN_BATCH
 
 #WALKERS
 class Dragon(WalkingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("dragonstandleft.png")
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("dragonstandleft.png")
         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
@@ -227,20 +205,16 @@ class Dragon(WalkingPlayer):
         self.walk_left = c.IMG("dragonwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
 
-#         self.img=self.left
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
         self.batch=c.MAIN_BATCH
         self.scale = 2
 
 class GreenKoopa(WalkingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("greenkoopastandleft.png")
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("greenkoopastandleft.png")
         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
@@ -250,19 +224,15 @@ class GreenKoopa(WalkingPlayer):
         self.walk_left = c.IMG("greenkoopawalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
 
-#         self.img=self.left
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
         self.batch=c.MAIN_BATCH 
         self.scale = 2
 
 class BigMole(WalkingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("bigmolestandleft.png")
+    def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmolestandleft.png")
         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
@@ -273,19 +243,16 @@ class BigMole(WalkingPlayer):
         self.walk_left = c.IMG("bigmolewalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
 
-#         self.img=self.left
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
         self.batch=c.MAIN_BATCH
         self.scale = 1.5 
 
 class Mario(WalkingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("bigmariostandleft.png")
         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
@@ -295,20 +262,16 @@ class Mario(WalkingPlayer):
         self.walk_left = c.IMG("bigmariowalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 3)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
 
-#         self.img=self.left
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
         self.batch=c.MAIN_BATCH
         self.scale = 2
 
 class Luigi(WalkingPlayer):
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-#         self.left = c.IMG("bigluigistandleft.png")
-        self.left = img
+    def __init__(self, *args, **kwargs):
+        self.left = c.IMG("bigluigistandleft.png")
         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
@@ -318,10 +281,8 @@ class Luigi(WalkingPlayer):
         self.walk_left = c.IMG("bigluigiwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
-        self.run_right_anim = c.ANIM(self.walk_right_seq, 0.05, True)
-        self.run_left_anim = c.ANIM(self.walk_left_seq, 0.05, True)
-        
-#         self.img=self.left
+
+        super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
         self.batch=c.MAIN_BATCH

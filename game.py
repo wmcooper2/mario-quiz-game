@@ -16,37 +16,19 @@ import sprites as s
 
 #TODO, if player moves while item in air, then wierd stuff happens
 #TODO, items move to bottom of screen
-#TODO, make a way to check if player is walking type so that I don't have to waste memory or complicate things by adding another list here for walking vs floating players.
 
 #SPRITES
-background = s.Background(img=s.Background.background_img, batch=c.MAIN_BATCH)
-
-# yammy = s.Yammy(img=c.IMG("yammystandright.png"))
-# mario = s.Mario(img=c.IMG("bigmariostandleft.png"))
-# luigi = s.Luigi(img=c.IMG("bigluigistandleft.png"))
-# fire_light = s.FireLight(img=c.IMG("firelightwalkleft.png"))
-# dragon = s.Dragon(img=c.IMG("dragonstandleft.png"))
-# big_boo = s.BigBoo(img=c.IMG("bigboostandleft.png"))
-# green_koopa = s.GreenKoopa(img=c.IMG("greenkoopastandleft.png"))
-# big_mole = s.BigMole(img=c.IMG("bigmolestandleft.png"))
-
-yammy = s.Yammy(c.IMG("yammystandright.png"))
-mario = s.Mario(c.IMG("bigmariostandleft.png"))
-luigi = s.Luigi(c.IMG("bigluigistandleft.png"))
-fire_light = s.FireLight(c.IMG("firelightwalkleft.png"))
-dragon = s.Dragon(c.IMG("dragonstandleft.png"))
-big_boo = s.BigBoo(img=c.IMG("bigboostandleft.png"))
-green_koopa = s.GreenKoopa(c.IMG("greenkoopastandleft.png"))
-big_mole = s.BigMole(c.IMG("bigmolestandleft.png"))
-
-# mario = s.Mario()
-# luigi = s.Luigi()
-# fire_light = s.FireLight()
-# dragon = s.Dragon()
-# big_boo = s.BigBoo()
-# green_koopa = s.GreenKoopa()
-# big_mole = s.BigMole()
-
+background = c.SPRITE(c.IMG("grassland.png"), batch=c.MAIN_BATCH)
+yammy = s.Yammy()
+#floaters
+fire_light = s.FireLight()
+big_boo = s.BigBoo()
+#walkers
+dragon = s.Dragon()
+green_koopa = s.GreenKoopa()
+big_mole = s.BigMole()
+mario = s.Mario()
+luigi = s.Luigi()
 
 c.ALL_PLAYERS = [
     mario,
@@ -68,14 +50,21 @@ c.FLOATING_PLAYERS = [
     fire_light,
     big_boo]
 
-# u.setup_positions_on_screen()
-u.set_player_spots()
+#     set_player_spots()
+#     set_item_spots()
+
+#items
 u.set_item_spots()
 i.add_items()
-u.set_score_spots()
+
+#players
+u.set_player_spots()
 u.add_players(c.RANDOMIZE_PLAYERS)
-# u.scores_setup(c.SCORE_SPOTS)
 c.P1 = c.PLAYERS[0]     #Set Player 1
+
+#Scores
+u.set_score_spots()
+u.scores_setup(c.SCORE_SPOTS)
 
 # ================================================================================
 # print("item_spots:", c.ITEM_SPOTS)

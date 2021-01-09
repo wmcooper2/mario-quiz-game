@@ -50,12 +50,12 @@ def draw_game_board() -> None:
     #         PROB.question.draw()
 
     #SCORES
-    for score in scores:
-        if score.points == 0:
-            score.zero.draw()
-        elif abs(score.points) > 0 and abs(score.points) <= 5:
-            for element in score.small_score:
-                element.draw()
-        elif abs(score.points) > 5:
-            for element in score.big_score:
-                element.draw()
+#     for score in scores:
+#         if score.points == 0:
+#             score.zero.draw()
+#         elif abs(score.points) > 0 and abs(score.points) <= 5:
+#             for element in score.small_score:
+#                 element.draw()
+#         elif abs(score.points) > 5:
+#             for element in score.big_score:
+#                 element.draw()

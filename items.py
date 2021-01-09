@@ -12,7 +12,7 @@ from constants import Difficulty as d
 from constants import Items as i
 import problems as p
 
-#TODO, fix walk attribute to spiny beetle, bombomb
+#TODO, finish Feather, QuestionBlock, Star classes
 
 class Item(c.SPRITE):
     def __init__(self, img, scale=1, *args, **kwargs):
@@ -23,8 +23,6 @@ class Item(c.SPRITE):
         self.y=c.ITEM_PLATFORM_H
         self.dest_x = self.x
         self.dest_y = self.y
-#         self.anchor_x = self.width // 2
-#         self.anchor_y = 0
 
         self.dx = 0        
         self.dy = 0
@@ -53,7 +51,6 @@ class Item(c.SPRITE):
 
     def update(self, dt) -> None:
         """Item's main update."""
-#         print("self/anchor_x:", self, self.anchor_x)
         self.dt = dt
         self.dx = self.x - self.dest_x 
         self.dy = self.y - self.dest_y
@@ -115,9 +112,7 @@ class Item(c.SPRITE):
         return self.x < c.P1.x
 
     def is_at_or_below_p1(self) -> bool:
-#         """Is the item perfectly level with player 1?"""
         """Is item at or below player 1 on y-axis?"""
-#         return self.y == c.P1.y
         return self.y <= c.P1.y
 
     def is_on_platform(self) -> bool:
@@ -231,9 +226,9 @@ class Walker(Item):
 #WALKERS
 class Bombomb(Walker):
     """Bombomb randomly mixes the order of the items on the screen."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 1)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("bombombstandright.png")
+        self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.walk_left = c.IMG("bombombwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
@@ -241,7 +236,8 @@ class Bombomb(Walker):
         self.walk_right = c.IMG("bombombwalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
-        self.left = img
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
     
     def effect(self):
         """Randomly mix the order of items on the screen. Returns None."""
@@ -249,9 +245,9 @@ class Bombomb(Walker):
 
 class SpinyBeetle(Walker): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 1)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("spinybeetlestandright.png")
+        self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.left = c.IMG("spinybeetlewalkleft.png")
         self.walk_left_seq = c.GRID(self.left, 1, 2)
@@ -259,7 +255,8 @@ class SpinyBeetle(Walker):
         self.walk_right = c.IMG("spinybeetlewalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
-        self.left = img
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
     
     def effect(self):
         """Presents a question from yomitore, qa 100, and custom questions. Returns None"""
@@ -269,13 +266,13 @@ class SpinyBeetle(Walker):
 #SLIDERS
 class RedMushroom(Item):
     """Red Mushroom is a random English vocabulary question."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right = img
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("redmushroom.png")
         self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.left_anim = self.right_anim
-
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Presents a random English word. Returns None"""
         p.showing_black_box = True
@@ -283,13 +280,13 @@ class RedMushroom(Item):
 
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right = img
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("greenmushroom.png")
         self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.left_anim = self.right_anim
-
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Presents a verb form problem. Returns None"""
         p.showing_black_box = True
@@ -297,14 +294,15 @@ class GreenMushroom(Item):
 
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 5)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("yoshicoinright.png")
+        self.right_seq = c.GRID(self.right, 1, 5)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.left = c.IMG("yoshicoinleft.png")
         self.left_seq = c.GRID(self.left, 1, 5)
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)
-
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Presents a pronunciation problem. Returns None"""
         p.showing_black_box = True
@@ -312,12 +310,13 @@ class YoshiCoin(Item):
 
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese)."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 2)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("pirahnaplantsmall.png")
+        self.right_seq = c.GRID(self.right, 1, 2)
         self.right_anim = c.ANIM(self.right_seq, 0.1, True)
         self.left_anim = self.right_anim
-
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Presents a sentence translation problem (English to Japanese). Returns None"""
         p.showing_black_box = True
@@ -325,74 +324,60 @@ class PirahnaPlant(Item):
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 1)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("powbutton.png")
+        self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
-        self.left = img
-
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Pow Button takes one point away from everyone. Returns None"""
         c.POW_BUTTON_EFFECT = True 
 
-class QuestionBlock(Item): #unfinished
-    """Question block chooses a random effect."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 4)
+class Feather(Item):
+    """Feather allows the player to skip their turn when the item is used."""
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("feather.png")
+        self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
-        self.left = img
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
+    
+    def effect(self):
+        """Allows the player to skip a turn when the item is used. Returns None."""
+        pass
 
+class QuestionBlock(Item):
+    """Question block chooses a random effect."""
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("questionblock.png")
+        self.right_seq = c.GRID(self.right, 1, 4)
+        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Choose a random effect from all of the available effects. Returns None."""
         pass
-#         print("question block effect")
 
-class Feather(Item): #unfinished
-    """Feather allows the player to skip their turn when the item is used."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
-        self.right_seq = c.GRID(img, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
-        self.left = img
-
-    def effect(self):
-        """Allows the player to skip a turn when the item is used. Returns None."""
-        FEATHER_EFFECT = True
-
-class Star(Item): #unfinished
+class Star(Item):
     """Star allows the player to avoid the negative affects of other items."""
-    def __init__(self, img, *args, **kwargs):
-        super().__init__(img, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self.right = c.IMG("star.png")
         self.right_seq = c.GRID(img, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
-        self.left = img
-
+        self.left = self.right
+        super().__init__(self.right, *args, **kwargs)
+    
     def effect(self):
         """Star allows the player to avoid the negative affects of other items."""
-#         print("star effect")
         pass
 
 def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""
-#     print("add_item: c.ALL_ITEMS")
-#     pprint(c.ALL_ITEMS)
-#     print("add_item: c.ITEM_SPOTS")
-#     pprint(c.ITEM_SPOTS)
-    #new item
-    item = new_item()
-#     print("add_item: new_item()")
-#     print(item)
-#     pprint(dir(item))
-    #good item
-#     print("add_item: existing item")
-#     print(c.ALL_ITEMS[2])
-#     pprint(dir(c.ALL_ITEMS[2]))
-#     item.dest_x = c.ITEM_SPOTS[0]
-    c.ALL_ITEMS.append(item)
-#     anchor item to it's spot if ALL_ITEMS
-#     new item's spot is the first element in c.ITEM_SPOTS
+    c.ALL_ITEMS.append(new_item())
 
 def add_items() -> None:
     """Populates c.ALL_ITEMS."""
@@ -415,7 +400,13 @@ def choose_item(difficulty: List[int]) -> Any:
 def probability(choices) -> Any:
     """returns a choice of item based on the passed in probability list."""
     choice = random.randrange(1, 100, 1)
-    if choice >= choices[5] and choice <= choices[6]:                  
+    #walkers
+    if choice > 0 and choice < choices[0]:            
+        return i.BOMBOMB 
+    elif choice >= choices[1] and choice < choices[2]:              
+        return i.SPINY_BEETLE 
+    #sliders
+    elif choice >= choices[5] and choice <= choices[6]:                  
         return i.RED_MUSHROOM
     elif choice >= choices[4] and choice < choices[5]:               
         return i.GREEN_MUSHROOM 
@@ -423,38 +414,34 @@ def probability(choices) -> Any:
         return i.YOSHI_COIN 
     elif choice >= choices[2] and choice < choices[3]:               
         return i.PIRAHNA_PLANT 
-    elif choice >= choices[1] and choice < choices[2]:              
-        return i.SPINY_BEETLE 
     elif choice >= choices[0] and choice < choices[1]:             
         return i.POW_BUTTON 
-    elif choice > 0 and choice < choices[0]:            
-        return i.BOMBOMB 
+
+        #need questionblock, feather and star
 
 def new_item() -> Any:
     """Adds new item to all_items. Returns Sprite object."""
     difficulty = c.DIFFICULTY
     choice = choose_item(difficulty)
-
     #walkers
-    elif choice == i.BOMBOMB:
-        return Bombomb(c.IMG("bombombstandright.png"))
+    if choice == i.BOMBOMB:
+        return Bombomb()
     elif choice == i.SPINY_BEETLE: 
-        return SpinyBeetle(c.IMG("spinybeetlestandright.png"))
-
+        return SpinyBeetle()
     #sliders
-    if choice == i.RED_MUSHROOM: 
-        return RedMushroom(c.IMG("redmushroom.png"))
+    elif choice == i.RED_MUSHROOM: 
+        return RedMushroom()
     elif choice == i.GREEN_MUSHROOM:
-        return GreenMushroom(c.IMG("greenmushroom.png"))
+        return GreenMushroom()
     elif choice == i.YOSHI_COIN: 
-        return YoshiCoin(c.IMG("yoshicoinright.png"))
+        return YoshiCoin()
     elif choice == i.PIRAHNA_PLANT:
-        return PirahnaPlant(c.IMG("pirahnaplantsmall.png"))
+        return PirahnaPlant()
     elif choice == i.POW_BUTTON: 
-        return PowButton(c.IMG("powbutton.png"))
+        return PowButton()
     elif choice == i.FEATHER: 
-        return Feather(c.IMG("feather.png"))
+        return Feather()
     elif choice == i.STAR: 
-        return Star(c.IMG("star.png"))
+        return Star()
     elif choice == i.QUESTION_BLOCK: 
-        return QuestionBlock(c.IMG("questionblock.png"))
+        return QuestionBlock()

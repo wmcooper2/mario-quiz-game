@@ -172,9 +172,6 @@ def set_player_spots() -> None:
 
 # def setup_positions_on_screen():
 #     """Calculate and assign the positions on screen."""
-#     set_player_spots()
-#     set_item_spots()
-#     set_score_spots()
 
 def set_item_spots() -> None:
     """Sets item positions on the screen."""
@@ -194,11 +191,11 @@ def set_score_spots() -> None:
         c.INVENTORY_SPOT.append(c.TOP_ROW_SPOTS[3])
     c.SCORE_SPOTS = c.TOP_ROW_SPOTS[0:3] + c.TOP_ROW_SPOTS[4:8] 
 
-# def scores_setup(spots, mini_sprite) -> None:
 def scores_setup(spots) -> None:
     """Assign mini sprites to players."""
     for player in c.PLAYERS:
         score_x = spots[c.PLAYERS.index(player)]
-        sprite = mini_sprite(player, score_x)
-        c.SCORE_DISPLAY.append(sprite) 
-        player.point_index = c.SCORE_DISPLAY.index(sprite) 
+        mini = mini_sprite(player)
+        mini.x = score_x
+        c.SCORE_DISPLAY.append(mini) 
+        player.point_index = c.SCORE_DISPLAY.index(mini) 
