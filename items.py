@@ -7,7 +7,7 @@ from typing import Any, List, Tuple
 import pyglet
 
 #custom
-from constants import constants as c
+from constants import Constants as c
 from constants import Difficulty as d
 from constants import Items as i
 import problems as p
@@ -57,7 +57,6 @@ class Item(c.SPRITE):
         self.change_image()
         self.move() 
         self.disappear_animation()
-        self.transfer_item()
  
     def apply_gravity(self, time) -> None:
         """Calculates y position of falling item.
@@ -129,7 +128,6 @@ class Item(c.SPRITE):
 
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""
-        #TODO, crashes here after item transfer
         dx, dy = self.dx, self.dy
         if dx > 0:                  # x_pos
             self.x -= self.x_speed
@@ -156,40 +154,6 @@ class Item(c.SPRITE):
         """Toggle self.disappear flag."""
         if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
             self.disappear = not self.disappear
-
-    def transfer_item(self) -> None:
-        """The animation of giving the item to a player."""
-        #if self is the item to transfer, perform animation sequence
-        if self == c.P1.inventory:
-            self.disappear_animation()  #always update animation
-
-            #item rise and disappear
-            if self.is_visible() and self.is_on_platform() and self.is_left_of_p1():
-                self.dest_y = self.y + self.disappear_limit
-                self.toggle_disappear()
-
-            #item over player
-            if not self.is_visible() and self.is_at_disappear_limit():
-                self.opacity = self.min_opacity
-                self.move_to_p1_x_axis()
-
-            #item over player, much closer to it and appearing
-            if self.is_over_p1() and self.is_at_disappear_limit():
-                self.dest_y = c.P1.y
-
-                # over shoot the dest_y to allow the floating players to grab the items
-                self.y, self.dest_y = c.P1.y + self.disappear_limit, c.P1.y - c.SCREEN_H
-                self.toggle_disappear()
-
-            #item is at the same spot as the player, x and y axes
-            if self.is_at_or_below_p1() and self.is_over_p1():
-                self.match_p1_coords()
-                #TODO, the player must answer the question correctly in order to get the item.
-                if c.P1.inventory:
-                    c.P1.inventory.delete()         #remove item from game
-                    c.P1.inventory = self           #assign x to player's x
-                else:
-                    c.P1.inventory = self           #assign x to player's x
 
     def is_visible(self) -> bool:
         """Is the opacity even slightly above 0? Then it's visible."""

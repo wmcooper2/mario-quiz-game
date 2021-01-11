@@ -1,2 +1,5 @@
 #!/bin/bash
+rm -rf __pycache__/
+echo "Deleted __pycache__/"
+echo "Starting game..."
 python3 game.py

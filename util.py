@@ -8,18 +8,19 @@ import pyglet
 from pyglet.window import key
 
 #custom
-from constants import constants as c
-# from constants import Difficulty as d
+from constants import Constants as c
 from constants import Items as i
-# from scores import mini_sprite
 
 #GAMEPLAY
-#TODO, what about the movement of c.ITEM ?
-def any_movement(players: List[Any], items: List[Any]) -> bool:
+#TODO, what about the movement of c.TRANSFER_ITEM ?
+def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
     """Checks if anything is moving."""
+    if c.TRANSFER_ITEM != None:
+        return any([movement(players), movement(items), movement(transfer_item)])
     return any([movement(players), movement(items)])
 
 def black_box_visible() -> bool:
+    """Is the black box visible?"""
     return c.SHOWING_BLACK_BOX
  
 def mix(list_: List[Any]) -> List[Any]:
@@ -48,10 +49,9 @@ def remove_item_from_platform() -> Any:
     """Removes item from c.ALL_ITEMS."""
     return c.ALL_ITEMS.pop(0)
 
-def reverse_rotate_player_list():
-    """Rotates contents of players list to the right by one. Returns None."""
-    player = c.PLAYERS.pop()
-    c.PLAYERS.insert(0, player)
+def reverse_rotate_player_list() -> None:
+    """Rotates contents of players list to the right by one."""
+    c.PLAYERS.insert(0, c.PLAYERS.pop())
 
 def right_answer(player) -> None:
     """Gives a point to the player in the ready position."""
@@ -59,28 +59,23 @@ def right_answer(player) -> None:
 
 def rotate_items_left() -> None:
     """Rotates contents of items list to the right by one."""         
-    item = c.ALL_ITEMS.pop()
-    c.ALL_ITEMS.insert(0, item)
+    c.ALL_ITEMS.insert(0, c.ALL_ITEMS.pop())
 
 def rotate_items_right() -> None:
     """Rotates contents of the items list to left the by one."""      
-    item = c.ALL_ITEMS.pop(0)
-    c.ALL_ITEMS.append(item) 
+    c.ALL_ITEMS.append(c.ALL_ITEMS.pop(0))
 
 def rotate_players_left() -> None: 
     """Rotates contents of players list to the left by one."""
-    player = c.PLAYERS.pop(0)
-    c.PLAYERS.append(player)
+    c.PLAYERS.append(c.PLAYERS.pop(0))
 
 def rotate_players_right() -> None:
     """Rotates contents of players list to the right by one."""
-    player = c.PLAYERS.pop()
-    c.PLAYERS.insert(0, player)
+    c.PLAYERS.insert(0, c.PLAYERS.pop())
 
 def wrong_answer(player) -> None:
     """Takes away a point from the player in the ready position."""
     player.points -= 1
-
 
 
 
@@ -161,11 +156,6 @@ def set_item_spots() -> None:
             next_spot = (c.SCREEN_W // 2) - c.ITEM_START_LEFT - (24 * item) 
             c.ITEM_SPOTS.append(next_spot)
 
-
-
-
-
-
 def set_score_spots() -> None:
     """Sets score positions evenly along the width of the screen."""
     for num in enumerate(c.PLAYERS):
@@ -196,4 +186,3 @@ def set_score_number() -> None:
     """Set the player's score to a number. """
     for player in c.PLAYERS:
         player.set_score_number()
-

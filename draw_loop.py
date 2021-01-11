@@ -4,7 +4,7 @@
 import pyglet
 
 #custom
-from constants import constants as c
+from constants import Constants as c
 from problems import Problem
 
 

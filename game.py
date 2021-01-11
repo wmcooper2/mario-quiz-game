@@ -6,7 +6,8 @@ import random
 import pyglet
 
 #custom
-from constants import constants as c
+from animations import transfer_item
+from constants import Constants as c
 from draw_loop import play_game
 from effects import handle_item_effects
 import items as i
@@ -78,8 +79,9 @@ def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
         item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
         item.update(dt)
-    if c.ITEM != None:
-        c.ITEM.update(dt)
+    if c.TRANSFER_ITEM is not None:
+        c.TRANSFER_ITEM.update(dt)
+    
 
 def update_players(dt) -> None:
     c.P1 = c.PLAYERS[0]     #reset player 1
@@ -108,10 +110,6 @@ def update_players(dt) -> None:
     for player in c.FLOATING_PLAYERS:
         player.float()
 
-
-
-
-
 def update(dt) -> None:
     """Game update loop."""
 #     handle_item_effects()
@@ -119,6 +117,9 @@ def update(dt) -> None:
     update_players(dt)
     update_items(dt)
     handle_key_presses(yammy)   #need to pass yammy
+    transfer_item()
+
+
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:

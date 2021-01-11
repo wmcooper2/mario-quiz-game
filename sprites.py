@@ -7,7 +7,7 @@ from typing import Any, Tuple
 import pyglet
 
 #custom
-from constants import constants as c
+from constants import Constants as c
 import util as u
 
 
@@ -35,17 +35,19 @@ class Player(c.SPRITE):
         #points/scores
         self.points = 0
         self.index = 0
-#         self.score = Score(self)
+        self.score = None
 
         #other
-        self.inventory = []
+#         self.inventory = []
+        self.inventory = None
 
     def update(self, dt):
         """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         self.move()
         self.check_inventory()
-        if self.points != 0:
+#         if self.points != 0:
+        if self.points != self.score.value:
             self.score.update(self)
 
     def center_floating_player(self, image: Any) -> None:
@@ -59,7 +61,8 @@ class Player(c.SPRITE):
 
     def check_inventory(self) -> None:
         """Move the inventory on screen to match the player's position."""
-        if self.inventory:
+        if self.inventory != None:
+#             print(f"self.inventory != None:{self.inventory!=None}, ITEM == INVENTORY: {self.inventory == c.P1.inventory}, ITEM:{self.inventory}, INVENTORY:{c.P1.inventory}")
             item = self.inventory
             item.x, item.y = self.x, self.y
 
@@ -358,11 +361,9 @@ class Score(c.SPRITE):
         self.y = c.SCORE_SPRITE_Y
         self.batch = c.SCORE_BATCH
         self.player = player
-#         self.value_x = 0
         self.value = 0
         self.number = pyglet.text.Label(
             text=str(self.value),
-#             x=0,
             y=self.y,
             font_name=c.FONT,
             font_size=c.FONT_SIZE,

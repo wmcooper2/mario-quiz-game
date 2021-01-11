@@ -35,7 +35,7 @@ class Difficulty(enum.Enum):
     HARD = 3
     SUPER_HARD = 4
 
-class constants():
+class Constants():
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
     GRID = pyglet.image.ImageGrid
@@ -142,7 +142,7 @@ class constants():
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
     P1 = None
-    ITEM = None
+    TRANSFER_ITEM = None
 
 #QUESTION SETTINGS 
     SHOWING_BLACK_BOX = False

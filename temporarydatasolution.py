@@ -5,7 +5,7 @@ import sys
 import string
 
 #custom
-from constants import constants as c
+from constants import Constants as c
 
 if "./gamedata" not in sys.path:
     sys.path.append("./gamedata")
