@@ -8,9 +8,8 @@ from constants import constants as c
 from problems import Problem
 
 
-def draw_game_board() -> None:
-    """Draw the players, items and scores that make up the game."""
-
+def play_game() -> None:
+    """Draw all the visual elements."""
     #update these vars each time through the loop
     c.P1 = c.PLAYERS[0]
     item = c.P1.inventory
@@ -59,3 +58,9 @@ def draw_game_board() -> None:
 #         elif abs(score.points) > 5:
 #             for element in score.big_score:
 #                 element.draw()
+    c.GAME_WINDOW.clear()
+    c.BACKGROUND_BATCH.draw()
+    c.YAMMY_BATCH.draw()
+    c.PLAYER_BATCH.draw()
+    c.SCORE_BATCH.draw()
+    c.ITEM_BATCH.draw()

@@ -59,11 +59,14 @@ class Player(c.SPRITE):
 
     def check_inventory(self) -> None:
         """Move the inventory on screen to match the player's position."""
-        if self == c.P1:
-            print("inventory?:", self.inventory)
-            if self.inventory:
-                item = self.inventory
-                item.x, item.y = self.x, self.y
+        if self.inventory:
+            item = self.inventory
+            item.x, item.y = self.x, self.y
+
+    def delete_inventory(self) -> None:
+        """Delete player's inventory."""
+        self.inventory.delete() #delete the item itself
+        self.inventory = None   #remove reference to the item
 
     def game_in_play(self):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""

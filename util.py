@@ -36,14 +36,16 @@ def movement(list_: List[Any]) -> bool:
     """Checks if any player is moving."""
     return any([thing.dx or thing.dy for thing in list_])
 
-def player1_has_item() -> bool:
-    """Does player1 have an item?"""
-    return bool(c.P1.inventory)
+# def player1_has_item() -> bool:
+#     """Does player1 have an item?"""
+#     return bool(c.P1.inventory)
 
-def remove_item_from_all_items() -> Any:
+def player_has_item(player: Any) -> bool:
+    """Does player have an item?"""
+    return bool(player.inventory)
+
+def remove_item_from_platform() -> Any:
     """Removes item from c.ALL_ITEMS."""
-#     item = c.ALL_ITEMS.pop(0)
-#     c.ITEM = item
     return c.ALL_ITEMS.pop(0)
 
 def reverse_rotate_player_list():

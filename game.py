@@ -7,7 +7,7 @@ import pyglet
 
 #custom
 from constants import constants as c
-from draw_loop import draw_game_board
+from draw_loop import play_game
 from effects import handle_item_effects
 import items as i
 from key_presses import handle_key_presses
@@ -122,14 +122,8 @@ def update(dt) -> None:
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
-    """Draw the visual elements."""
-    c.GAME_WINDOW.clear()
-    c.BACKGROUND_BATCH.draw()
-    c.YAMMY_BATCH.draw()
-    c.PLAYER_BATCH.draw()
-    c.SCORE_BATCH.draw()
-    c.ITEM_BATCH.draw()
-    draw_game_board()
+    #add menu item option
+    play_game()
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, c.FRAME_SPEED)
