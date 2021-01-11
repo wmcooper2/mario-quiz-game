@@ -11,7 +11,7 @@ from pyglet.window import key
 from constants import constants as c
 # from constants import Difficulty as d
 from constants import Items as i
-from scores import mini_sprite
+# from scores import mini_sprite
 
 #GAMEPLAY
 #TODO, what about the movement of c.ITEM ?
@@ -121,7 +121,6 @@ def key_s() -> bool:
 
 
 #SETUP
-
 def add_players(random_=False) -> None:
     """Populates c.PLAYERS."""
     #TODO, Random is the default here... change this to allow a non-random option
@@ -140,26 +139,6 @@ def center_image(image):
     image.anchor_x = image.width // 2
     image.anchor_y = image.height // 2
 
-# def line_up(self):
-#     """Sets the available player positions on the screen. Returns None."""                
-#     for place in range(self.num_players):                                                 
-#         if len(self.player_spots) == 1:                                                   
-#             first_spot = (self.screen_w // 3) - 150                                       
-#             self.player_spots.append(first_spot)
-#         else:
-#             next_spot = (self.screen_w // 3) - 150 + (100 * place)
-#             self.player_spots.append(next_spot)                                           
-# 
-# def item_line_up(self, items):
-#     """Sets the available item positions on the screen. Returns None."""                  
-#     for item in range(c.NUM_ITEMS):                                                    
-#         if len(c.ITEM_SPOTS) == 1:                                                     
-#             first_spot = (c.SCREEN_W // 3) - c.ITEM_START_LEFT                         
-#             c.ITEM_SPOTS.append(first_spot)
-#         else:
-#             next_spot = (c.SCREEN_W // 3) - c.ITEM_START_LEFT - (24 * item)            
-#             c.ITEM_SPOTS.append(next_spot)     
-
 def set_player_spots() -> None:
     """Sets player positions on the screen."""
     for place in range(c.NUM_PLAYERS):
@@ -169,9 +148,6 @@ def set_player_spots() -> None:
         else:
             next_spot = (c.SCREEN_W // 2) - 150 + (100 * place)
             c.PLAYER_SPOTS.append(next_spot)
-
-# def setup_positions_on_screen():
-#     """Calculate and assign the positions on screen."""
 
 def set_item_spots() -> None:
     """Sets item positions on the screen."""
@@ -183,19 +159,39 @@ def set_item_spots() -> None:
             next_spot = (c.SCREEN_W // 2) - c.ITEM_START_LEFT - (24 * item) 
             c.ITEM_SPOTS.append(next_spot)
 
-def set_score_spots() -> None:
-    """Sets score positions on the screen."""
-    for spot in range(7):
-        c.TOP_ROW_SPOTS.append((c.SCREEN_W // 8) * spot + 125) 
-    if c.NUM_PLAYERS >= 4:
-        c.INVENTORY_SPOT.append(c.TOP_ROW_SPOTS[3])
-    c.SCORE_SPOTS = c.TOP_ROW_SPOTS[0:3] + c.TOP_ROW_SPOTS[4:8] 
 
-def scores_setup(spots) -> None:
-    """Assign mini sprites to players."""
+
+
+
+
+def set_score_spots() -> None:
+    """Sets score positions evenly along the width of the screen."""
+    for num in enumerate(c.PLAYERS):
+        space = c.SCREEN_W // len(c.PLAYERS)
+        c.SCORE_SPOTS.append((num[0] * space) + (space // 2))
+
+def set_score_indices() -> None:
+    """Set player index."""
     for player in c.PLAYERS:
-        score_x = spots[c.PLAYERS.index(player)]
-        mini = mini_sprite(player)
-        mini.x = score_x
-        c.SCORE_DISPLAY.append(mini) 
-        player.point_index = c.SCORE_DISPLAY.index(mini) 
+        player.player_index()
+
+def set_player_score_sprites() -> None:
+    """Create a mini sprite of the player. Used in the score display."""
+    for player in c.PLAYERS:
+        player.mini_sprite()
+
+def assign_x_pos_to_player_score_sprites() -> None:
+    """Set the x pos of the player's score sprite."""
+    for player in c.PLAYERS:
+        player.set_score_x()
+
+def set_score_values_x() -> None:
+    """Set the x pos of the number in the score display."""
+    for player in c.PLAYERS:
+        player.set_value_x()
+
+def set_score_number() -> None:
+    """Set the player's score to a number. """
+    for player in c.PLAYERS:
+        player.set_score_number()
+

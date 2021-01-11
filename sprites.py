@@ -1,5 +1,6 @@
 #std lib
 import math
+import random
 from typing import Any, Tuple
 
 #3rd party
@@ -8,6 +9,10 @@ import pyglet
 #custom
 from constants import constants as c
 import util as u
+
+
+#NOTE, a "Score" object (visually) is the mini sprite and the number-points
+# points are the number of points within the score object
 
 
 class Player(c.SPRITE):
@@ -27,16 +32,21 @@ class Player(c.SPRITE):
         self.rotating_players = False
         self.item = False
 
+        #points/scores
+        self.points = 0
+        self.index = 0
+#         self.score = Score(self)
+
         #other
         self.inventory = []
-        self.points = 0
-        self.point_index = 0
 
     def update(self, dt):
         """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         self.move()
         self.check_inventory()
+        if self.points != 0:
+            self.score.update(self)
 
     def center_floating_player(self, image: Any) -> None:
         """Centers the anchor point in the image."""
@@ -48,21 +58,24 @@ class Player(c.SPRITE):
         image.anchor_x = image.width // 2
 
     def check_inventory(self) -> None:
-        if self.inventory:
-            item = self.inventory
-            item.x, item.y = self.x, self.y
-
-    def use_item(self):
-        """Player uses the item in their inventory. Returns None."""
-        self.item = True
-        item = self.inventory[0]
-        if item.item_not_used == True:
-            item.effect()                       
-            item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+        """Move the inventory on screen to match the player's position."""
+        if self == c.P1:
+            print("inventory?:", self.inventory)
+            if self.inventory:
+                item = self.inventory
+                item.x, item.y = self.x, self.y
 
     def game_in_play(self):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""
         c.GAME_JUST_STARTED = False
+
+    def player_index(self) -> int:
+        """Get index of player in c.PLAYERS."""
+        self.index = c.PLAYERS.index(self)
+
+    def mini_sprite(self) -> None:
+        """Make a mini sprite from self."""
+        self.score = Score(self)
 
     def move(self) -> None: 
         """Moves the players closer to dest_x and dest_y."""
@@ -85,32 +98,50 @@ class Player(c.SPRITE):
         if close_x:
             self.x = self.spot
 
+    def set_score_x(self) -> None:
+        """Assign x pos to self.score's sprite."""
+        self.score.x = c.SCORE_SPOTS[self.index]
+
+    def set_value_x(self) -> None:
+        """Assign x pos to self.score's sprite."""
+        self.score.number.x = c.SCORE_SPOTS[self.index] - c.POINT_X_OFFSET
+
+    def set_score_number(self) -> None:
+        """Set the score's number value."""
+        self.score.value = 0
+
+    def use_item(self):
+        """Player uses the item in their inventory. Returns None."""
+        self.item = True
+        item = self.inventory[0]
+        if item.item_not_used == True:
+            item.effect()                       
+            item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+
     def within_margin(self) -> Tuple[bool, bool]:
         """Checks if player within range of destination."""
         return abs(self.dx) <= self.x_speed
 
-
 class FloatingPlayer(Player):
-    float_height = 0
-    float_deg = 0
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.float_height = 0
+        self.float_deg = random.randrange(360)
 
     def float(self) -> None:
         """Makes the character float up and down in place."""
-        radians = math.radians(FloatingPlayer.float_deg)
-        FloatingPlayer.float_height = math.sin(radians)
-        if FloatingPlayer.float_deg == 360:
-            FloatingPlayer.float_deg = 0
-            FloatingPlayer.float_height = 0
-        FloatingPlayer.float_deg += 1
-        self.y = self.y + (FloatingPlayer.float_height / 3) 
+        degrees = math.radians(self.float_deg)
+        self.float_height = math.sin(degrees)
+        if self.float_deg == 360:
+            self.float_deg = 0
+            self.float_height = 0
+        self.float_deg += 1
+        self.y = self.y + (self.float_height / 3) 
 
 class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
 class Yammy(c.SPRITE):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("yammystandright.png")
@@ -125,7 +156,7 @@ class Yammy(c.SPRITE):
         super().__init__(self.right, *args, **kwargs)
         self.x=30
         self.y=c.ITEM_PLATFORM_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.YAMMY_BATCH
         self.scale = 2
         self.opacity = 0
 
@@ -171,8 +202,15 @@ class FireLight(FloatingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
         self.scale = 1.5
+
+        def mini_sprite(self) -> Any:
+            """Makes mini-sprite version of self. Overrides base class method."""
+            mini = Score(self)
+            mini.y -= 5                             #readjusted for score_display only
+            mini.image = self.left_anim
+            return mini
 
 class BigBoo(FloatingPlayer):
     def __init__(self, *args, **kwargs):
@@ -190,7 +228,14 @@ class BigBoo(FloatingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
+
+        def mini_sprite(self) -> Any:
+            """Makes mini-sprite version of self. Overrides base class method."""
+            mini = Score(self)
+            mini.scale = 0.5
+            mini.image = self.walk_left_anim
+            return mini
 
 #WALKERS
 class Dragon(WalkingPlayer):
@@ -209,7 +254,7 @@ class Dragon(WalkingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
         self.scale = 2
 
 class GreenKoopa(WalkingPlayer):
@@ -228,7 +273,7 @@ class GreenKoopa(WalkingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
-        self.batch=c.MAIN_BATCH 
+        self.batch=c.PLAYER_BATCH
         self.scale = 2
 
 class BigMole(WalkingPlayer):
@@ -247,7 +292,7 @@ class BigMole(WalkingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
         self.scale = 1.5 
 
 class Mario(WalkingPlayer):
@@ -266,7 +311,7 @@ class Mario(WalkingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
         self.scale = 2
 
 class Luigi(WalkingPlayer):
@@ -285,5 +330,216 @@ class Luigi(WalkingPlayer):
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
         self.y=c.WALK_H
-        self.batch=c.MAIN_BATCH
+        self.batch=c.PLAYER_BATCH
         self.scale = 2
+
+
+#SCORES
+class Coin(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        self.coin = c.IMG("yellowcoin.png")
+#         coin_img = c.IMG("yellowcoin.png")
+#         coin_seq = c.GRID(coin_img, 1, 3)
+        super().__init__(self.coin, *args, **kwargs)
+
+class Skull(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        self.skull = c.IMG("skull.png") 
+#         skull_img = c.IMG("skull.png") 
+#         skull_seq = c.GRID(skull_img, 1, 1)
+        super().__init__(self.skull, *args, **kwargs)
+
+class Score(c.SPRITE):
+    def __init__(self, player, *args, **kwargs):
+        super().__init__(player.left_anim, *args, **kwargs)
+        self.y = c.SCORE_SPRITE_Y
+        self.batch = c.SCORE_BATCH
+        self.player = player
+#         self.value_x = 0
+        self.value = 0
+        self.number = pyglet.text.Label(
+            text=str(self.value),
+#             x=0,
+            y=self.y,
+            font_name=c.FONT,
+            font_size=c.FONT_SIZE,
+            batch=c.SCORE_BATCH)
+
+    def update(self, player: Any) -> None:
+        """Update the player's score."""
+        #points
+        if self.value != player.points:
+            self.value = player.points
+            self.number.text = str(self.value)
+        
+        #sprite
+        #add item to player's sprite so the player doesn't "carry" it around
+
+
+
+
+
+
+
+#     def change_points(self, player) -> None:
+#         """Changes score's points to match the associated player's points."""
+#         if self.points < player.points:
+#             self.points += 1
+#         elif self.points > player.points:
+#             self.points -= 1
+
+
+#         self.populate_score_spots(score_object)
+
+#         if self.points != player.points:
+#             self.delete_score()                     
+#             self.change_points(player)              
+#             self.set_score_images()
+
+
+#     def populate_score_spots(self, score_object) -> None:
+#         """Setup of the score spots."""
+#         #populate self.small_score_spots_coins
+#         if not self.small_score_spots_coins:                  
+#             self.make_small_score_spots_coins(score_object)    
+# 
+#         #populate self.small_score_spots_skulls
+#         if not self.small_score_spots_skulls:                   
+#             self.make_small_score_spots_skulls(score_object)     
+# 
+#         #populate self.big_score_spots
+#         if not self.big_score_spots:                     
+#             self.make_big_score_spots(score_object)
+
+#     def make_small_score_spots_coins(self, score_object):
+#         """Sets spots for self.small_score_spots_coins. Returns None."""
+#         start = score_object.x - 36
+#         for x in range(5):
+#             self.small_score_spots_coins.append(start + (x * 12)) #coin width = 12
+
+#     def make_small_score_spots_skulls(self, score_object):
+#         """Sets spots for self.small_score_spots_skulls. Returns None."""
+#         start = score_object.x - 36
+#         for x in range(5):
+#             self.small_score_spots_skulls.append(start + (x * 16)) #skull width = 16
+
+#     def make_big_score_spots(self, score_object):
+#         """Sets spots for self.big_score_spots. Returns None."""
+#         start = score_object.x - 36
+#         for x in range(3):
+#             self.big_score_spots.append(start + (x * 30))
+
+#     def delete_score(self):
+#         """Deletes the sprites that are the displayed score. Returns None."""
+#         points = self.points                #Score.points
+#         if points > 5:
+#             self.delete_big_score()
+#         elif points <= 5 and points > 0:
+#             self.delete_small_score()
+#         elif points == 0:
+#             self.delete_zero_score()
+#         elif points < 0 and points >= -5:
+#             self.delete_small_score()
+#         elif points < -5:
+#             self.delete_big_score()
+
+#     def delete_big_score(self):
+#         """Deletes contents of big_score. Returns None."""
+#         self.big_score = []
+
+#     def delete_small_score(self):
+#         """Deletes small_score. Returns None."""
+#         self.small_score = []
+
+#     def delete_zero_score(self):
+#         """Deletes the zero score. Returns None."""
+#         self.zero.text = ""
+
+#     def set_score_images(self):
+#         """Adds the proper score sprites for the given point range. Returns None."""
+#         points = self.points                #Score.points
+#         if points > 5:
+#             self.make_big_score_coin()
+#         elif points <= 5 and points > 0:
+#             self.make_small_score_coins()
+#         elif points == 0:
+#             self.make_zero_score()
+#         elif points < 0 and points >= -5:
+#             self.make_small_score_skulls()
+#         elif points < -5:
+#             self.make_big_score_skull()
+
+#     def make_big_score_coin(self):
+#         """Assembles the big score of coins. Returns None."""
+#         self.big_score.append(
+#             Coin(
+#                 img=Coin.coin,
+#                 x=self.big_score_spots[0],
+#                 y=self.score_y,
+#                 batch=c.MAIN_BATCH))
+#         self.big_score[0].scale = 1.5
+#         self.big_score.append(
+#             pyglet.text.Label(
+#                 text="x",x=self.big_score_spots[1],
+#                 y=self.score_y,
+#                 font_name="Comic Sans MS",
+#                 font_size=24,
+#                 batch=c.MAIN_BATCH))
+#         self.big_score.append(
+#             pyglet.text.Label(
+#                 text=str(self.points),
+#                 x=self.big_score_spots[2],
+#                 y=self.score_y,
+#                 font_name="Comic Sans MS",
+#                 font_size=24,
+#                 batch=c.MAIN_BATCH))
+
+#     def make_small_score_coins(self):
+#         """Assembles the small score of coins. Returns None."""
+#         for x in range(self.points):
+#             self.small_score.append(
+#                 Coin(
+#                     img=Coin.coin,
+#                     x=self.small_score_spots_coins[x],
+#                     y=self.score_y,
+#                     batch=c.MAIN_BATCH))
+ 
+#     def make_zero_score(self):
+#         """Assembles the zero score. Returns None."""
+#         self.zero.text = "0"
+
+#     def make_small_score_skulls(self):
+#         """Assembles the small score of skulls. Returns None."""
+#         for x in range(abs(self.points)):
+#             self.small_score.append(
+#                 Skull(
+#                     img=Skull.skull,
+#                     x=self.small_score_spots_skulls[x],
+#                     y=self.score_y,
+#                     batch=c.MAIN_BATCH))
+
+#     def make_big_score_skull(self):
+#         """Assembles the big score of skulls. Returns None."""
+#         self.big_score.append(
+#               Skull(
+#                     img=Skull.skull,
+#                     x=self.big_score_spots[0],
+#                     y=self.score_y,
+#                     batch=c.MAIN_BATCH))
+#         self.big_score[0].scale = 1.5 
+#         self.big_score.append(
+#             pyglet.text.Label(
+#                 text="x",
+#                 x=self.big_score_spots[1],
+#                 y=self.score_y,
+#                 font_name="Comic Sans MS",
+#                 font_size=24,
+#                 batch=c.MAIN_BATCH))
+#         self.big_score.append(
+#             pyglet.text.Label(
+#                 text=str(abs(self.points)),
+#                 x=self.big_score_spots[2],
+#                 y=self.score_y,
+#                 font_name="Comic Sans MS",
+#                 font_size=24,
+#                 batch=c.MAIN_BATCH))

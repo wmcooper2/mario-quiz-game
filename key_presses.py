@@ -32,12 +32,20 @@ def handle_key_presses(yammy: Any) -> None:
         c.PLAYERS = u.mix(c.PLAYERS)
 
     #plus one point
-    elif u.key_o() and u.player1_has_item():
+#     elif u.key_o() and u.player1_has_item():
+    elif u.key_o() and u.player1_has_item() and not u.movement(c.PLAYERS):
+#         print("has item?", u.player1_has_item())
         u.right_answer(c.P1)
+        u.rotate_players_left()
+
 
     #minus one point
-    elif u.key_x() and u.player1_has_item():
+    elif u.key_x() and u.player1_has_item() and not u.movement(c.PLAYERS):
         u.wrong_answer(c.P1)
+        u.rotate_players_left()
+        #TODO, delete player's inventory
+        if c.P1.inventory:
+            c.P1.inventory.delete()
 
     elif u.key_a() and not u.movement(c.ALL_ITEMS):
         pass

@@ -46,7 +46,7 @@ class Item(c.SPRITE):
         #other
 #         self.problem = p.Problem()
         self.scale = scale
-        self.batch=c.MAIN_BATCH
+        self.batch=c.ITEM_BATCH
         self.scale=c.ITEM_SCALE
 
     def update(self, dt) -> None:

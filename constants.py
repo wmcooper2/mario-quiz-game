@@ -73,7 +73,6 @@ class constants():
 #IMPORTANT LISTS
     #items
     ALL_ITEMS = []
-    INVENTORY_SPOT = []
     ITEM_SPOTS = []
     QUESTION_ITEM = []
 
@@ -87,7 +86,6 @@ class constants():
     #scores
     SCORE_DISPLAY = []
     SCORE_SPOTS = []
-    TOP_ROW_SPOTS = []
 
 #SETTINGS
     NUM_PLAYERS = 6
@@ -97,6 +95,7 @@ class constants():
     MIN_OPACITY = 0
     MAX_OPACITY = 255
     FONT = "Comic Sans MS"
+    FONT_SIZE = 24
     DIFFICULTY = Difficulty.SUPER_HARD
     ITEM_SCALE = 1.5
     ITEM_START_LEFT = 216   #be careful changing this value
@@ -117,13 +116,20 @@ class constants():
     HARD_RANGE =        [15, 30, 45, 60, 75, 90, 100]           #15, 15, 15, 15, 15, 15, 10
     SUPER_HARD_RANGE =  [10, 20, 40, 60, 80, 90, 100]           #10, 10, 20, 20, 20, 10, 10
 
+
+#DRAWING SPRITES
+    MAIN_BATCH = pyglet.graphics.Batch()
+    BACKGROUND_BATCH = pyglet.graphics.Batch()
+    PLAYER_BATCH = pyglet.graphics.Batch()
+    ITEM_BATCH = pyglet.graphics.Batch()
+    SCORE_BATCH = pyglet.graphics.Batch()
+    YAMMY_BATCH = pyglet.graphics.Batch()
+
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90
     GAME_WINDOW = pyglet.window.Window(1000, 563)
-    MAIN_BATCH = pyglet.graphics.Batch()
     KH = key.KeyStateHandler()  # Key Handler
     GAME_WINDOW.push_handlers(KH)
-
     SCREEN_W = GAME_WINDOW.width
     SCREEN_H = GAME_WINDOW.height
     OFF_SCREEN_R = 1100
@@ -131,10 +137,8 @@ class constants():
     FLOAT_H = 100
     WALK_H = 63
     MAIN_TIME = 0
-#     SCORE_SPRITE_Y = SCREEN_H - 36
-    SCORE_SPRITE_Y = 50 - 36
-#     SCORE_SPRITE_X = 
-#     SCORE_DISPLAY_Y = SCREEN_H - 36
+    POINT_X_OFFSET = 40
+    SCORE_SPRITE_Y = 0
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
     P1 = None

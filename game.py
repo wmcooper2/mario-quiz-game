@@ -18,11 +18,13 @@ import sprites as s
 #TODO, items move to bottom of screen
 
 #SPRITES
-background = c.SPRITE(c.IMG("grassland.png"), batch=c.MAIN_BATCH)
+background = c.SPRITE(c.IMG("grassland.png"), batch=c.BACKGROUND_BATCH)
 yammy = s.Yammy()
+
 #floaters
 fire_light = s.FireLight()
 big_boo = s.BigBoo()
+
 #walkers
 dragon = s.Dragon()
 green_koopa = s.GreenKoopa()
@@ -30,6 +32,8 @@ big_mole = s.BigMole()
 mario = s.Mario()
 luigi = s.Luigi()
 
+
+#PLAYERS
 c.ALL_PLAYERS = [
     mario,
     luigi,
@@ -50,9 +54,8 @@ c.FLOATING_PLAYERS = [
     fire_light,
     big_boo]
 
-#     set_player_spots()
-#     set_item_spots()
 
+#SOME SETUP
 #items
 u.set_item_spots()
 i.add_items()
@@ -63,48 +66,20 @@ u.add_players(c.RANDOMIZE_PLAYERS)
 c.P1 = c.PLAYERS[0]     #Set Player 1
 
 #Scores
+#TODO, move these to their respective classes???
 u.set_score_spots()
-u.scores_setup(c.SCORE_SPOTS)
-
-# ================================================================================
-# print("item_spots:", c.ITEM_SPOTS)
-# 
-# print("all_items:", len(c.ALL_ITEMS))
-# for item in c.ALL_ITEMS:
-#     print(item, item.x, item.dest_x) #no anchor_x here
-# 
-# 
-# temp = u.remove_item_from_all_items()
-# print("temp:", temp, temp.x, temp.dest_x)
-# print("c.ITEM:", c.ITEM)
-# 
-# 
-# print("all_items:", len(c.ALL_ITEMS))
-# for item in c.ALL_ITEMS:
-#     print(item, item.x, item.dest_x) #no anchor_x here
-# 
-# temp.transfer_item()
-# print("temp:", temp, temp.x, temp.dest_x)
-# print("c.ITEM:", c.ITEM)
-# 
-# i.add_item()
-# print("all_items:", len(c.ALL_ITEMS))
-# for item in c.ALL_ITEMS:
-#     print(item, item.x, item.dest_x) #no anchor_x here
-# print("temp:", temp, temp.x, temp.dest_x)
-# print("c.ITEM:", c.ITEM)
-# 
-# # temp.delete()
-# # c.ITEM.delete()
-#  
-# quit()
-# 
-# ================================================================================
+u.set_score_indices()
+u.set_player_score_sprites()
+u.assign_x_pos_to_player_score_sprites()
+u.set_score_values_x()
 
 
-
-
-
+def update_items(dt) -> None:
+    for item in c.ALL_ITEMS:
+        item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
+        item.update(dt)
+    if c.ITEM != None:
+        c.ITEM.update(dt)
 
 def update_players(dt) -> None:
     c.P1 = c.PLAYERS[0]     #reset player 1
@@ -115,26 +90,25 @@ def update_players(dt) -> None:
 
         #player automatically uses item
 #         if player.inventory and c.SHOWING_BLACK_BOX == False: 
-#             print("INVENTORY:", c.P1.inventory)
 #             main_item = c.P1.inventory[0]
 #             player.use_item() 
-   
+
+        
         #update player scores 
-#         score_points = c.SCORE_DISPLAY[player.point_index].points #the integer value
-#         score_object = c.SCORE_DISPLAY[player.point_index]        #the score object
+        #TODO, fix point display
+
+#         score_points = c.SCORE_DISPLAY[player.index].points #the integer value
+#         score_object = c.SCORE_DISPLAY[player.index]        #the score object
 #         if player.points != score_points: 
+            #update player's points
+            #update score sprite's points
 #             score_object.update(score_object, player)           #player_score is in a different instance than player
 
     #FLOATING PLAYERS
     for player in c.FLOATING_PLAYERS:
         player.float()
 
-def update_items(dt) -> None:
-    for item in c.ALL_ITEMS:
-        item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
-        item.update(dt)
-    if c.ITEM != None:
-        c.ITEM.update(dt)
+
 
 
 
@@ -150,7 +124,11 @@ def update(dt) -> None:
 def on_draw() -> None:
     """Draw the visual elements."""
     c.GAME_WINDOW.clear()
-    c.MAIN_BATCH.draw()
+    c.BACKGROUND_BATCH.draw()
+    c.YAMMY_BATCH.draw()
+    c.PLAYER_BATCH.draw()
+    c.SCORE_BATCH.draw()
+    c.ITEM_BATCH.draw()
     draw_game_board()
 
 if __name__ == "__main__":
