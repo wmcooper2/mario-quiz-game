@@ -8,15 +8,14 @@ import pyglet
 #custom
 from animations import transfer_item
 from constants import Constants as c
-from draw_loop import play_game
+from draw_loop import draw_menu, draw_problem, draw_sprites
 from effects import handle_item_effects
 import items as i
 from key_presses import handle_key_presses
 import util as u
 import sprites as s
 
-#TODO, if player moves while item in air, then wierd stuff happens
-#TODO, items move to bottom of screen
+#TODO, add the star, feather and question block to the game
 
 #SPRITES
 background = c.SPRITE(c.IMG("grassland.png"), batch=c.BACKGROUND_BATCH)
@@ -55,25 +54,63 @@ c.FLOATING_PLAYERS = [
     fire_light,
     big_boo]
 
-
 #SOME SETUP
-#items
+#Items
 u.set_item_spots()
 i.add_items()
 
-#players
+#Players
 u.set_player_spots()
 u.add_players(c.RANDOMIZE_PLAYERS)
-c.P1 = c.PLAYERS[0]     #Set Player 1
+# c.P1 = c.PLAYERS[0]     #Set Player 1
 
 #Scores
-#TODO, move these to their respective classes???
+#TODO, move these to their respective classes?
 u.set_score_spots()
 u.set_score_indices()
 u.set_player_score_sprites()
 u.assign_x_pos_to_player_score_sprites()
 u.set_score_values_x()
 
+question = c.NEW_QUESTION
+# PROB = s.Problem
+# BB = PROB.BLACK_BOX
+problem = s.Problem()
+
+def update_problem() -> None:
+    pass
+#     if c.P1.item:
+        #QUESTION
+        # basic pattern:
+            # draw the black box
+            # change the guide
+            # change the question in the problem
+            # draw the guide
+            # draw the question        
+#         print("drawing box")
+#         problem.box.draw()
+
+        #         S_BB = True     #set flag
+#         if question:
+#             question = False    #reset flag
+#             #simple vocab
+#             if isinstance(item, RedMushroom):    
+#                 PROB.random_english_word()
+#             #verbs
+#             elif isinstance(item, GreenMushroom):  
+#                 PROB.random_present_verb()
+#             #Japanese to English translation
+#             elif isinstance(item, PirahnaPlant):   
+#                 PROB.random_target_sentence()
+#             #pronunciation
+#             elif isinstance(item, YoshiCoin):      
+#                 PROB.random_pronunciation()
+#             #answer the question
+#             elif isinstance(item, SpinyBeetle):    
+#                 PROB.random_question()
+
+    #         PROB.guide.draw()
+    #         PROB.question.draw()
 
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
@@ -91,24 +128,9 @@ def update_players(dt) -> None:
         player.update(dt)
 
         #player automatically uses item
-#         if player.inventory and c.SHOWING_BLACK_BOX == False: 
-#             main_item = c.P1.inventory[0]
+#         if player.item and c.SHOWING_BLACK_BOX == False: 
+#             main_item = c.P1.item
 #             player.use_item() 
-
-        
-        #update player scores 
-        #TODO, fix point display
-
-#         score_points = c.SCORE_DISPLAY[player.index].points #the integer value
-#         score_object = c.SCORE_DISPLAY[player.index]        #the score object
-#         if player.points != score_points: 
-            #update player's points
-            #update score sprite's points
-#             score_object.update(score_object, player)           #player_score is in a different instance than player
-
-    #FLOATING PLAYERS
-    for player in c.FLOATING_PLAYERS:
-        player.float()
 
 def update(dt) -> None:
     """Game update loop."""
@@ -118,13 +140,16 @@ def update(dt) -> None:
     update_items(dt)
     handle_key_presses(yammy)   #need to pass yammy
     transfer_item()
-
-
+    update_problem()
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
-    #add menu item option
-    play_game()
+    #TODO, make menu selection screen 
+#     if c.MENU_SCREEN:
+#         draw_menu()        
+#     else:
+    draw_sprites()
+    draw_problem(problem)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, c.FRAME_SPEED)

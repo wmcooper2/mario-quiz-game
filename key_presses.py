@@ -8,18 +8,20 @@ from constants import Constants as c
 import items as i
 import util as u
 
+
+#TODO, give player option to use item
+
 def handle_key_presses(yammy: Any) -> None:
     #disappear Yammy
     if u.key_f():
         yammy.toggle_disappear()
 
-    #Transfer item to player 1
-#     elif u.key_1() and not u.any_movement(c.PLAYERS, c.ALL_ITEMS) and not u.black_box_visible() and not u.player_has_item(c.P1):
+    #yammy drops item
     elif u.key_1() and not u.any_movement(c.PLAYERS, c.ALL_ITEMS, [c.TRANSFER_ITEM]) and not u.black_box_visible():
-        #if player has item, delete that item first
+        #if player already has item, delete that item first
         if u.player_has_item(c.P1):
-            c.P1.inventory.delete()             #remove item from game
-            c.P1.inventory = None
+            c.P1.item.delete()
+            c.P1.item = None
         yammy.wave_wand()
         c.TRANSFER_ITEM = u.remove_item_from_platform()
         i.add_item()
@@ -41,7 +43,7 @@ def handle_key_presses(yammy: Any) -> None:
     #minus one point
     elif u.key_x() and u.player_has_item(c.P1) and not u.movement(c.PLAYERS):
         u.wrong_answer(c.P1)
-        c.P1.delete_inventory()
+        c.P1.delete_item()
         u.rotate_players_left()
         #set item dest to go off screen left and disappear after it leaves the visible area?
 

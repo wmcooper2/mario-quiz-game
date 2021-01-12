@@ -8,11 +8,14 @@ import pyglet
 
 #custom
 from constants import Constants as c
+
+#TODO, rework tds import
+import temporarydatasolution as tds
 import util as u
 
 
-#NOTE, a "Score" object (visually) is the mini sprite and the number-points
-# points are the number of points within the score object
+#NOTE, a "Score" object (visually) is the player's mini sprite and the points
+# points are represented visually with a number within the score object on screen
 
 
 class Player(c.SPRITE):
@@ -30,7 +33,7 @@ class Player(c.SPRITE):
 
         #flags
         self.rotating_players = False
-        self.item = False
+#         self.item = False
 
         #points/scores
         self.points = 0
@@ -38,38 +41,31 @@ class Player(c.SPRITE):
         self.score = None
 
         #other
-#         self.inventory = []
-        self.inventory = None
+        self.item = None
 
     def update(self, dt):
         """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         self.move()
-        self.check_inventory()
+        self.check_item()
 #         if self.points != 0:
         if self.points != self.score.value:
             self.score.update(self)
-
-    def center_floating_player(self, image: Any) -> None:
-        """Centers the anchor point in the image."""
-        image.anchor_x = image.width // 2
-        image.anchor_y = image.height // 2
 
     def center_walking_player(self, image: Any) -> None:
         """Centers the anchor point in the image."""
         image.anchor_x = image.width // 2
 
-    def check_inventory(self) -> None:
+    def check_item(self) -> None:
         """Move the inventory on screen to match the player's position."""
-        if self.inventory != None:
-#             print(f"self.inventory != None:{self.inventory!=None}, ITEM == INVENTORY: {self.inventory == c.P1.inventory}, ITEM:{self.inventory}, INVENTORY:{c.P1.inventory}")
-            item = self.inventory
+        if self.item != None:
+            item = self.item
             item.x, item.y = self.x, self.y
 
-    def delete_inventory(self) -> None:
-        """Delete player's inventory."""
-        self.inventory.delete() #delete the item itself
-        self.inventory = None   #remove reference to the item
+    def delete_item(self) -> None:
+        """Delete player's item."""
+        self.item.delete() #delete the item itself
+        self.item = None   #remove reference to the item
 
     def game_in_play(self):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""
@@ -116,10 +112,10 @@ class Player(c.SPRITE):
         """Set the score's number value."""
         self.score.value = 0
 
-    def use_item(self):
-        """Player uses the item in their inventory. Returns None."""
+    def use_item(self) -> None:
+        """Player uses their item."""
         self.item = True
-        item = self.inventory[0]
+        item = self.item
         if item.item_not_used == True:
             item.effect()                       
             item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
@@ -143,6 +139,11 @@ class FloatingPlayer(Player):
             self.float_height = 0
         self.float_deg += 1
         self.y = self.y + (self.float_height / 3) 
+
+    def center_floating_player(self, image: Any) -> None:
+        """Centers the anchor point in the image."""
+        image.anchor_x = image.width // 2
+        image.anchor_y = image.height // 2
 
 class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
@@ -218,7 +219,13 @@ class FireLight(FloatingPlayer):
             mini.image = self.left_anim
             return mini
 
+    def update(self, dt) -> None:
+        """FireLight update loop. Overrides base class."""
+        super().update(dt)
+        self.float()
+
 class BigBoo(FloatingPlayer):
+    #TODO, make it so that bigboo doesn't float unless he is moving.
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigboostandleft.png")
         self.center_floating_player(self.left)
@@ -236,12 +243,19 @@ class BigBoo(FloatingPlayer):
         self.y=c.FLOAT_H
         self.batch=c.PLAYER_BATCH
 
+        #TODO, figure out why this method only works if within the __init__ block
         def mini_sprite(self) -> Any:
             """Makes mini-sprite version of self. Overrides base class method."""
             mini = Score(self)
             mini.scale = 0.5
             mini.image = self.walk_left_anim
             return mini
+
+    def update(self, dt) -> None:
+        """BigBoo update loop. Overrides base class."""
+        super().update(dt)
+        if self.dx != 0:
+            self.float()
 
 #WALKERS
 class Dragon(WalkingPlayer):
@@ -339,21 +353,86 @@ class Luigi(WalkingPlayer):
         self.batch=c.PLAYER_BATCH
         self.scale = 2
 
+class Problem(pyglet.text.Label):
+#     question_center_x = BOX_IMG.width // 2 + BOX.x
+#     question_center_y = BOX_IMG.height // 2 + BOX.y
+#     english_vocab_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     english_sentence_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     present_verb_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     japanese_vocab_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     pronunciation_guide = pyglet.text.Label(text="Speak", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     japanese_sentence_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+#     answer_my_question_guide = pyglet.text.Label(text="Answer the question", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+ 
+    def __init__(self, x=345, y=300, text="blank",  *args, **kwargs):
+        super().__init__(*args, **kwargs)
+#         BOX_IMG = pyglet.resource.image("blackbox.png")
+        self.img = pyglet.resource.image("blackbox.png")
+#         BOX = pyglet.sprite.Sprite(self.img, x=345, y=264)
+        self.box = pyglet.sprite.Sprite(self.img, x=345, y=264)
 
-#SCORES
-class Coin(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        self.coin = c.IMG("yellowcoin.png")
-#         coin_img = c.IMG("yellowcoin.png")
-#         coin_seq = c.GRID(coin_img, 1, 3)
-        super().__init__(self.coin, *args, **kwargs)
+#         self.q_x = Problem.question_center_x
+#         self.q_y = Problem.question_center_y
+#         self.question = pyglet.text.Label(text="blank", font_name="Comic Sans MS", x=self.q_x, y=self.q_y, font_size=24, width=self.BOX_IMG.width)
+#         self.question.anchor_x = "center"
+#         self.question.anchor_y = "center"
+#         self.data = tds.Data()
 
-class Skull(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        self.skull = c.IMG("skull.png") 
-#         skull_img = c.IMG("skull.png") 
-#         skull_seq = c.GRID(skull_img, 1, 1)
-        super().__init__(self.skull, *args, **kwargs)
+#        self.past_verb_guide = pyglet.text.Label(text = "past verb guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.japanese_translation_guide = pyglet.text.Label(text = "japanese translation guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.target_sentence_guide= pyglet.text.Label(text = "target sentence guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.image_guide = pyglet.text.Label(text = "image guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+    
+    def random_english_word(self):
+        """Chooses a random English vocabulary word. Returns None."""
+        #Student should translate the English word into Japanese
+        random_word = self.data.english_word()
+        basic_format = random_word + " "
+        self.question.text = self.data.english_word() 
+
+    def random_japanese_word(self):
+        """Chooses a random Japanese vocabulary word. Returns None."""
+        choice = self.data.english_word()
+        self.question.text = self.data.japanese_word() 
+    
+    def random_image(self):
+        """Chooses a random word and loads the associated image. Returns None."""
+        self.question.text = "image word" 
+        #need to change the size of the image to fit within the Vocab box dimensions
+        #not completed in temporarydatasolution.py
+
+    def random_present_verb(self):
+        """Chooses random type of present-tense verb. Returns None."""
+        self.question.text = self.data.random_verb() 
+
+    def random_verb_form(self):
+        """Chooses a random verb form from a random verb. Returns None."""
+        self.question.text = self.data.random_verb_form()
+
+    def random_past_verb(self):
+        """Chooses a random verb's past form. Returns None."""
+        self.question.text = self.data.random_past_verb() 
+    
+    def random_target_sentence(self):
+        """Chooses a random target sentence. Returns None."""
+        self.question.text = self.data.random_target_sentence() 
+
+    def random_japanese_target_sentence(self):
+        """Chooses a random Japanese target sentence. Returns None."""
+        self.question.text = "Get Japanese sentences."
+#        self.question.text = "日本"  #produces unexpected text
+#        self.question.text = "\u65e5" + "u\672c"
+#        self.question.text = "{&#26085}"
+#        self.question.text = self.data.random_target_sentence_japanese()
+
+    def random_pronunciation(self):
+        """Chooses a random word that is difficult to pronuounce. Returns None."""
+        self.question.text = self.data.random_pronunciation() 
+
+    def random_question(self):
+        """Chooses a random question. Returns None."""
+        self.question.text = self.data.random_question()
+
 
 class Score(c.SPRITE):
     def __init__(self, player, *args, **kwargs):
@@ -364,7 +443,7 @@ class Score(c.SPRITE):
         self.value = 0
         self.number = pyglet.text.Label(
             text=str(self.value),
-            y=self.y,
+            y=self.y + c.POINT_Y_OFFSET,
             font_name=c.FONT,
             font_size=c.FONT_SIZE,
             batch=c.SCORE_BATCH)
@@ -375,175 +454,3 @@ class Score(c.SPRITE):
         if self.value != player.points:
             self.value = player.points
             self.number.text = str(self.value)
-        
-        #sprite
-        #add item to player's sprite so the player doesn't "carry" it around
-
-
-
-
-
-
-
-#     def change_points(self, player) -> None:
-#         """Changes score's points to match the associated player's points."""
-#         if self.points < player.points:
-#             self.points += 1
-#         elif self.points > player.points:
-#             self.points -= 1
-
-
-#         self.populate_score_spots(score_object)
-
-#         if self.points != player.points:
-#             self.delete_score()                     
-#             self.change_points(player)              
-#             self.set_score_images()
-
-
-#     def populate_score_spots(self, score_object) -> None:
-#         """Setup of the score spots."""
-#         #populate self.small_score_spots_coins
-#         if not self.small_score_spots_coins:                  
-#             self.make_small_score_spots_coins(score_object)    
-# 
-#         #populate self.small_score_spots_skulls
-#         if not self.small_score_spots_skulls:                   
-#             self.make_small_score_spots_skulls(score_object)     
-# 
-#         #populate self.big_score_spots
-#         if not self.big_score_spots:                     
-#             self.make_big_score_spots(score_object)
-
-#     def make_small_score_spots_coins(self, score_object):
-#         """Sets spots for self.small_score_spots_coins. Returns None."""
-#         start = score_object.x - 36
-#         for x in range(5):
-#             self.small_score_spots_coins.append(start + (x * 12)) #coin width = 12
-
-#     def make_small_score_spots_skulls(self, score_object):
-#         """Sets spots for self.small_score_spots_skulls. Returns None."""
-#         start = score_object.x - 36
-#         for x in range(5):
-#             self.small_score_spots_skulls.append(start + (x * 16)) #skull width = 16
-
-#     def make_big_score_spots(self, score_object):
-#         """Sets spots for self.big_score_spots. Returns None."""
-#         start = score_object.x - 36
-#         for x in range(3):
-#             self.big_score_spots.append(start + (x * 30))
-
-#     def delete_score(self):
-#         """Deletes the sprites that are the displayed score. Returns None."""
-#         points = self.points                #Score.points
-#         if points > 5:
-#             self.delete_big_score()
-#         elif points <= 5 and points > 0:
-#             self.delete_small_score()
-#         elif points == 0:
-#             self.delete_zero_score()
-#         elif points < 0 and points >= -5:
-#             self.delete_small_score()
-#         elif points < -5:
-#             self.delete_big_score()
-
-#     def delete_big_score(self):
-#         """Deletes contents of big_score. Returns None."""
-#         self.big_score = []
-
-#     def delete_small_score(self):
-#         """Deletes small_score. Returns None."""
-#         self.small_score = []
-
-#     def delete_zero_score(self):
-#         """Deletes the zero score. Returns None."""
-#         self.zero.text = ""
-
-#     def set_score_images(self):
-#         """Adds the proper score sprites for the given point range. Returns None."""
-#         points = self.points                #Score.points
-#         if points > 5:
-#             self.make_big_score_coin()
-#         elif points <= 5 and points > 0:
-#             self.make_small_score_coins()
-#         elif points == 0:
-#             self.make_zero_score()
-#         elif points < 0 and points >= -5:
-#             self.make_small_score_skulls()
-#         elif points < -5:
-#             self.make_big_score_skull()
-
-#     def make_big_score_coin(self):
-#         """Assembles the big score of coins. Returns None."""
-#         self.big_score.append(
-#             Coin(
-#                 img=Coin.coin,
-#                 x=self.big_score_spots[0],
-#                 y=self.score_y,
-#                 batch=c.MAIN_BATCH))
-#         self.big_score[0].scale = 1.5
-#         self.big_score.append(
-#             pyglet.text.Label(
-#                 text="x",x=self.big_score_spots[1],
-#                 y=self.score_y,
-#                 font_name="Comic Sans MS",
-#                 font_size=24,
-#                 batch=c.MAIN_BATCH))
-#         self.big_score.append(
-#             pyglet.text.Label(
-#                 text=str(self.points),
-#                 x=self.big_score_spots[2],
-#                 y=self.score_y,
-#                 font_name="Comic Sans MS",
-#                 font_size=24,
-#                 batch=c.MAIN_BATCH))
-
-#     def make_small_score_coins(self):
-#         """Assembles the small score of coins. Returns None."""
-#         for x in range(self.points):
-#             self.small_score.append(
-#                 Coin(
-#                     img=Coin.coin,
-#                     x=self.small_score_spots_coins[x],
-#                     y=self.score_y,
-#                     batch=c.MAIN_BATCH))
- 
-#     def make_zero_score(self):
-#         """Assembles the zero score. Returns None."""
-#         self.zero.text = "0"
-
-#     def make_small_score_skulls(self):
-#         """Assembles the small score of skulls. Returns None."""
-#         for x in range(abs(self.points)):
-#             self.small_score.append(
-#                 Skull(
-#                     img=Skull.skull,
-#                     x=self.small_score_spots_skulls[x],
-#                     y=self.score_y,
-#                     batch=c.MAIN_BATCH))
-
-#     def make_big_score_skull(self):
-#         """Assembles the big score of skulls. Returns None."""
-#         self.big_score.append(
-#               Skull(
-#                     img=Skull.skull,
-#                     x=self.big_score_spots[0],
-#                     y=self.score_y,
-#                     batch=c.MAIN_BATCH))
-#         self.big_score[0].scale = 1.5 
-#         self.big_score.append(
-#             pyglet.text.Label(
-#                 text="x",
-#                 x=self.big_score_spots[1],
-#                 y=self.score_y,
-#                 font_name="Comic Sans MS",
-#                 font_size=24,
-#                 batch=c.MAIN_BATCH))
-#         self.big_score.append(
-#             pyglet.text.Label(
-#                 text=str(abs(self.points)),
-#                 x=self.big_score_spots[2],
-#                 y=self.score_y,
-#                 font_name="Comic Sans MS",
-#                 font_size=24,
-#                 batch=c.MAIN_BATCH))

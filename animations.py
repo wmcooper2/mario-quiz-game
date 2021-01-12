@@ -35,6 +35,6 @@ def transfer_item() -> None:
         if item.is_at_or_below_p1() and item.is_over_p1():
             item.match_p1_coords()
             #TODO, the player must answer the question correctly in order to get the item.
-            c.P1.inventory = item               #assign x to player's x
+            c.P1.item = item               #assign x to player's x
             c.TRANSFER_ITEM = None              #remove reference as c.TRANSFER_ITEM
 

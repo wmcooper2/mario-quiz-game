@@ -43,6 +43,10 @@ class Constants():
     SPRITE = pyglet.sprite.Sprite
 
 #FLAGS
+    #TODO, move the flags into enum classes
+    #MENU
+    MENU_SCREEN = True
+
     #DEBUG
     DEBUG = False
     ALL_RED_MUSHROOMS = False
@@ -134,10 +138,11 @@ class Constants():
     SCREEN_H = GAME_WINDOW.height
     OFF_SCREEN_R = 1100
     OFF_SCREEN_L = -100
-    FLOAT_H = 100
+    FLOAT_H = 120
     WALK_H = 63
     MAIN_TIME = 0
     POINT_X_OFFSET = 40
+    POINT_Y_OFFSET = 10
     SCORE_SPRITE_Y = 0
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
@@ -147,6 +152,3 @@ class Constants():
 #QUESTION SETTINGS 
     SHOWING_BLACK_BOX = False
     NEW_QUESTION = None
-
-#DEBUG TOOLS
-    SPRITE_DATA = ["opacity", "x", "y", "dx", "dy", "dest_x", "dest_y"]

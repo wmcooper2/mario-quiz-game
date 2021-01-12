@@ -12,7 +12,6 @@ from constants import Constants as c
 from constants import Items as i
 
 #GAMEPLAY
-#TODO, what about the movement of c.TRANSFER_ITEM ?
 def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
     """Checks if anything is moving."""
     if c.TRANSFER_ITEM != None:
@@ -37,13 +36,9 @@ def movement(list_: List[Any]) -> bool:
     """Checks if any player is moving."""
     return any([thing.dx or thing.dy for thing in list_])
 
-# def player1_has_item() -> bool:
-#     """Does player1 have an item?"""
-#     return bool(c.P1.inventory)
-
 def player_has_item(player: Any) -> bool:
     """Does player have an item?"""
-    return bool(player.inventory)
+    return bool(player.item)
 
 def remove_item_from_platform() -> Any:
     """Removes item from c.ALL_ITEMS."""
