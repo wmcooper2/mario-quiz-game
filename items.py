@@ -11,6 +11,7 @@ from constants import Constants as c
 from constants import Difficulty as d
 from constants import Effects as e
 from constants import Items as i
+import util as u
 # import problems as p
 
 #TODO, finish Feather, QuestionBlock, Star classes
@@ -206,7 +207,7 @@ class Bombomb(Walker):
     
     def effect(self) -> None:
         """Randomly mix the order of items on the screen."""
-        print("Bombomb effect")
+        c.PLAYERS = u.mix(c.PLAYERS)
 
 class SpinyBeetle(Walker): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
@@ -308,7 +309,7 @@ class Feather(Item):
     
     def effect(self) -> None:
         """Allows the player to skip a turn when the item is used."""
-        print("Feather effect")
+        u.rotate_players_left()
 
 class QuestionBlock(Item):
     """Question block chooses a random effect."""
@@ -334,7 +335,7 @@ class Star(Item):
     
     def effect(self) -> None:
         """Star allows the player to avoid the negative affects of other items."""
-        print("Pow effect")
+        print("Star effect")
 
 def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""
