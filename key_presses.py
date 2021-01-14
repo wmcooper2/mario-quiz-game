@@ -11,6 +11,14 @@ import util as u
 
 #TODO, give player option to use item
 
+#NOTE
+"""
+keys assigned so far:
+    Digits:     1
+    Letters:    ADFOSUX
+    Arrows:     Left Right Up
+"""
+
 def handle_key_presses(yammy: Any) -> None:
     #disappear Yammy
     if u.key_f():
@@ -56,3 +64,7 @@ def handle_key_presses(yammy: Any) -> None:
     elif u.key_s() and not u.movement(c.ALL_ITEMS):
         c.ALL_ITEMS = u.mix(c.ALL_ITEMS)
 
+    elif u.key_u() and u.player_has_item(c.P1):
+        c.P1.use_item()
+        #delete item after use
+        c.P1.delete_item()

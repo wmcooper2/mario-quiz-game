@@ -10,7 +10,7 @@ import pyglet
 from constants import Constants as c
 
 #TODO, rework tds import
-import temporarydatasolution as tds
+# import temporarydatasolution as tds
 import util as u
 
 
@@ -114,11 +114,11 @@ class Player(c.SPRITE):
 
     def use_item(self) -> None:
         """Player uses their item."""
-        self.item = True
-        item = self.item
-        if item.item_not_used == True:
-            item.effect()                       
-            item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+#         self.item = True
+#         item = self.item
+#         if item.item_not_used == True:
+        self.item.effect()                       
+#             item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
 
     def within_margin(self) -> Tuple[bool, bool]:
         """Checks if player within range of destination."""
@@ -353,35 +353,36 @@ class Luigi(WalkingPlayer):
         self.batch=c.PLAYER_BATCH
         self.scale = 2
 
-class Problem(pyglet.text.Label):
-#     question_center_x = BOX_IMG.width // 2 + BOX.x
-#     question_center_y = BOX_IMG.height // 2 + BOX.y
-#     english_vocab_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     english_sentence_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     present_verb_guide = pyglet.text.Label(text="Translate to Japanese", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     japanese_vocab_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     pronunciation_guide = pyglet.text.Label(text="Speak", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     japanese_sentence_guide = pyglet.text.Label(text="Translate to English", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
-#     answer_my_question_guide = pyglet.text.Label(text="Answer the question", font_name="Comic Sans MS", anchor_x="center",  x=question_center_x, y=question_center_y + 60, font_size=12)
+class Problem(c.LABEL):
+#     english_vocab_guide = c.LABEL(text="Translate to Japanese", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     english_sentence_guide = c.LABEL(text="Translate to Japanese", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     present_verb_guide = c.LABEL(text="Translate to Japanese", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     japanese_vocab_guide = c.LABEL(text="Translate to English", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     pronunciation_guide = c.LABEL(text="Speak", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     japanese_sentence_guide = c.LABEL(text="Translate to English", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
+#     answer_my_question_guide = c.LABEL(text="Answer the question", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
  
-    def __init__(self, x=345, y=300, text="blank",  *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-#         BOX_IMG = pyglet.resource.image("blackbox.png")
-        self.img = pyglet.resource.image("blackbox.png")
-#         BOX = pyglet.sprite.Sprite(self.img, x=345, y=264)
-        self.box = pyglet.sprite.Sprite(self.img, x=345, y=264)
+        self.img = c.IMG("blackbox.png")
+        self.box = c.SPRITE(self.img, x=370, y=250)
+        self.box.scale = 3
+        self.center_x = (self.img.width // 2) + self.box.x
+        self.center_y = (self.img.height // 2) + self.box.y
 
-#         self.q_x = Problem.question_center_x
-#         self.q_y = Problem.question_center_y
-#         self.question = pyglet.text.Label(text="blank", font_name="Comic Sans MS", x=self.q_x, y=self.q_y, font_size=24, width=self.BOX_IMG.width)
-#         self.question.anchor_x = "center"
-#         self.question.anchor_y = "center"
+        self.question = c.LABEL(
+            text="blank",
+            font_name=c.FONT,
+            x=self.center_x,
+            y=self.center_y,
+            font_size=24,
+            width=self.box.width)
 #         self.data = tds.Data()
 
-#        self.past_verb_guide = pyglet.text.Label(text = "past verb guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
-#        self.japanese_translation_guide = pyglet.text.Label(text = "japanese translation guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
-#        self.target_sentence_guide= pyglet.text.Label(text = "target sentence guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
-#        self.image_guide = pyglet.text.Label(text = "image guide", font_name = "Comic Sans MS", x = 300, y = 300, font_size = 18)
+#        self.past_verb_guide = c.LABEL(text="past verb guide", font_name=c.FONT, x=300, y=300, font_size=18)
+#        self.japanese_translation_guide = c.LABEL(text="japanese translation guide", font_name=c.FONT, x=300, y=300, font_size=18)
+#        self.target_sentence_guide = c.LABEL(text="target sentence guide", font_name=c.FONT, x=300, y=300, font_size=18)
+#        self.image_guide = c.LABEL(text="image guide", font_name=c.FONT, x=300, y=300, font_size=18)
     
     def random_english_word(self):
         """Chooses a random English vocabulary word. Returns None."""
@@ -441,7 +442,7 @@ class Score(c.SPRITE):
         self.batch = c.SCORE_BATCH
         self.player = player
         self.value = 0
-        self.number = pyglet.text.Label(
+        self.number = c.LABEL(
             text=str(self.value),
             y=self.y + c.POINT_Y_OFFSET,
             font_name=c.FONT,

@@ -9,8 +9,9 @@ import pyglet
 #custom
 from constants import Constants as c
 from constants import Difficulty as d
+from constants import Effects as e
 from constants import Items as i
-import problems as p
+# import problems as p
 
 #TODO, finish Feather, QuestionBlock, Star classes
 
@@ -203,9 +204,9 @@ class Bombomb(Walker):
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Randomly mix the order of items on the screen. Returns None."""
-        c.BOMBOMB_EFFECT = True 
+    def effect(self) -> None:
+        """Randomly mix the order of items on the screen."""
+        print("Bombomb effect")
 
 class SpinyBeetle(Walker): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
@@ -222,10 +223,9 @@ class SpinyBeetle(Walker):
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Presents a question from yomitore, qa 100, and custom questions. Returns None"""
-        p.showing_black_box = True
-        self.problem.random_question()
+    def effect(self) -> None:
+        """Presents a question from yomitore, qa 100, and custom questions."""
+        print("SpinyBeetle effect")
 
 #SLIDERS
 class RedMushroom(Item):
@@ -237,10 +237,9 @@ class RedMushroom(Item):
         self.left_anim = self.right_anim
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Presents a random English word. Returns None"""
-        p.showing_black_box = True
-        self.problem.random_english_word()
+    def effect(self) -> None:
+        """Presents a random English word"""
+        print("RedMushroom effect")
 
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question."""
@@ -251,10 +250,9 @@ class GreenMushroom(Item):
         self.left_anim = self.right_anim
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Presents a verb form problem. Returns None"""
-        p.showing_black_box = True
-        self.problem.random_present_verb()
+    def effect(self) -> None:
+        """Presents a verb form problem"""
+        print("GreenMushroom effect")
 
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question."""
@@ -267,10 +265,9 @@ class YoshiCoin(Item):
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Presents a pronunciation problem. Returns None"""
-        p.showing_black_box = True
-        self.problem.random_pronunciation()
+    def effect(self) -> None:
+        """Presents a pronunciation problem."""
+        print("YoshiCoin effect")
 
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese)."""
@@ -281,10 +278,10 @@ class PirahnaPlant(Item):
         self.left_anim = self.right_anim
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Presents a sentence translation problem (English to Japanese). Returns None"""
-        p.showing_black_box = True
-        self.problem.random_target_sentence()
+    def effect(self) -> None:
+        """Presents a sentence translation problem (English to Japanese)"""
+        pass
+        print("PirahnaPlant effect")
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone."""
@@ -297,8 +294,8 @@ class PowButton(Item):
         super().__init__(self.right, *args, **kwargs)
     
     def effect(self):
-        """Pow Button takes one point away from everyone. Returns None"""
-        c.POW_BUTTON_EFFECT = True 
+        """Pow Button takes one point away from everyone."""
+        print("Pow effect")
 
 class Feather(Item):
     """Feather allows the player to skip their turn when the item is used."""
@@ -309,9 +306,9 @@ class Feather(Item):
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Allows the player to skip a turn when the item is used. Returns None."""
-        pass
+    def effect(self) -> None:
+        """Allows the player to skip a turn when the item is used."""
+        print("Feather effect")
 
 class QuestionBlock(Item):
     """Question block chooses a random effect."""
@@ -322,9 +319,9 @@ class QuestionBlock(Item):
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
-        """Choose a random effect from all of the available effects. Returns None."""
-        pass
+    def effect(self) -> None:
+        """Choose a random effect from all of the available effects."""
+        print("QuestionBlock effect")
 
 class Star(Item):
     """Star allows the player to avoid the negative affects of other items."""
@@ -335,9 +332,9 @@ class Star(Item):
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
-    def effect(self):
+    def effect(self) -> None:
         """Star allows the player to avoid the negative affects of other items."""
-        pass
+        print("Pow effect")
 
 def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""

@@ -68,6 +68,9 @@ def rotate_players_right() -> None:
     """Rotates contents of players list to the right by one."""
     c.PLAYERS.insert(0, c.PLAYERS.pop())
 
+# def is_transfer_item_on_player(player: Any) -> bool:
+#     return player.x == c.TRANSFER_ITEM.x and player.y == c.TRANSFER_ITEM.y
+
 def wrong_answer(player) -> None:
     """Takes away a point from the player in the ready position."""
     player.points -= 1
@@ -77,11 +80,29 @@ def wrong_answer(player) -> None:
 
 
 #KEY HANDLER CONVENIENCE FUNCTIONS
+def key_1() -> bool:
+    return c.KH[key._1] 
+
+def key_a() -> bool:
+    return c.KH[key.A]
+
+def key_d() -> bool:
+    return c.KH[key.D]
+
 def key_f() -> bool:
     return c.KH[key.F]
 
-def key_1() -> bool:
-    return c.KH[key._1] 
+def key_o() -> bool:
+    return c.KH[key.O]
+
+def key_s() -> bool:
+    return c.KH[key.S]
+
+def key_u() -> bool:
+    return c.KH[key.U]
+
+def key_x() -> bool:
+    return c.KH[key.X]
 
 def key_left() -> bool:
     return c.KH[key.LEFT] 
@@ -91,21 +112,6 @@ def key_right() -> bool:
 
 def key_up() -> bool:
     return c.KH[key.UP]
-
-def key_o() -> bool:
-    return c.KH[key.O]
-
-def key_x() -> bool:
-    return c.KH[key.X]
-
-def key_a() -> bool:
-    return c.KH[key.A]
-
-def key_d() -> bool:
-    return c.KH[key.D]
-
-def key_s() -> bool:
-    return c.KH[key.S]
 
 
 

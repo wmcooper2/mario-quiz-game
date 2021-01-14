@@ -9,13 +9,14 @@ import pyglet
 from animations import transfer_item
 from constants import Constants as c
 from draw_loop import draw_menu, draw_problem, draw_sprites
-from effects import handle_item_effects
 import items as i
 from key_presses import handle_key_presses
 import util as u
 import sprites as s
 
 #TODO, add the star, feather and question block to the game
+
+#NOTE, the business logic is separated from the drawing of the sprites in the update loops
 
 #SPRITES
 background = c.SPRITE(c.IMG("grassland.png"), batch=c.BACKGROUND_BATCH)
@@ -61,8 +62,7 @@ i.add_items()
 
 #Players
 u.set_player_spots()
-u.add_players(c.RANDOMIZE_PLAYERS)
-# c.P1 = c.PLAYERS[0]     #Set Player 1
+u.add_players()
 
 #Scores
 #TODO, move these to their respective classes?
@@ -73,22 +73,10 @@ u.assign_x_pos_to_player_score_sprites()
 u.set_score_values_x()
 
 question = c.NEW_QUESTION
-# PROB = s.Problem
-# BB = PROB.BLACK_BOX
 problem = s.Problem()
 
 def update_problem() -> None:
     pass
-#     if c.P1.item:
-        #QUESTION
-        # basic pattern:
-            # draw the black box
-            # change the guide
-            # change the question in the problem
-            # draw the guide
-            # draw the question        
-#         print("drawing box")
-#         problem.box.draw()
 
         #         S_BB = True     #set flag
 #         if question:
@@ -133,8 +121,7 @@ def update_players(dt) -> None:
 #             player.use_item() 
 
 def update(dt) -> None:
-    """Game update loop."""
-#     handle_item_effects()
+    """This handles the business logic."""
     yammy.update()
     update_players(dt)
     update_items(dt)
@@ -144,6 +131,7 @@ def update(dt) -> None:
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
+    """This handles the drawing of the sprites on screen."""
     #TODO, make menu selection screen 
 #     if c.MENU_SCREEN:
 #         draw_menu()        

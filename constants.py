@@ -35,12 +35,28 @@ class Difficulty(enum.Enum):
     HARD = 3
     SUPER_HARD = 4
 
+class Effects(enum.Enum):
+    QUESTION_BLOCK = 0
+    BOMBOMB = 1
+    POW_BUTTON = 2
+    SPINY_BEETLE = 3
+    GREEN_MUSHROOM = 4
+    RED_MUSHROOM = 5
+    PIRAHNA_PLANT = 6
+    YOSHI_COIN = 7
+    FEATHER = 8
+    STAR = 9
+    RANDOMIZE_PLAYERS = 10
+    GAME_STARTED = 11
+    MIXING_PLAYER = 12
+
 class Constants():
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
     GRID = pyglet.image.ImageGrid
     ANIM = pyglet.image.Animation.from_image_sequence
     SPRITE = pyglet.sprite.Sprite
+    LABEL = pyglet.text.Label
 
 #FLAGS
     #TODO, move the flags into enum classes
@@ -56,23 +72,6 @@ class Constants():
     ALL_SPINY_BEETLES = False
     ALL_POW_BUTTONS = False
     ALL_BOMBOMBS = False
-
-    #EFFECTS
-    QUESTION_BLOCK_EFFECT = False
-    BOMBOMB_EFFECT = False
-    POW_BUTTON_EFFECT = False
-    SPINY_BEETLE_EFFECT = False
-    GREEN_MUSHROOM_EFFECT = False
-    RED_MUSHROOM_EFFECT = False
-    PIRAHNA_PLANT_EFFECT = False
-    YOSHI_COIN_EFFECT = False
-    FEATHER_EFFECT = False
-    STAR_EFFECT = False
-    RANDOMIZE_PLAYERS = False
-    GAME_JUST_STARTED = True 
-    MIXING_PLAYER_SPOTS = False
-    BOMBOMB_EFFECT = False
-    POW_BUTTON_EFFECT = False
 
 #IMPORTANT LISTS
     #items
