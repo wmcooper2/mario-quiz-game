@@ -26,11 +26,7 @@ def handle_key_presses(yammy: Any) -> None:
 
     #yammy drops item
     elif u.key_1() and not u.any_movement(c.PLAYERS, c.ALL_ITEMS, [c.TRANSFER_ITEM]) and not u.black_box_visible():
-        #if player already has item, delete that item first
-        if u.player_has_item(c.P1):
-#             c.P1.item.delete()
-            c.P1.item.poof()
-            c.P1.item = None
+        c.P1.use_item()
         yammy.wave_wand()
         c.TRANSFER_ITEM = u.remove_item_from_platform()
         i.add_item()
@@ -52,7 +48,9 @@ def handle_key_presses(yammy: Any) -> None:
     #minus one point
     elif u.key_x() and u.player_has_item(c.P1) and not u.movement(c.PLAYERS):
         u.wrong_answer(c.P1)
-        c.P1.delete_item()
+        c.P1.item.poof()
+#         c.P1.delete_item()
+        c.P1.item = None
         u.rotate_players_left()
         #set item dest to go off screen left and disappear after it leaves the visible area?
 
@@ -68,4 +66,4 @@ def handle_key_presses(yammy: Any) -> None:
     elif u.key_u() and u.player_has_item(c.P1):
         c.P1.use_item()
         #delete item after use
-        c.P1.delete_item()
+#         c.P1.delete_item()

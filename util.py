@@ -32,9 +32,13 @@ def mix(list_: List[Any]) -> List[Any]:
         copy.remove(choice)
     return mixed[:]
 
-def movement(list_: List[Any]) -> bool:
-    """Checks if any player is moving."""
-    return any([thing.dx or thing.dy for thing in list_])
+# def movement(list_: List[Any]) -> bool:
+def movement(obj: Any) -> bool:
+    """Checks if anything is moving."""
+    if type(obj) == list:
+        return any([thing.dx or thing.dy for thing in obj])
+    else:
+        return obj.dx != 0 or obj.dy != 0
 
 def player_has_item(player: Any) -> bool:
     """Does player have an item?"""

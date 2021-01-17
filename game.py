@@ -76,13 +76,11 @@ u.set_score_values_x()
 question = c.NEW_QUESTION
 problem = s.Problem()
 
-def update_problem() -> None:
-    pass
+# def update_problem() -> None:
 
         #         S_BB = True     #set flag
-#         if question:
 #             question = False    #reset flag
-#             #simple vocab
+            #simple vocab
 #             if isinstance(item, RedMushroom):    
 #                 PROB.random_english_word()
 #             #verbs
@@ -97,9 +95,6 @@ def update_problem() -> None:
 #             #answer the question
 #             elif isinstance(item, SpinyBeetle):    
 #                 PROB.random_question()
-
-    #         PROB.guide.draw()
-    #         PROB.question.draw()
 
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
@@ -128,7 +123,7 @@ def update(dt) -> None:
     update_items(dt)
     handle_key_presses(yammy)   #need to pass yammy
     transfer_item()
-    update_problem()
+#     update_problem()
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:

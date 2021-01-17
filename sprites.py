@@ -40,6 +40,7 @@ class Player(c.SPRITE):
         self.points = 0
         self.index = 0
         self.score = None
+        self.last_question_answered_correctly = True
 
         #other
         self.item = None
@@ -124,11 +125,12 @@ class Player(c.SPRITE):
 
     def use_item(self) -> None:
         """Player uses their item."""
-#         self.item = True
-#         item = self.item
-#         if item.item_not_used == True:
-        self.item.effect()                       
-#             item.item_not_used = False          #dont need to reset to False, instance is destroyed after use. 
+#         if u.player_has_item(c.P1):
+        if self.item:
+            self.item.effect()                       
+            self.item.poof()
+            self.item = None
+#         self.item.effect()                       
 
     def within_margin(self) -> Tuple[bool, bool]:
         """Checks if player within range of destination."""
