@@ -28,7 +28,8 @@ def handle_key_presses(yammy: Any) -> None:
     elif u.key_1() and not u.any_movement(c.PLAYERS, c.ALL_ITEMS, [c.TRANSFER_ITEM]) and not u.black_box_visible():
         #if player already has item, delete that item first
         if u.player_has_item(c.P1):
-            c.P1.item.delete()
+#             c.P1.item.delete()
+            c.P1.item.poof()
             c.P1.item = None
         yammy.wave_wand()
         c.TRANSFER_ITEM = u.remove_item_from_platform()

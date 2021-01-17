@@ -5,6 +5,7 @@ from typing import Any, List, Tuple
 
 #3rd party
 import pyglet
+from tabulate import tabulate
 
 #custom
 from constants import Constants as c
@@ -50,6 +51,8 @@ class Item(c.SPRITE):
         self.scale = scale
         self.batch=c.ITEM_BATCH
         self.scale=c.ITEM_SCALE
+#         self.data = [[self.__class__.__name__, self.image.x, self.image.y, self.image.anchor_x, self.image.anchor_y]]
+#         print(f"PLAYER:{tabulate(self.data)}")
 
     def update(self, dt) -> None:
         """Item's main update."""
@@ -124,13 +127,19 @@ class Item(c.SPRITE):
         """Is the item directly overhead player 1?"""
         return self.x == c.P1.x 
 
+    def is_visible(self) -> bool:
+        """Is the opacity even slightly above 0? Then it's visible."""
+        return self.opacity > self.min_opacity
+
     def match_p1_coords(self) -> None:
-        """Sets item x/y to player 1's x/y."""
+        """Sets item's position to trail behind player 1."""
         self.x, self.y = c.P1.x, c.P1.y
+#         self.dest_x, self.y = c.P1.x + c.P1.walk_left_anim.get_max_width() + 20, c.P1.y
 
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""
         dx, dy = self.dx, self.dy
+#         print(f"ITEM dx:{dx}, x:{self.x}, dest_x:{self.dest_x}")
         if dx > 0:                  # x_pos
             self.x -= self.x_speed
         elif dx < 0:
@@ -152,14 +161,16 @@ class Item(c.SPRITE):
         """Move item to same x axis."""
         self.x, self.dest_x = c.P1.x, c.P1.x
 
+    def poof(self) -> None:
+        """Poof animation."""
+        self.opacity = 0
+        self.poof = Poof(x=self.x, y=self.y)
+        self.delete()
+
     def toggle_disappear(self) -> None:
         """Toggle self.disappear flag."""
         if self.opacity <= self.min_opacity or self.opacity >= self.max_opacity:
             self.disappear = not self.disappear
-
-    def is_visible(self) -> bool:
-        """Is the opacity even slightly above 0? Then it's visible."""
-        return self.opacity > self.min_opacity
 
     def within_margin(self) -> Tuple[bool, bool]:
         """Checks if item within range of destination."""
@@ -337,6 +348,20 @@ class Star(Item):
         """Star allows the player to avoid the negative affects of other items."""
         print("Star effect")
 
+class Poof(c.SPRITE):
+    def __init__(self, x=0, y=0, *args, **kwargs):
+        self.poof = c.IMG("poof.png")
+        self.poof_seq = c.GRID(self.poof, 1, 4)
+        self.poof_anim = c.ANIM(self.poof_seq, 0.1, False)
+        super().__init__(self.poof, *args, **kwargs)
+        self.x = x
+        self.y = y
+        self.batch=c.ANIMATION_BATCH
+        self.image = self.poof_anim
+
+
+
+#ITEM RELATED UTILITY FUNCTIONS
 def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""
     c.ALL_ITEMS.append(new_item())

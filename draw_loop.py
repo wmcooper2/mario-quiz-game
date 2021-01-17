@@ -46,3 +46,4 @@ def draw_sprites() -> None:
     c.PLAYER_BATCH.draw()
     c.SCORE_BATCH.draw()
     c.ITEM_BATCH.draw()
+    c.ANIMATION_BATCH.draw()

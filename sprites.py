@@ -5,6 +5,7 @@ from typing import Any, Tuple
 
 #3rd party
 import pyglet
+from tabulate import tabulate
 
 #custom
 from constants import Constants as c
@@ -13,10 +14,11 @@ from constants import Constants as c
 # import temporarydatasolution as tds
 import util as u
 
+#TODO, remove center image methods, not needed
+
 
 #NOTE, a "Score" object (visually) is the player's mini sprite and the points
 # points are represented visually with a number within the score object on screen
-
 
 class Player(c.SPRITE):
     def __init__(self, *args, **kwargs):
@@ -33,7 +35,6 @@ class Player(c.SPRITE):
 
         #flags
         self.rotating_players = False
-#         self.item = False
 
         #points/scores
         self.points = 0
@@ -42,25 +43,21 @@ class Player(c.SPRITE):
 
         #other
         self.item = None
+#         self.data = [[self.__class__.__name__, self.image.x, self.image.y, self.image.anchor_x, self.image.anchor_y]]
+#         print(f"PLAYER:{tabulate(self.data)}")
+        print(f"{self.__class__.__name__} width:{self.width}")
 
     def update(self, dt):
         """Main update function called in the game loop."""
         self.dx = self.x - self.spot
         self.move()
-        self.check_item()
-#         if self.points != 0:
+        self.keep_item(self.dx)
         if self.points != self.score.value:
             self.score.update(self)
 
     def center_walking_player(self, image: Any) -> None:
         """Centers the anchor point in the image."""
         image.anchor_x = image.width // 2
-
-    def check_item(self) -> None:
-        """Move the inventory on screen to match the player's position."""
-        if self.item != None:
-            item = self.item
-            item.x, item.y = self.x, self.y
 
     def delete_item(self) -> None:
         """Delete player's item."""
@@ -70,6 +67,19 @@ class Player(c.SPRITE):
     def game_in_play(self):
         """Sets c.GAME_JUST_STARTED to False. Returns None."""
         c.GAME_JUST_STARTED = False
+
+    def keep_item(self, dx: int) -> None:
+        """Move the inventory on screen to match the player's position.
+            Item follows player on screen.
+        """
+        if self.item != None:
+            item = self.item
+            if dx < 0:
+                #item trails on the right side of the player
+                item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 - 10, self.y
+            else:
+                #item trails on the left side of the player
+                item.x, item.y = self.x + self.walk_left_anim.get_max_width() + 10, self.y
 
     def player_index(self) -> int:
         """Get index of player in c.PLAYERS."""
@@ -130,6 +140,11 @@ class FloatingPlayer(Player):
         self.float_height = 0
         self.float_deg = random.randrange(360)
 
+    def center_floating_player(self, image: Any) -> None:
+        """Centers the anchor point in the image."""
+        image.anchor_x = image.width // 2
+        image.anchor_y = image.height // 2
+
     def float(self) -> None:
         """Makes the character float up and down in place."""
         degrees = math.radians(self.float_deg)
@@ -140,10 +155,17 @@ class FloatingPlayer(Player):
         self.float_deg += 1
         self.y = self.y + (self.float_height / 3) 
 
-    def center_floating_player(self, image: Any) -> None:
-        """Centers the anchor point in the image."""
-        image.anchor_x = image.width // 2
-        image.anchor_y = image.height // 2
+    def keep_item(self, dx: int) -> None:
+        """Move the inventory on screen to match the player's position.
+            Item follows player on screen. Overrides base class method."""
+        if self.item != None:
+            item = self.item
+            if dx < 0:
+                #item trails on the right side of the player
+                item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 + 10, self.y
+            else:
+                #item trails on the left side of the player
+                item.x, item.y = self.x + self.walk_left_anim.get_max_width(), self.y
 
 class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
@@ -196,7 +218,7 @@ class Yammy(c.SPRITE):
 class FireLight(FloatingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("firelightwalkleft.png")
-        self.center_floating_player(self.left)
+#         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 2)
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)  #not animated while standing 
         self.walk_right = c.IMG("firelightwalkright.png")
@@ -228,7 +250,7 @@ class BigBoo(FloatingPlayer):
     #TODO, make it so that bigboo doesn't float unless he is moving.
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigboostandleft.png")
-        self.center_floating_player(self.left)
+#         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("bigboowalkright.png")
@@ -261,7 +283,7 @@ class BigBoo(FloatingPlayer):
 class Dragon(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("dragonstandleft.png")
-        self.center_walking_player(self.left)
+#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("dragonwalkright.png")
@@ -280,7 +302,7 @@ class Dragon(WalkingPlayer):
 class GreenKoopa(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("greenkoopastandleft.png")
-        self.center_walking_player(self.left)
+#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("greenkoopawalkright.png")
@@ -299,7 +321,7 @@ class GreenKoopa(WalkingPlayer):
 class BigMole(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmolestandleft.png")
-        self.center_walking_player(self.left)
+#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("bigmolewalkright.png")
@@ -318,7 +340,7 @@ class BigMole(WalkingPlayer):
 class Mario(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmariostandleft.png")
-        self.center_walking_player(self.left)
+#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
         self.walk_right = c.IMG("bigmariowalkright.png")
@@ -337,7 +359,7 @@ class Mario(WalkingPlayer):
 class Luigi(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigluigistandleft.png")
-        self.center_walking_player(self.left)
+#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
         self.walk_right = c.IMG("bigluigiwalkright.png")

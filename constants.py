@@ -121,6 +121,7 @@ class Constants():
 
 
 #DRAWING SPRITES
+    ANIMATION_BATCH = pyglet.graphics.Batch()
     MAIN_BATCH = pyglet.graphics.Batch()
     BACKGROUND_BATCH = pyglet.graphics.Batch()
     PLAYER_BATCH = pyglet.graphics.Batch()

@@ -44,6 +44,7 @@ c.ALL_PLAYERS = [
     green_koopa,
     big_mole]
 
+
 c.WALKING_PLAYERS = [
     dragon,
     green_koopa,
