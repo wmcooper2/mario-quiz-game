@@ -7,8 +7,9 @@ from pyglet.window import key
 
 
 #setup image directory
-resource_dir = "./resources"
-pyglet.resource.path = [resource_dir]
+images = "./resources"
+music = "./music"
+pyglet.resource.path = [images, music]
 pyglet.resource.reindex()
 
 class player_speed(enum.Enum):

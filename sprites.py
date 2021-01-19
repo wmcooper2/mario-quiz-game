@@ -40,13 +40,9 @@ class Player(c.SPRITE):
         self.points = 0
         self.index = 0
         self.score = None
-        self.last_question_answered_correctly = True
 
         #other
         self.item = None
-#         self.data = [[self.__class__.__name__, self.image.x, self.image.y, self.image.anchor_x, self.image.anchor_y]]
-#         print(f"PLAYER:{tabulate(self.data)}")
-        print(f"{self.__class__.__name__} width:{self.width}")
 
     def update(self, dt):
         """Main update function called in the game loop."""
@@ -77,10 +73,13 @@ class Player(c.SPRITE):
             item = self.item
             if dx < 0:
                 #item trails on the right side of the player
-                item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 - 10, self.y
+#                 item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 - 10, self.y
+#                 item.x, item.y = self.x - self.walk_left_anim.get_max_width() - 10, self.y
+                item.x, item.y = self.x - self.walk_left_anim.get_max_width(), self.y
             else:
                 #item trails on the left side of the player
-                item.x, item.y = self.x + self.walk_left_anim.get_max_width() + 10, self.y
+#                 item.x, item.y = self.x + self.walk_left_anim.get_max_width() + 10, self.y
+                item.x, item.y = self.x + self.walk_left_anim.get_max_width(), self.y
 
     def player_index(self) -> int:
         """Get index of player in c.PLAYERS."""
@@ -234,7 +233,7 @@ class FireLight(FloatingPlayer):
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
         self.batch=c.PLAYER_BATCH
-        self.scale = 1.5
+#         self.scale = 1.5
 
         def mini_sprite(self) -> Any:
             """Makes mini-sprite version of self. Overrides base class method."""
@@ -266,13 +265,14 @@ class BigBoo(FloatingPlayer):
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
         self.batch=c.PLAYER_BATCH
+        self.scale = 1.5
 
         #TODO, figure out why this method only works if within the __init__ block
         def mini_sprite(self) -> Any:
             """Makes mini-sprite version of self. Overrides base class method."""
             mini = Score(self)
-            mini.scale = 0.5
             mini.image = self.walk_left_anim
+#             mini.scale = 0.25
             return mini
 
     def update(self, dt) -> None:
@@ -466,6 +466,9 @@ class Score(c.SPRITE):
         self.batch = c.SCORE_BATCH
         self.player = player
         self.value = 0
+        self.scale = 1.5 
+        if isinstance(player, BigBoo):
+            self.scale = 1 
         self.number = c.LABEL(
             text=str(self.value),
             y=self.y + c.POINT_Y_OFFSET,

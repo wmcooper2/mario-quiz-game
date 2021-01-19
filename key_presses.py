@@ -49,10 +49,8 @@ def handle_key_presses(yammy: Any) -> None:
     elif u.key_x() and u.player_has_item(c.P1) and not u.movement(c.PLAYERS):
         u.wrong_answer(c.P1)
         c.P1.item.poof()
-#         c.P1.delete_item()
         c.P1.item = None
         u.rotate_players_left()
-        #set item dest to go off screen left and disappear after it leaves the visible area?
 
     elif u.key_a() and not u.movement(c.ALL_ITEMS):
         u.rotate_items_left()
@@ -65,5 +63,3 @@ def handle_key_presses(yammy: Any) -> None:
 
     elif u.key_u() and u.player_has_item(c.P1):
         c.P1.use_item()
-        #delete item after use
-#         c.P1.delete_item()

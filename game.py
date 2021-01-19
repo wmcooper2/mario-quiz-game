@@ -18,6 +18,13 @@ import sprites as s
 
 #NOTE, the business logic is separated from the drawing of the sprites in the update loops
 
+#Music
+# source = pyglet.media.load('explosion.wav')
+# source = pyglet.resource.media('overworld.mp3')
+source = pyglet.media.load('./music/overworld.mp3')
+source.play()
+
+
 #SPRITES
 background = c.SPRITE(c.IMG("grassland.png"), batch=c.BACKGROUND_BATCH)
 yammy = s.Yammy()

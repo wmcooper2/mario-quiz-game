@@ -21,18 +21,12 @@ def draw_problem(problem: Any) -> None:
             draw the guide
             draw the question        
     """
-    #okay
-#     if u.player_has_item(c.P1):
     if u.player_has_item(c.P1) and not u.movement(c.P1):
-#     if u.player_has_item(c.P1) and not u.movement(c.P1) and c.P1.last_question_answered_correctly:
-    #and item has not yet been earned by answering a question correctly
+    #TODO, make the user decide to use the item or throw it away before they get the question to earn a new item.
 
-    #and item is on the player
         #QUESTION
         problem.box.draw()
         problem.question.draw()
-
-    
 
 def draw_sprites() -> None:
     """Draw all the visual elements."""
