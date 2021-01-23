@@ -12,16 +12,22 @@ from constants import Constants as c
 from constants import Items as i
 
 #GAMEPLAY
-def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
+# def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
+#     """Checks if anything is moving."""
+#     if c.TRANSFER_ITEM != None:
+#         return any([movement(players), movement(items), movement(transfer_item)])
+#     return any([movement(players), movement(items)])
+
+def any_movement() -> bool:
     """Checks if anything is moving."""
     if c.TRANSFER_ITEM != None:
-        return any([movement(players), movement(items), movement(transfer_item)])
-    return any([movement(players), movement(items)])
+        return any([movement(c.PLAYERS), movement(c.ALL_ITEMS), movement(c.TRANSFER_ITEM)])
+    return any([movement(c.PLAYERS), movement(c.ALL_ITEMS)])
 
-def black_box_visible() -> bool:
-    """Is the black box visible?"""
-    return c.SHOWING_BLACK_BOX
- 
+# def black_box_visible() -> bool:
+#     """Is the black box visible?"""
+#     return c.SHOWING_BLACK_BOX
+
 def mix(list_: List[Any]) -> List[Any]:
     """Mix elements of 'list_'."""
     mixed = []
@@ -43,6 +49,10 @@ def movement(obj: Any) -> bool:
 def player_has_item(player: Any) -> bool:
     """Does player have an item?"""
     return bool(player.item)
+
+def player_in_front() -> Any:
+    """Player in the front of the line."""
+    return c.PLAYERS[0]
 
 def remove_item_from_platform() -> Any:
     """Removes item from c.ALL_ITEMS."""
@@ -98,6 +108,9 @@ def key_f() -> bool:
 
 def key_o() -> bool:
     return c.KH[key.O]
+
+def key_q() -> bool:
+    return c.KH[key.Q]
 
 def key_s() -> bool:
     return c.KH[key.S]

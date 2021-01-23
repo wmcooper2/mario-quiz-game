@@ -26,7 +26,6 @@ class Item(c.SPRITE):
         self.y=c.ITEM_PLATFORM_H
         self.dest_x = self.x
         self.dest_y = self.y
-
         self.dx = 0        
         self.dy = 0
 
@@ -45,14 +44,12 @@ class Item(c.SPRITE):
         #flags
         self.special = False
         self.item_not_used = True
+        self.bounce = False
 
         #other
-#         self.problem = p.Problem()
         self.scale = scale
         self.batch=c.ITEM_BATCH
         self.scale=c.ITEM_SCALE
-#         self.data = [[self.__class__.__name__, self.image.x, self.image.y, self.image.anchor_x, self.image.anchor_y]]
-#         print(f"PLAYER:{tabulate(self.data)}")
 
     def update(self, dt) -> None:
         """Item's main update."""
@@ -112,12 +109,12 @@ class Item(c.SPRITE):
         return self.y >= (c.ITEM_PLATFORM_H + self.disappear_limit)
 
     def is_left_of_p1(self) -> bool:
-        """Is the item to the left of player 1?"""
-        return self.x < c.P1.x
+        """Is the item to the left of player in front?"""
+        return self.x < u.player_in_front().x
 
     def is_at_or_below_p1(self) -> bool:
         """Is item at or below player 1 on y-axis?"""
-        return self.y <= c.P1.y
+        return self.y <= u.player_in_front().y
 
     def is_on_platform(self) -> bool:
         """Is the item on the platform?"""
@@ -125,21 +122,15 @@ class Item(c.SPRITE):
 
     def is_over_p1(self) -> bool:
         """Is the item directly overhead player 1?"""
-        return self.x == c.P1.x 
+        return self.y >= u.player_in_front().y
 
     def is_visible(self) -> bool:
         """Is the opacity even slightly above 0? Then it's visible."""
         return self.opacity > self.min_opacity
 
-    def match_p1_coords(self) -> None:
-        """Sets item's position to trail behind player 1."""
-        self.x, self.y = c.P1.x, c.P1.y
-#         self.dest_x, self.y = c.P1.x + c.P1.walk_left_anim.get_max_width() + 20, c.P1.y
-
     def move(self) -> None: 
         """Moves the items closer to dest_x and dest_y."""
         dx, dy = self.dx, self.dy
-#         print(f"ITEM dx:{dx}, x:{self.x}, dest_x:{self.dest_x}")
         if dx > 0:                  # x_pos
             self.x -= self.x_speed
         elif dx < 0:
@@ -150,6 +141,7 @@ class Item(c.SPRITE):
         elif dy < 0:
             self.y += self.y_speed
 
+        #if self.bounce:  # make the item bounce using a similar method as the floating
         #if the object is within range of the speed "step", then just make delta == 0
         close_x, close_y = self.within_margin()
         if close_x:
@@ -157,9 +149,11 @@ class Item(c.SPRITE):
         if close_y:
             self.y = self.dest_y
 
-    def move_to_p1_x_axis(self) -> None:
-        """Move item to same x axis."""
-        self.x, self.dest_x = c.P1.x, c.P1.x
+    def move_over_player(self) -> None:
+        """Move item to trailing position behind player."""
+        player = u.player_in_front()
+        new_spot = player._trail_right_pos()
+        self.x, self.dest_x = new_spot, new_spot
 
     def poof(self) -> None:
         """Poof animation."""

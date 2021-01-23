@@ -144,16 +144,16 @@ class Data():
         for sentence in self.book_3_japanese_target_sentences:
             self.japanese_target_sentences.append(sentence)
         
-    def japanese_word(self, word):
-        """Gets the Japanese definition. Returns String."""
+    def japanese_word(self, word: str) -> str:
+        """Gets the Japanese definition."""
         return self.dictionary[word]["japanese"]
 
-    def english_word(self):
-        """Gets a random English word. Returns String."""
+    def english_word(self) -> str:
+        """Gets a random English word."""
         return random.choice(self.words)
 
-    def random_verb_form(self):
-        """Gets a random verb in a random form. Returns String."""
+    def random_verb_form(self) -> str:
+        """Gets a random verb in a random form."""
         choice = random.choice(self.verbs)
         verb_forms = self.verb_forms[choice].keys()
         verb_forms = ["normal", "present", "past", "past participle", "gerund"]
@@ -162,12 +162,12 @@ class Data():
             return self.verb_forms[choice][form_choice][0]
         return self.verb_forms[choice][form_choice]        
 
-    def random_verb(self):
-        """Gets a random, present-tense verb. Returns String."""
+    def random_verb(self) -> str:
+        """Gets a random, present-tense verb."""
         return random.choice(self.verbs)
 
-    def random_past_verb(self):
-        """Gets a random, past-tense verb. Returns String."""
+    def random_past_verb(self) -> str:
+        """Gets a random, past-tense verb."""
         choice = random.choice(self.verbs)
         if type(self.verb_forms[choice]["past"]) == list:
             return self.verb_forms[choice]["past"][0]
@@ -181,10 +181,10 @@ class Data():
         """Gets a random japanese target sentence. Returns String."""
         return random.choice(self.japanese_target_sentences)
 
-    def random_pronunciation(self):
-        """Gets a random word that is difficult to pronounce. Returns String."""
+    def random_pronunciation(self) -> str:
+        """Gets a random word that is difficult to pronounce."""
         return random.choice(self.pronunciation_words)
 
-    def random_question(self):
-        """Gets a random question. Returns String."""
-        return random.choice(self.questions)
+#     def random_question(self):
+#         """Gets a random question. Returns String."""
+#         return random.choice(self.questions)

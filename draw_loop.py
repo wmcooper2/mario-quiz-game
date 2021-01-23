@@ -21,12 +21,15 @@ def draw_problem(problem: Any) -> None:
             draw the guide
             draw the question        
     """
-    if u.player_has_item(c.P1) and not u.movement(c.P1):
-    #TODO, make the user decide to use the item or throw it away before they get the question to earn a new item.
-
-        #QUESTION
+    player = u.player_in_front()
+#     c.SHOWING_BLACK_BOX = True
+#     if not player.item and not u.movement(player):
+    if not u.movement(player):
+#         problem.random_question()
+    #TODO, question box flashes when a player is rotated out...
+        # call custom draw method on problem
         problem.box.draw()
-        problem.question.draw()
+#         problem.question.draw()
 
 def draw_sprites() -> None:
     """Draw all the visual elements."""

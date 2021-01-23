@@ -83,26 +83,6 @@ u.set_score_values_x()
 question = c.NEW_QUESTION
 problem = s.Problem()
 
-# def update_problem() -> None:
-
-        #         S_BB = True     #set flag
-#             question = False    #reset flag
-            #simple vocab
-#             if isinstance(item, RedMushroom):    
-#                 PROB.random_english_word()
-#             #verbs
-#             elif isinstance(item, GreenMushroom):  
-#                 PROB.random_present_verb()
-#             #Japanese to English translation
-#             elif isinstance(item, PirahnaPlant):   
-#                 PROB.random_target_sentence()
-#             #pronunciation
-#             elif isinstance(item, YoshiCoin):      
-#                 PROB.random_pronunciation()
-#             #answer the question
-#             elif isinstance(item, SpinyBeetle):    
-#                 PROB.random_question()
-
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
         item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
@@ -110,27 +90,25 @@ def update_items(dt) -> None:
     if c.TRANSFER_ITEM is not None:
         c.TRANSFER_ITEM.update(dt)
     
-
 def update_players(dt) -> None:
-    c.P1 = c.PLAYERS[0]     #reset player 1
     #update player positions
-    for player in c.PLAYERS:
-        player.spot = c.PLAYER_SPOTS[c.PLAYERS.index(player)]
-        player.update(dt)
-
-        #player automatically uses item
-#         if player.item and c.SHOWING_BLACK_BOX == False: 
-#             main_item = c.P1.item
-#             player.use_item() 
+    for p in c.PLAYERS:
+        p.spot = c.PLAYER_SPOTS[c.PLAYERS.index(p)]
+        p.update(dt)
 
 def update(dt) -> None:
     """This handles the business logic."""
     yammy.update()
     update_players(dt)
     update_items(dt)
-    handle_key_presses(yammy)   #need to pass yammy
+    handle_key_presses(yammy, problem)
     transfer_item()
-#     update_problem()
+
+    #update problem
+#     if not u.black_box_visible():
+#     if problem.showing:
+#         problem.toggle()
+#         problem.random_question()
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
@@ -140,7 +118,8 @@ def on_draw() -> None:
 #         draw_menu()        
 #     else:
     draw_sprites()
-    draw_problem(problem)
+    if problem.showing:
+        draw_problem(problem)
 
 if __name__ == "__main__":
     pyglet.clock.schedule_interval(update, c.FRAME_SPEED)

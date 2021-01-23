@@ -151,5 +151,5 @@ class Constants():
     TRANSFER_ITEM = None
 
 #QUESTION SETTINGS 
-    SHOWING_BLACK_BOX = False
+#     SHOWING_BLACK_BOX = False
     NEW_QUESTION = None

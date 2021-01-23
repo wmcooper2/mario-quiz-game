@@ -1,7 +1,7 @@
 #std lib
 import math
 import random
-from typing import Any, Tuple
+from typing import Any, Callable, Tuple
 
 #3rd party
 import pyglet
@@ -11,11 +11,11 @@ from tabulate import tabulate
 from constants import Constants as c
 
 #TODO, rework tds import
-# import temporarydatasolution as tds
+import temporarydatasolution as tds
 import util as u
 
-#TODO, remove center image methods, not needed
-
+all_sprites = c.IMG("allsprites.png")
+data = tds.Data()
 
 #NOTE, a "Score" object (visually) is the player's mini sprite and the points
 # points are represented visually with a number within the score object on screen
@@ -43,6 +43,7 @@ class Player(c.SPRITE):
 
         #other
         self.item = None
+        self.scale = 1
 
     def update(self, dt):
         """Main update function called in the game loop."""
@@ -61,29 +62,14 @@ class Player(c.SPRITE):
         self.item.delete() #delete the item itself
         self.item = None   #remove reference to the item
 
-    def game_in_play(self):
-        """Sets c.GAME_JUST_STARTED to False. Returns None."""
-        c.GAME_JUST_STARTED = False
-
     def keep_item(self, dx: int) -> None:
         """Move the inventory on screen to match the player's position.
             Item follows player on screen.
         """
-        if self.item != None:
-            item = self.item
-            if dx < 0:
-                #item trails on the right side of the player
-#                 item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 - 10, self.y
-#                 item.x, item.y = self.x - self.walk_left_anim.get_max_width() - 10, self.y
-                item.x, item.y = self.x - self.walk_left_anim.get_max_width(), self.y
-            else:
-                #item trails on the left side of the player
-#                 item.x, item.y = self.x + self.walk_left_anim.get_max_width() + 10, self.y
-                item.x, item.y = self.x + self.walk_left_anim.get_max_width(), self.y
-
-    def player_index(self) -> int:
-        """Get index of player in c.PLAYERS."""
-        self.index = c.PLAYERS.index(self)
+        if dx < 0:
+            self.trailing_left()
+        else:
+            self.trailing_right()
 
     def mini_sprite(self) -> None:
         """Make a mini sprite from self."""
@@ -110,6 +96,10 @@ class Player(c.SPRITE):
         if close_x:
             self.x = self.spot
 
+    def player_index(self) -> int:
+        """Get index of player in c.PLAYERS."""
+        self.index = c.PLAYERS.index(self)
+
     def set_score_x(self) -> None:
         """Assign x pos to self.score's sprite."""
         self.score.x = c.SCORE_SPOTS[self.index]
@@ -122,14 +112,32 @@ class Player(c.SPRITE):
         """Set the score's number value."""
         self.score.value = 0
 
+    def trailing_right(self) -> None:
+        """Set player's item to trail on the right side."""
+        if self.item:
+            self.item.x, self.item.y = self._trail_right_pos(), self.y
+#             self.item.dest_x, self.item.y = self._trail_right_pos(), self.y
+
+    def trailing_left(self) -> None:
+        """Set player's item to trail on the left side."""
+        if self.item:
+            self.item.x, self.item.y = self._trail_left_pos(), self.y
+#             self.item.dest_x, self.item.y = self._trail_left_pos(), self.y
+
+    def _trail_right_pos(self) -> int:
+        """Calculate the item's trailing position for the right side of the player."""
+        return self.x + self.width + 5
+
+    def _trail_left_pos(self) -> int:
+        """Calculate the item's trailing position for the left side of the player."""
+        return self.x - self.item.width - 5
+
     def use_item(self) -> None:
         """Player uses their item."""
-#         if u.player_has_item(c.P1):
         if self.item:
             self.item.effect()                       
             self.item.poof()
             self.item = None
-#         self.item.effect()                       
 
     def within_margin(self) -> Tuple[bool, bool]:
         """Checks if player within range of destination."""
@@ -155,18 +163,6 @@ class FloatingPlayer(Player):
             self.float_height = 0
         self.float_deg += 1
         self.y = self.y + (self.float_height / 3) 
-
-    def keep_item(self, dx: int) -> None:
-        """Move the inventory on screen to match the player's position.
-            Item follows player on screen. Overrides base class method."""
-        if self.item != None:
-            item = self.item
-            if dx < 0:
-                #item trails on the right side of the player
-                item.x, item.y = self.x - self.walk_left_anim.get_max_width()//2 + 10, self.y
-            else:
-                #item trails on the left side of the player
-                item.x, item.y = self.x + self.walk_left_anim.get_max_width(), self.y
 
 class WalkingPlayer(Player):
     def __init__(self, *args, **kwargs):
@@ -219,7 +215,6 @@ class Yammy(c.SPRITE):
 class FireLight(FloatingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("firelightwalkleft.png")
-#         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 2)
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)  #not animated while standing 
         self.walk_right = c.IMG("firelightwalkright.png")
@@ -233,7 +228,6 @@ class FireLight(FloatingPlayer):
         self.x=c.OFF_SCREEN_R
         self.y=c.FLOAT_H
         self.batch=c.PLAYER_BATCH
-#         self.scale = 1.5
 
         def mini_sprite(self) -> Any:
             """Makes mini-sprite version of self. Overrides base class method."""
@@ -248,9 +242,9 @@ class FireLight(FloatingPlayer):
         self.float()
 
 class BigBoo(FloatingPlayer):
-    #TODO, make it so that bigboo doesn't float unless he is moving.
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigboostandleft.png")
+        #TODO, realign boo, too far right
 #         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
@@ -272,7 +266,6 @@ class BigBoo(FloatingPlayer):
             """Makes mini-sprite version of self. Overrides base class method."""
             mini = Score(self)
             mini.image = self.walk_left_anim
-#             mini.scale = 0.25
             return mini
 
     def update(self, dt) -> None:
@@ -285,7 +278,6 @@ class BigBoo(FloatingPlayer):
 class Dragon(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("dragonstandleft.png")
-#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("dragonwalkright.png")
@@ -304,7 +296,6 @@ class Dragon(WalkingPlayer):
 class GreenKoopa(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("greenkoopastandleft.png")
-#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("greenkoopawalkright.png")
@@ -323,7 +314,6 @@ class GreenKoopa(WalkingPlayer):
 class BigMole(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmolestandleft.png")
-#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True) 
         self.walk_right = c.IMG("bigmolewalkright.png")
@@ -342,7 +332,8 @@ class BigMole(WalkingPlayer):
 class Mario(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmariostandleft.png")
-#         self.center_walking_player(self.left)
+#         self.left = all_sprites.get_region(x=2, y=95, width=48, height=28)
+#         self.left = all_sprites.get_region(x=300, y=300, width=48, height=28)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
         self.walk_right = c.IMG("bigmariowalkright.png")
@@ -350,6 +341,7 @@ class Mario(WalkingPlayer):
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
         self.walk_left = c.IMG("bigmariowalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 3)
+#         self.walk_left_seq = c.GRID(self.left, 1, 3)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
 
         super().__init__(self.left, *args, **kwargs)
@@ -361,7 +353,6 @@ class Mario(WalkingPlayer):
 class Luigi(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigluigistandleft.png")
-#         self.center_walking_player(self.left)
         self.left_seq = c.GRID(self.left, 1,1)
         self.left_anim = c.ANIM(self.left_seq, 1, True)
         self.walk_right = c.IMG("bigluigiwalkright.png")
@@ -393,71 +384,95 @@ class Problem(c.LABEL):
         self.box.scale = 3
         self.center_x = (self.img.width // 2) + self.box.x
         self.center_y = (self.img.height // 2) + self.box.y
+        self.showing = False
 
-        self.question = c.LABEL(
-            text="blank",
-            font_name=c.FONT,
-            x=self.center_x,
-            y=self.center_y,
-            font_size=24,
-            width=self.box.width)
-#         self.data = tds.Data()
+        #TODO, populate with sprites of the letters
+        self.question2 = []
+
+#         self.question = c.LABEL(
+#             text="blank",
+#             font_name=c.FONT,
+#             x=self.center_x,
+#             y=self.center_y,
+#             font_size=24,
+#             width=self.box.width)
 
 #        self.past_verb_guide = c.LABEL(text="past verb guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.japanese_translation_guide = c.LABEL(text="japanese translation guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.target_sentence_guide = c.LABEL(text="target sentence guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.image_guide = c.LABEL(text="image guide", font_name=c.FONT, x=300, y=300, font_size=18)
     
-    def random_english_word(self):
-        """Chooses a random English vocabulary word. Returns None."""
-        #Student should translate the English word into Japanese
-        random_word = self.data.english_word()
-        basic_format = random_word + " "
-        self.question.text = self.data.english_word() 
+    def change(self) -> None:
+        """Change the problem."""
+        pass
 
-    def random_japanese_word(self):
-        """Chooses a random Japanese vocabulary word. Returns None."""
-        choice = self.data.english_word()
-        self.question.text = self.data.japanese_word() 
+
+    def toggle(self) -> None:
+        """Toggle the flag to show the black box."""
+        self.showing = not self.showing
+
+    def random_question(self) -> Callable[[], None]:
+        """Randomly return a question-method."""
+#         text = self.eng_word()
+#         print("word:", text)
+        func = random.choice([
+            self.eng_word,
+            self.jap_word,
+            self.jap_sentence,
+            self.image_,
+            self.sentence,
+            self.present_verb,
+            self.past_verb,
+            self.pronunciation,
+            self.verb_form])
+        print(func())
+
+    def eng_word(self) -> str:
+        """Chooses a random English vocabulary word."""
+        return data.english_word()
     
-    def random_image(self):
-        """Chooses a random word and loads the associated image. Returns None."""
-        self.question.text = "image word" 
+    def image_(self) -> Any:
+        """Chooses a random word and loads the associated image."""
+#         print("image")
+        return "image"
+        #TODO, return GIF
+#         self.question.text = "image word" 
         #need to change the size of the image to fit within the Vocab box dimensions
         #not completed in temporarydatasolution.py
 
-    def random_present_verb(self):
-        """Chooses random type of present-tense verb. Returns None."""
-        self.question.text = self.data.random_verb() 
+    def jap_word(self) -> str:
+        """Chooses a random Japanese vocabulary word."""
+        eng = data.english_word()
+        return data.japanese_word(eng)
 
-    def random_verb_form(self):
-        """Chooses a random verb form from a random verb. Returns None."""
-        self.question.text = self.data.random_verb_form()
+    def present_verb(self) -> str:
+        """Chooses random type of present-tense verb."""
+        return data.random_verb() 
 
-    def random_past_verb(self):
-        """Chooses a random verb's past form. Returns None."""
-        self.question.text = self.data.random_past_verb() 
+    def past_verb(self) -> str:
+        """Chooses a random verb's past form."""
+        return data.random_past_verb() 
     
-    def random_target_sentence(self):
-        """Chooses a random target sentence. Returns None."""
-        self.question.text = self.data.random_target_sentence() 
+    def sentence(self) -> str:
+        """Chooses a random target sentence."""
+        return data.random_target_sentence() 
 
-    def random_japanese_target_sentence(self):
-        """Chooses a random Japanese target sentence. Returns None."""
-        self.question.text = "Get Japanese sentences."
+    def jap_sentence(self) -> str:
+        """Chooses a random Japanese target sentence."""
+#         print("Get Japanese sentences.")
+        return "Japanese sentence"
 #        self.question.text = "日本"  #produces unexpected text
 #        self.question.text = "\u65e5" + "u\672c"
 #        self.question.text = "{&#26085}"
 #        self.question.text = self.data.random_target_sentence_japanese()
 
-    def random_pronunciation(self):
-        """Chooses a random word that is difficult to pronuounce. Returns None."""
-        self.question.text = self.data.random_pronunciation() 
+    def pronunciation(self) -> str:
+        """Chooses a random word that is difficult to pronounce."""
+        return data.random_pronunciation() 
 
-    def random_question(self):
-        """Chooses a random question. Returns None."""
-        self.question.text = self.data.random_question()
-
+    def verb_form(self) -> str:
+        """Chooses a random verb form from a random verb."""
+        return data.random_verb_form()
 
 class Score(c.SPRITE):
     def __init__(self, player, *args, **kwargs):
