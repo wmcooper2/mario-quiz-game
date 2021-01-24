@@ -200,7 +200,7 @@ class Bombomb(Walker):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("bombombstandright.png")
         self.right_seq = c.GRID(self.right, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.walk_left = c.IMG("bombombwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
@@ -219,7 +219,7 @@ class SpinyBeetle(Walker):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("spinybeetlestandright.png")
         self.right_seq = c.GRID(self.right, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left = c.IMG("spinybeetlewalkleft.png")
         self.walk_left_seq = c.GRID(self.left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
@@ -239,7 +239,7 @@ class RedMushroom(Item):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("redmushroom.png")
         self.right_seq = c.GRID(self.right, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
         super().__init__(self.right, *args, **kwargs)
     
@@ -252,7 +252,7 @@ class GreenMushroom(Item):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("greenmushroom.png")
         self.right_seq = c.GRID(self.right, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
         super().__init__(self.right, *args, **kwargs)
     
@@ -308,7 +308,7 @@ class Feather(Item):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("feather.png")
         self.right_seq = c.GRID(self.right, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     
@@ -334,7 +334,7 @@ class Star(Item):
     def __init__(self, *args, **kwargs):
         self.right = c.IMG("star.png")
         self.right_seq = c.GRID(img, 1, 1)
-        self.right_anim = c.ANIM(self.right_seq, 1, True)
+        self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left = self.right
         super().__init__(self.right, *args, **kwargs)
     

@@ -1,5 +1,7 @@
 #std lib
 import math
+from string import ascii_lowercase as lowercase
+from string import ascii_uppercase as uppercase
 import random
 from typing import Any, Callable, Tuple
 
@@ -14,7 +16,8 @@ from constants import Constants as c
 import temporarydatasolution as tds
 import util as u
 
-all_sprites = c.IMG("allsprites.png")
+# all_sprites = c.IMG("allsprites.png")
+all_sprites = c.IMG("allsprites2.png")
 data = tds.Data()
 
 #NOTE, a "Score" object (visually) is the player's mini sprite and the points
@@ -216,7 +219,7 @@ class FireLight(FloatingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("firelightwalkleft.png")
         self.left_seq = c.GRID(self.left, 1, 2)
-        self.left_anim = c.ANIM(self.left_seq, 0.1, True)  #not animated while standing 
+        self.left_anim = c.ANIM(self.left_seq, 0.1, False)  #not animated while standing 
         self.walk_right = c.IMG("firelightwalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -247,7 +250,7 @@ class BigBoo(FloatingPlayer):
         #TODO, realign boo, too far right
 #         self.center_floating_player(self.left)
         self.left_seq = c.GRID(self.left, 1, 1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True) 
+        self.left_anim = c.ANIM(self.left_seq, 1, False) 
         self.walk_right = c.IMG("bigboowalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 1)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -279,7 +282,7 @@ class Dragon(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("dragonstandleft.png")
         self.left_seq = c.GRID(self.left, 1, 1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True) 
+        self.left_anim = c.ANIM(self.left_seq, 1, False) 
         self.walk_right = c.IMG("dragonwalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -297,7 +300,7 @@ class GreenKoopa(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("greenkoopastandleft.png")
         self.left_seq = c.GRID(self.left, 1, 1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True) 
+        self.left_anim = c.ANIM(self.left_seq, 1, False) 
         self.walk_right = c.IMG("greenkoopawalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -315,7 +318,7 @@ class BigMole(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmolestandleft.png")
         self.left_seq = c.GRID(self.left, 1,1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True) 
+        self.left_anim = c.ANIM(self.left_seq, 1, False) 
         self.walk_right = c.IMG("bigmolewalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -332,10 +335,14 @@ class BigMole(WalkingPlayer):
 class Mario(WalkingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("bigmariostandleft.png")
-#         self.left = all_sprites.get_region(x=2, y=95, width=48, height=28)
-#         self.left = all_sprites.get_region(x=300, y=300, width=48, height=28)
-        self.left_seq = c.GRID(self.left, 1,1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True)
+        self.left_seq = c.GRID(self.left, 1, 1)
+        self.left_anim = c.ANIM(self.left_seq, 1, False)
+        
+        #attempting to use slices from a main spritesheet.
+#         self.left = all_sprites.get_region(x=2, y=150, width=48, height=28)
+#         self.left_seq = c.GRID(self.left, 1, 3)
+#         self.left_anim = c.ANIM(self.left_seq, 1, True)
+
         self.walk_right = c.IMG("bigmariowalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 3)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
@@ -352,14 +359,17 @@ class Mario(WalkingPlayer):
 
 class Luigi(WalkingPlayer):
     def __init__(self, *args, **kwargs):
-        self.left = c.IMG("bigluigistandleft.png")
-        self.left_seq = c.GRID(self.left, 1,1)
-        self.left_anim = c.ANIM(self.left_seq, 1, True)
-        self.walk_right = c.IMG("bigluigiwalkright.png")
-        self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
+#         self.left = c.IMG("bigluigistandleft.png")
+        self.left = c.IMG("bigluigistandleft2.png")
+        self.left_seq = c.GRID(self.left, 1, 1)
+        self.left_anim = c.ANIM(self.left_seq, 1, False)
+
+        self.walk_right = c.IMG("bigluigiwalkright2.png")
+        self.walk_right_seq = c.GRID(self.walk_right, 1, 3)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
-        self.walk_left = c.IMG("bigluigiwalkleft.png")
-        self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
+
+        self.walk_left = c.IMG("bigluigiwalkleft2.png")
+        self.walk_left_seq = c.GRID(self.walk_left, 1, 3)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
 
         super().__init__(self.left, *args, **kwargs)
@@ -385,9 +395,12 @@ class Problem(c.LABEL):
         self.center_x = (self.img.width // 2) + self.box.x
         self.center_y = (self.img.height // 2) + self.box.y
         self.showing = False
+        self.letters = []        
+        self.coords = {}
+        for letter in enumerate(lowercase):
+            self.coords[letter[1]] = letter[0] * 8
+        print("coords:", self.coords)
 
-        #TODO, populate with sprites of the letters
-        self.question2 = []
 
 #         self.question = c.LABEL(
 #             text="blank",
@@ -401,15 +414,7 @@ class Problem(c.LABEL):
 #        self.japanese_translation_guide = c.LABEL(text="japanese translation guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.target_sentence_guide = c.LABEL(text="target sentence guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.image_guide = c.LABEL(text="image guide", font_name=c.FONT, x=300, y=300, font_size=18)
-    
-    def change(self) -> None:
-        """Change the problem."""
-        pass
 
-
-    def toggle(self) -> None:
-        """Toggle the flag to show the black box."""
-        self.showing = not self.showing
 
     def random_question(self) -> Callable[[], None]:
         """Randomly return a question-method."""
@@ -425,14 +430,47 @@ class Problem(c.LABEL):
             self.past_verb,
             self.pronunciation,
             self.verb_form])
-        print(func())
+
+        #Get problem string
+        string = func()
+        box_width = self.box.width * .9
+        #calculate length of string in pixels, compare to box width
+            #8px is width of each letter-sprite
+        length = len(string)*8
+        if length <= box_width:
+            print("fits on one line") 
+            print("total question width:", length)
+            #align in center vertically and horizontally
+            for char in string:
+                #TODO, populate with sprites of the letters
+                letter = c.SPRITE()#create sprite
+                #append to self.letters
+
+            #TODO, draw the sprites to the screen
+            if len(string) % 2 == 0:
+                print("even")
+                #if even number of letters
+            #else, odd number of letters
+        else:
+            print("break to next line") 
+            
+        #split string into words
+        #for each word
+            #calculate width
+            #add width to total width of problem
+            #if accumulated total width for the current line is too wide for black box
+                # decrement the y-value to drop to the next line
+            #for each letter in word
+                #make a sprite and add it to the sprite list for this problem
+                #make sure to add them to the batch
+
 
     def eng_word(self) -> str:
         """Chooses a random English vocabulary word."""
         return data.english_word()
     
     def image_(self) -> Any:
-        """Chooses a random word and loads the associated image."""
+        """Chooses image."""
 #         print("image")
         return "image"
         #TODO, return GIF
@@ -440,25 +478,8 @@ class Problem(c.LABEL):
         #need to change the size of the image to fit within the Vocab box dimensions
         #not completed in temporarydatasolution.py
 
-    def jap_word(self) -> str:
-        """Chooses a random Japanese vocabulary word."""
-        eng = data.english_word()
-        return data.japanese_word(eng)
-
-    def present_verb(self) -> str:
-        """Chooses random type of present-tense verb."""
-        return data.random_verb() 
-
-    def past_verb(self) -> str:
-        """Chooses a random verb's past form."""
-        return data.random_past_verb() 
-    
-    def sentence(self) -> str:
-        """Chooses a random target sentence."""
-        return data.random_target_sentence() 
-
     def jap_sentence(self) -> str:
-        """Chooses a random Japanese target sentence."""
+        """Chooses Japanese target sentence."""
 #         print("Get Japanese sentences.")
         return "Japanese sentence"
 #        self.question.text = "日本"  #produces unexpected text
@@ -466,12 +487,33 @@ class Problem(c.LABEL):
 #        self.question.text = "{&#26085}"
 #        self.question.text = self.data.random_target_sentence_japanese()
 
+    def jap_word(self) -> str:
+        """Chooses Japanese vocabulary word."""
+        eng = data.english_word()
+        return data.japanese_word(eng)
+
+    def past_verb(self) -> str:
+        """Chooses verb's past form."""
+        return data.random_past_verb() 
+
+    def present_verb(self) -> str:
+        """Chooses present-tense verb."""
+        return data.random_verb() 
+
     def pronunciation(self) -> str:
-        """Chooses a random word that is difficult to pronounce."""
+        """Chooses pronunciation word."""
         return data.random_pronunciation() 
 
+    def sentence(self) -> str:
+        """Chooses target sentence."""
+        return data.random_target_sentence() 
+
+    def toggle(self) -> None:
+        """Toggle the flag to show the black box."""
+        self.showing = not self.showing
+
     def verb_form(self) -> str:
-        """Chooses a random verb form from a random verb."""
+        """Chooses random verb."""
         return data.random_verb_form()
 
 class Score(c.SPRITE):
