@@ -129,6 +129,7 @@ class Constants():
     ITEM_BATCH = pyglet.graphics.Batch()
     SCORE_BATCH = pyglet.graphics.Batch()
     YAMMY_BATCH = pyglet.graphics.Batch()
+    PROBLEM_BATCH = pyglet.graphics.Batch()
 
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90

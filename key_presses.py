@@ -48,9 +48,11 @@ def handle_key_presses(yammy: Any, problem: Any) -> None:
         elif u.key_o():
             u.right_answer(player)
             u.rotate_players_left()
-            #toggle problem
+
             if problem.showing:
                 problem.toggle()
+
+            #delete prior problem letter sprites
 
         #minus one point
         elif u.key_x():
@@ -59,9 +61,11 @@ def handle_key_presses(yammy: Any, problem: Any) -> None:
                 player.item.poof()
                 player.item = None
             u.rotate_players_left()
-            #toggle problem
+
             if problem.showing:
                 problem.toggle()
+
+            #delete prior problem letter sprites
 
         elif u.key_a():
             u.rotate_items_left()

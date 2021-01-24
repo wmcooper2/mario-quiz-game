@@ -13,23 +13,12 @@ def draw_menu() -> None:
     print("menu")
 
 def draw_problem(problem: Any) -> None:
-    """
-        basic pattern:
-            draw the black box
-            change the guide
-            change the question in the problem
-            draw the guide
-            draw the question        
-    """
+    """Draw the problem."""
     player = u.player_in_front()
-#     c.SHOWING_BLACK_BOX = True
-#     if not player.item and not u.movement(player):
     if not u.movement(player):
 #         problem.random_question()
-    #TODO, question box flashes when a player is rotated out...
-        # call custom draw method on problem
         problem.box.draw()
-#         problem.question.draw()
+        c.PROBLEM_BATCH.draw()
 
 def draw_sprites() -> None:
     """Draw all the visual elements."""

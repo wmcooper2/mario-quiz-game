@@ -1,7 +1,9 @@
 #std lib
 import math
+import string as s
 from string import ascii_lowercase as lowercase
 from string import ascii_uppercase as uppercase
+from string import ascii_letters as uppersandlowers
 import random
 from typing import Any, Callable, Tuple
 
@@ -18,6 +20,7 @@ import util as u
 
 # all_sprites = c.IMG("allsprites.png")
 all_sprites = c.IMG("allsprites2.png")
+all_letters = c.IMG("letters.png")
 data = tds.Data()
 
 #NOTE, a "Score" object (visually) is the player's mini sprite and the points
@@ -386,21 +389,6 @@ class Problem(c.LABEL):
 #     pronunciation_guide = c.LABEL(text="Speak", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
 #     japanese_sentence_guide = c.LABEL(text="Translate to English", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
 #     answer_my_question_guide = c.LABEL(text="Answer the question", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
- 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.img = c.IMG("blackbox.png")
-        self.box = c.SPRITE(self.img, x=370, y=250)
-        self.box.scale = 3
-        self.center_x = (self.img.width // 2) + self.box.x
-        self.center_y = (self.img.height // 2) + self.box.y
-        self.showing = False
-        self.letters = []        
-        self.coords = {}
-        for letter in enumerate(lowercase):
-            self.coords[letter[1]] = letter[0] * 8
-        print("coords:", self.coords)
-
 
 #         self.question = c.LABEL(
 #             text="blank",
@@ -415,11 +403,29 @@ class Problem(c.LABEL):
 #        self.target_sentence_guide = c.LABEL(text="target sentence guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.image_guide = c.LABEL(text="image guide", font_name=c.FONT, x=300, y=300, font_size=18)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.img = c.IMG("blackbox.png")
+        self.box = c.SPRITE(self.img, x=370, y=250)
+        self.box.scale = 3
+        self.center_x = (self.img.width // 2) + self.box.x
+        self.center_y = (self.img.height // 2) + self.box.y
+        self.showing = False
+        self.letters = []        
+        self.letter_scale = 3
+        self.coords = {}
+        for letter in enumerate(lowercase):
+            self.coords[letter[1]] = letter[0] * 8
+        print("coords:", self.coords)
 
     def random_question(self) -> Callable[[], None]:
         """Randomly return a question-method."""
 #         text = self.eng_word()
 #         print("word:", text)
+
+        #delete the prior sprites that make up the problem
+        self.letters = []
+
         func = random.choice([
             self.eng_word,
             self.jap_word,
@@ -438,21 +444,50 @@ class Problem(c.LABEL):
             #8px is width of each letter-sprite
         length = len(string)*8
         if length <= box_width:
-            print("fits on one line") 
-            print("total question width:", length)
+            print("Fits on one line, len =", length) 
+
             #align in center vertically and horizontally
-            for char in string:
-                #TODO, populate with sprites of the letters
-                letter = c.SPRITE()#create sprite
-                #append to self.letters
+            for char in enumerate(string):
+                if char[1] in s.printable:
+                    print("printable char:", char)
+
+                    #if lowercase
+                    if char[1] in lowercase:
+                        letter = c.SPRITE(
+                            all_letters.get_region(
+#                                 x=self.coords[char[1]]*self.letter_scale,
+                                x=self.coords[char[1]],
+                                y=0,
+                                width=8,
+                                height=7),
+                            x=self.box.x+8*char[0]*self.letter_scale,
+                            y=self.box.y,
+                            batch=c.PROBLEM_BATCH)
+                        letter.scale = self.letter_scale
+                        self.letters.append(letter)
+
+
+
+                        print("char lower:", char[1])
+                        print("char lower coord:", self.coords[char[1]])
+                        #create sprite
+
+                        #TODO, ensure coords are accurate
+                    #if uppercase
+                    #else
+                    else:
+                        print("not lowercase")
+                    #append to self.letters
+                else:
+                    print("not printable...")
 
             #TODO, draw the sprites to the screen
-            if len(string) % 2 == 0:
-                print("even")
+#             if len(string) % 2 == 0:
+#                 print("even")
                 #if even number of letters
             #else, odd number of letters
         else:
-            print("break to next line") 
+            print("Need multiple lines.") 
             
         #split string into words
         #for each word
