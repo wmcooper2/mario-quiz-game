@@ -17,6 +17,9 @@ from constants import Items as i
 def is_title_screen() -> bool:
     return c.SCREEN == Screens.TITLE
 
+def is_options_screen() -> bool:
+    return c.SCREEN == Screens.OPTIONS
+
 #GAMEPLAY
 # def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
 #     """Checks if anything is moving."""
@@ -105,6 +108,9 @@ def key_1() -> bool:
 
 def key_a() -> bool:
     return c.KH[key.A]
+
+def key_b() -> bool:
+    return c.KH[key.B]
 
 def key_d() -> bool:
     return c.KH[key.D]

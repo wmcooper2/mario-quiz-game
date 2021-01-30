@@ -9,9 +9,11 @@ import pyglet
 from animations import transfer_item
 from constants import Constants as c
 from constants import Screens
-from draw_loop import draw_menu, draw_problem, draw_sprites, draw_title
+from draw_loop import draw_menu, draw_problem, draw_sprites
 import items as i
-from key_presses import game_loop_keys, title_loop_keys
+from key_presses import game_loop_keys, options_loop_keys, title_loop_keys
+from title_screen import TitleScreen
+from options_screen import OptionsScreen
 import util as u
 import sprites as s
 
@@ -79,8 +81,13 @@ u.set_player_score_sprites()
 u.assign_x_pos_to_player_score_sprites()
 u.set_score_values_x()
 
+#Problems
 question = c.NEW_QUESTION
 problem = s.Problem()
+
+#Screens
+title = TitleScreen()
+options = OptionsScreen()
 
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
@@ -105,14 +112,21 @@ def game_loop(dt) -> None:
 
 def title_loop(dt) -> None:
     """Handles the business logic for the Title screen."""
-    title_loop_keys(selector)
+    title_loop_keys(title)
+
+def options_loop(dt) -> None:
+    """Handles the business logic for the Options screen."""
+    options_loop_keys(options)
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
     """Handles the drawing the sprites on screen."""
     if u.is_title_screen():
         c.GAME_WINDOW.clear()
-        draw_title()
+        title.update()
+    elif u.is_options_screen():
+        c.GAME_WINDOW.clear()
+        options.update()
     else:
         draw_sprites()
         if problem.showing:
@@ -122,6 +136,8 @@ def screen_choices(dt):
     """Screens are changed here."""
     if u.is_title_screen():
         title_loop(dt)
+    elif u.is_options_screen():
+        options_loop(dt)
     else:
         game_loop(dt)
  

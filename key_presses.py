@@ -11,23 +11,23 @@ import items as i
 import util as u
 
 
-def title_loop_keys(selector: Any) -> None:
-    """
-        Arrows: Up Down
-    """
-    if u.key_up():
-        selector.y = 130
-    elif u.key_down():
-        selector.y = 100
-    elif u.key_enter():
-        if selector.y == 130:
-            c.SCREEN = Screens.GAME
-        elif selector.y == 100:
-            c.SCREEN = Screens.OPTIONS
 
+def title_loop_keys(title: Any) -> None:
+    """"""
+    if u.key_up():
+        title.selector_up()
+    elif u.key_down():
+        title.selector_down()
+    elif u.key_enter():
+        if title.is_game_selected():
+            c.SCREEN = Screens.GAME
+        elif title.is_options_selected():
+            c.SCREEN = Screens.OPTIONS
 
 def options_loop_keys(selector: Any) -> None:
     """"""
+    if u.key_b():
+        c.SCREEN = Screens.TITLE
 
 def game_loop_keys(yammy: Any, problem: Any) -> None:
     """
