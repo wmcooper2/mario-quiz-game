@@ -6,6 +6,7 @@ from typing import Any
 
 #custom
 from constants import Constants as c
+from constants import Screens
 import items as i
 import util as u
 
@@ -16,10 +17,17 @@ def title_loop_keys(selector: Any) -> None:
     """
     if u.key_up():
         selector.y = 130
-        #change menu selector constant to game
     elif u.key_down():
         selector.y = 100
-        #change menu selector constant to options
+    elif u.key_enter():
+        if selector.y == 130:
+            c.SCREEN = Screens.GAME
+        elif selector.y == 100:
+            c.SCREEN = Screens.OPTIONS
+
+
+def options_loop_keys(selector: Any) -> None:
+    """"""
 
 def game_loop_keys(yammy: Any, problem: Any) -> None:
     """
@@ -27,7 +35,6 @@ def game_loop_keys(yammy: Any, problem: Any) -> None:
         Letters:    ADFOSUX
         Arrows:     Left Right Up
     """
-
     player = u.player_in_front()
     if not u.any_movement():
         if u.key_1():

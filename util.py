@@ -9,7 +9,13 @@ from pyglet.window import key
 
 #custom
 from constants import Constants as c
+from constants import Screens
 from constants import Items as i
+
+
+#SCREENS
+def is_title_screen() -> bool:
+    return c.SCREEN == Screens.TITLE
 
 #GAMEPLAY
 # def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
@@ -132,6 +138,9 @@ def key_up() -> bool:
 
 def key_down() -> bool:
     return c.KH[key.DOWN]
+
+def key_enter() -> bool:
+    return c.KH[key.ENTER]
 
 
 

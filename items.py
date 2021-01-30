@@ -15,8 +15,17 @@ from constants import Items as i
 import util as u
 # import problems as p
 
-#TODO, finish Feather, QuestionBlock, Star classes
+class SoundEffects():
+    def __init__(self):
+        self._poof = pyglet.media.load('./music/poof_sound.wav')
 
+    def poof(self) -> None:
+        self._poof.play()
+sounds = SoundEffects()
+
+
+
+#TODO, finish Feather, QuestionBlock, Star classes
 class Item(c.SPRITE):
     def __init__(self, img, scale=1, *args, **kwargs):
         super().__init__(img, *args, **kwargs)
@@ -159,6 +168,7 @@ class Item(c.SPRITE):
         """Poof animation."""
         self.opacity = 0
         self.poof = Poof(x=self.x, y=self.y)
+#         sounds.poof()
         self.delete()
 
     def toggle_disappear(self) -> None:

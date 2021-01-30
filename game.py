@@ -105,13 +105,12 @@ def game_loop(dt) -> None:
 
 def title_loop(dt) -> None:
     """Handles the business logic for the Title screen."""
-    #key handlers for title buttons
     title_loop_keys(selector)
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
     """Handles the drawing the sprites on screen."""
-    if Screens.TITLE:
+    if u.is_title_screen():
         c.GAME_WINDOW.clear()
         draw_title()
     else:
@@ -119,9 +118,13 @@ def on_draw() -> None:
         if problem.showing:
             draw_problem(problem)
 
-if __name__ == "__main__":
-    if Screens.TITLE:
-        pyglet.clock.schedule_interval(title_loop, c.FRAME_SPEED)
+def screen_choices(dt):
+    """Screens are changed here."""
+    if u.is_title_screen():
+        title_loop(dt)
     else:
-        pyglet.clock.schedule_interval(game_loop, c.FRAME_SPEED)
+        game_loop(dt)
+ 
+if __name__ == "__main__":
+    pyglet.clock.schedule_interval(screen_choices, c.FRAME_SPEED)
     pyglet.app.run()

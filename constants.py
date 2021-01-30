@@ -51,14 +51,16 @@ class Effects(enum.Enum):
     GAME_STARTED = 11
     MIXING_PLAYER = 12
 
-class Screens():
-    OPTIONS = False
-    PLAYERS = False
-    GAME = False
-    TITLE = True
-#     TITLE = False
+class Screens(enum.Enum):
+    OPTIONS = 0
+    PLAYERS = 1
+    GAME = 2
+    TITLE = 3
 
 class Constants():
+    SCREEN = Screens.TITLE
+#     SCREEN = Screens.GAME
+
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
     GRID = pyglet.image.ImageGrid
