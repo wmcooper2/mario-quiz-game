@@ -130,6 +130,9 @@ def key_right() -> bool:
 def key_up() -> bool:
     return c.KH[key.UP]
 
+def key_down() -> bool:
+    return c.KH[key.DOWN]
+
 
 
 

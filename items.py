@@ -353,8 +353,6 @@ class Poof(c.SPRITE):
         self.batch=c.ANIMATION_BATCH
         self.image = self.poof_anim
 
-
-
 #ITEM RELATED UTILITY FUNCTIONS
 def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""

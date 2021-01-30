@@ -184,7 +184,3 @@ class Data():
     def random_pronunciation(self) -> str:
         """Gets a random word that is difficult to pronounce."""
         return random.choice(self.pronunciation_words)
-
-#     def random_question(self):
-#         """Gets a random question. Returns String."""
-#         return random.choice(self.questions)

@@ -23,8 +23,28 @@ all_sprites = c.IMG("allsprites2.png")
 all_letters = c.IMG("letters.png")
 data = tds.Data()
 
+punc = {
+    "!": {"x": 208, "y": 9},
+    ".": {"x": 216, "y": 9},
+    "-": {"x": 224, "y": 9},
+    ",": {"x": 232, "y": 9},
+    "?": {"x": 240, "y": 9},
+    "#": {"x": 208, "y": 0},
+    "(": {"x": 216, "y": 0},
+    ")": {"x": 224, "y": 0},
+    "'": {"x": 232, "y": 0},
+}
+
 #NOTE, a "Score" object (visually) is the player's mini sprite and the points
 # points are represented visually with a number within the score object on screen
+
+class Background(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("grassland.png")
+        super().__init__(image, *args, *kwargs)
+        self.batch = c.BACKGROUND_BATCH
+
+
 
 class Player(c.SPRITE):
     def __init__(self, *args, **kwargs):
@@ -390,14 +410,6 @@ class Problem(c.LABEL):
 #     japanese_sentence_guide = c.LABEL(text="Translate to English", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
 #     answer_my_question_guide = c.LABEL(text="Answer the question", font_name=c.FONT, anchor_x="center",  x=center_x, y=center_y + 60, font_size=12)
 
-#         self.question = c.LABEL(
-#             text="blank",
-#             font_name=c.FONT,
-#             x=self.center_x,
-#             y=self.center_y,
-#             font_size=24,
-#             width=self.box.width)
-
 #        self.past_verb_guide = c.LABEL(text="past verb guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.japanese_translation_guide = c.LABEL(text="japanese translation guide", font_name=c.FONT, x=300, y=300, font_size=18)
 #        self.target_sentence_guide = c.LABEL(text="target sentence guide", font_name=c.FONT, x=300, y=300, font_size=18)
@@ -414,19 +426,26 @@ class Problem(c.LABEL):
         self.letters = []        
         self.letter_scale = 3
         self.coords = {}
+        self.adjustment_width = 0
+        self.question = c.LABEL(
+            text="blank",
+            font_name=c.FONT,
+            x=self.center_x,
+            y=self.center_y,
+            font_size=24,
+            width=self.box.width,
+            batch=c.PROBLEM_BATCH)
+
+
+        #setup alphabet image indices
         for letter in enumerate(lowercase):
             self.coords[letter[1]] = letter[0] * 8
-        print("coords:", self.coords)
+        for letter in enumerate(uppercase):
+            self.coords[letter[1]] = letter[0] * 8
 
-    def random_question(self) -> Callable[[], None]:
-        """Randomly return a question-method."""
-#         text = self.eng_word()
-#         print("word:", text)
-
-        #delete the prior sprites that make up the problem
-        self.letters = []
-
-        func = random.choice([
+    def random_question(self) -> str:
+        """Get random question string."""
+        choice = random.choice([
             self.eng_word,
             self.jap_word,
             self.jap_sentence,
@@ -436,60 +455,42 @@ class Problem(c.LABEL):
             self.past_verb,
             self.pronunciation,
             self.verb_form])
+        return choice()
 
-        #Get problem string
-        string = func()
+    def lowercase_sprite(self, char) -> None:
+        """Add lowercase sprite."""
+        letter = c.SPRITE(
+            all_letters.get_region(
+                x=self.coords[char[1]],
+                y=0,
+                width=8,
+                height=7),
+            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
+#             x=self.box.x+8*char[0]*self.letter_scale,
+#             x=self.box.x+8*char[0] + self.adjustment_width,
+            y=self.box.y,
+            batch=c.PROBLEM_BATCH)
+        letter.scale = self.letter_scale
+        self.letters.append(letter)
+
+    def new_question(self) -> None:
+        """Setup a new question."""
+        self.letters = []                   #clear previous problem
+        question = self.random_question()
         box_width = self.box.width * .9
-        #calculate length of string in pixels, compare to box width
-            #8px is width of each letter-sprite
-        length = len(string)*8
-        if length <= box_width:
-            print("Fits on one line, len =", length) 
+        length = len(question)*8            #8px, width of letter-sprite
 
-            #align in center vertically and horizontally
-            for char in enumerate(string):
-                if char[1] in s.printable:
-                    print("printable char:", char)
+        #ensure question fits within the box's boundaries
+        if length <= box_width:             #fits on one line
+            for char in enumerate(question):
+                if char[1] in s.printable:  #if is ascii
+#                     print("printable char:", char)
 
-                    #if lowercase
-                    if char[1] in lowercase:
-                        letter = c.SPRITE(
-                            all_letters.get_region(
-#                                 x=self.coords[char[1]]*self.letter_scale,
-                                x=self.coords[char[1]],
-                                y=0,
-                                width=8,
-                                height=7),
-                            x=self.box.x+8*char[0]*self.letter_scale,
-                            y=self.box.y,
-                            batch=c.PROBLEM_BATCH)
-                        letter.scale = self.letter_scale
-                        self.letters.append(letter)
+                    #TODO, set the y pos and adjust to center x pos
+                    self.adjustment_width = self.box.width // 2 - (len(question) // 2)
+                    print("adjustment width:", self.adjustment_width)
 
-
-
-                        print("char lower:", char[1])
-                        print("char lower coord:", self.coords[char[1]])
-                        #create sprite
-
-                        #TODO, ensure coords are accurate
-                    #if uppercase
-                    #else
-                    else:
-                        print("not lowercase")
-                    #append to self.letters
-                else:
-                    print("not printable...")
-
-            #TODO, draw the sprites to the screen
-#             if len(string) % 2 == 0:
-#                 print("even")
-                #if even number of letters
-            #else, odd number of letters
-        else:
-            print("Need multiple lines.") 
-            
-        #split string into words
+        #split question into words
         #for each word
             #calculate width
             #add width to total width of problem
@@ -499,14 +500,53 @@ class Problem(c.LABEL):
                 #make a sprite and add it to the sprite list for this problem
                 #make sure to add them to the batch
 
+                    #if lowercase
+                    if char[1] in lowercase:
+                        self.lowercase_sprite(char)
 
+                    #if uppercase
+                    elif char[1] in uppercase:
+                        letter = c.SPRITE(
+                            all_letters.get_region(
+                                x=self.coords[char[1]],
+                                y=8,
+                                width=8,
+                                height=8),
+                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
+#                             x=self.box.x+8*char[0]*self.letter_scale,
+#                             x=self.box.x+8*char[0] + self.adjustment_width,
+                            y=self.box.y,
+                            batch=c.PROBLEM_BATCH)
+                        letter.scale = self.letter_scale
+                        self.letters.append(letter)
+
+                    elif char[1] in punc:
+                        letter = c.SPRITE(
+                            all_letters.get_region(
+                                x=punc[char[1]]["x"],
+                                y=punc[char[1]]["y"],
+                                width=8,
+                                height=8),
+                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
+#                             x=self.box.x+8*char[0]*self.letter_scale,
+#                             x=self.box.x+8*char[0] + self.adjustment_width,
+                            y=self.box.y,
+                            batch=c.PROBLEM_BATCH)
+                        letter.scale = self.letter_scale
+                        self.letters.append(letter)
+
+                else:
+                    print("not printable...")
+                    #probably japanese, just make a Label class sprite for now
+        else:
+            print("Need multiple lines.") 
+            
     def eng_word(self) -> str:
         """Chooses a random English vocabulary word."""
         return data.english_word()
     
     def image_(self) -> Any:
         """Chooses image."""
-#         print("image")
         return "image"
         #TODO, return GIF
 #         self.question.text = "image word" 
@@ -574,3 +614,73 @@ class Score(c.SPRITE):
         if self.value != player.points:
             self.value = player.points
             self.number.text = str(self.value)
+
+
+#TITLE MENU
+class Title(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("title.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+        self.scale = 2
+        self.x = (c.GAME_WINDOW.width - self.width) / 2
+        self.y = (c.GAME_WINDOW.height - self.height) / 2
+
+class SubTitle(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("quizlabel2.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+        self.scale = 0.5
+        self.x = (c.GAME_WINDOW.width - self.width) / 2
+        self.y = (c.GAME_WINDOW.height - self.height) / 2 - 100
+
+class TitleBorder(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("titleborder.png")
+        super().__init__(image, *args, **kwargs)
+        self.scale = 2.5
+        self.x = (c.GAME_WINDOW.width - self.width) / 2
+        self.y = (c.GAME_WINDOW.height - self.height) / 2
+
+class TitleBackground(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("titlebackground.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BACKGROUND_BATCH
+
+class TitleGround(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("titleground.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.GROUND_BATCH
+
+class QuizLabel(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("quizlabel.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+
+class OptionsBtn(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("optionsbtn.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+        self.x = (c.GAME_WINDOW.width - self.width) / 2
+        self.y = 100
+
+class GameBtn(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("gamebtn.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+        self.x = (c.GAME_WINDOW.width - self.width) / 2
+        self.y = 130
+
+class Selector(c.SPRITE):
+    def __init__(self, *args, **kwargs):
+        image = c.IMG("redmushroom.png")
+        super().__init__(image, *args, **kwargs)
+        self.batch = c.TITLE_BATCH
+        self.x = (c.GAME_WINDOW.width - self.width) / 2 - 50
+        self.y = 100 

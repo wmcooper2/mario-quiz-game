@@ -10,25 +10,30 @@ import items as i
 import util as u
 
 
-#TODO, give player option to use item
+def title_loop_keys(selector: Any) -> None:
+    """
+        Arrows: Up Down
+    """
+    if u.key_up():
+        selector.y = 130
+        #change menu selector constant to game
+    elif u.key_down():
+        selector.y = 100
+        #change menu selector constant to options
 
-#NOTE
-"""
-keys assigned so far:
-    Digits:     1
-    Letters:    ADFOSUX
-    Arrows:     Left Right Up
-"""
+def game_loop_keys(yammy: Any, problem: Any) -> None:
+    """
+        Digits:     1
+        Letters:    ADFOSUX
+        Arrows:     Left Right Up
+    """
 
-def handle_key_presses(yammy: Any, problem: Any) -> None:
     player = u.player_in_front()
-#     if u.key_f():
-#         yammy.toggle_disappear()
-
     if not u.any_movement():
         if u.key_1():
             if not problem.showing:
-                problem.random_question()
+#                 problem.new_question()
+                problem.question.draw()
                 problem.toggle()
             player.use_item()
             yammy.wave_wand()

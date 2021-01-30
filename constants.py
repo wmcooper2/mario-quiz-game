@@ -51,6 +51,13 @@ class Effects(enum.Enum):
     GAME_STARTED = 11
     MIXING_PLAYER = 12
 
+class Screens():
+    OPTIONS = False
+    PLAYERS = False
+    GAME = False
+    TITLE = True
+#     TITLE = False
+
 class Constants():
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
@@ -61,9 +68,6 @@ class Constants():
 
 #FLAGS
     #TODO, move the flags into enum classes
-    #MENU
-    MENU_SCREEN = True
-
     #DEBUG
     DEBUG = False
     ALL_RED_MUSHROOMS = False
@@ -120,16 +124,18 @@ class Constants():
     HARD_RANGE =        [15, 30, 45, 60, 75, 90, 100]           #15, 15, 15, 15, 15, 15, 10
     SUPER_HARD_RANGE =  [10, 20, 40, 60, 80, 90, 100]           #10, 10, 20, 20, 20, 10, 10
 
-
 #DRAWING SPRITES
     ANIMATION_BATCH = pyglet.graphics.Batch()
     MAIN_BATCH = pyglet.graphics.Batch()
     BACKGROUND_BATCH = pyglet.graphics.Batch()
+    GROUND_BATCH = pyglet.graphics.Batch()
     PLAYER_BATCH = pyglet.graphics.Batch()
     ITEM_BATCH = pyglet.graphics.Batch()
     SCORE_BATCH = pyglet.graphics.Batch()
     YAMMY_BATCH = pyglet.graphics.Batch()
     PROBLEM_BATCH = pyglet.graphics.Batch()
+    TITLE_BATCH = pyglet.graphics.Batch()
+    TITLE_BACKGROUND_BATCH = pyglet.graphics.Batch()
 
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90

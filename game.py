@@ -8,14 +8,14 @@ import pyglet
 #custom
 from animations import transfer_item
 from constants import Constants as c
-from draw_loop import draw_menu, draw_problem, draw_sprites
+from constants import Screens
+from draw_loop import draw_menu, draw_problem, draw_sprites, draw_title
 import items as i
-from key_presses import handle_key_presses
+from key_presses import game_loop_keys, title_loop_keys
 import util as u
 import sprites as s
 
 #TODO, add the star, feather and question block to the game
-
 #NOTE, the business logic is separated from the drawing of the sprites in the update loops
 
 #Music
@@ -24,9 +24,9 @@ import sprites as s
 source = pyglet.media.load('./music/overworld.mp3')
 source.play()
 
-
 #SPRITES
-background = c.SPRITE(c.IMG("grassland.png"), batch=c.BACKGROUND_BATCH)
+background = s.Background()
+selector = s.Selector()
 yammy = s.Yammy()
 
 #floaters
@@ -39,7 +39,6 @@ green_koopa = s.GreenKoopa()
 big_mole = s.BigMole()
 mario = s.Mario()
 luigi = s.Luigi()
-
 
 #PLAYERS
 c.ALL_PLAYERS = [
@@ -96,31 +95,33 @@ def update_players(dt) -> None:
         p.spot = c.PLAYER_SPOTS[c.PLAYERS.index(p)]
         p.update(dt)
 
-def update(dt) -> None:
-    """This handles the business logic."""
+def game_loop(dt) -> None:
+    """Handles the business logic for the game loop."""
     yammy.update()
     update_players(dt)
     update_items(dt)
-    handle_key_presses(yammy, problem)
+    game_loop_keys(yammy, problem)
     transfer_item()
 
-    #update problem
-#     if not u.black_box_visible():
-#     if problem.showing:
-#         problem.toggle()
-#         problem.random_question()
+def title_loop(dt) -> None:
+    """Handles the business logic for the Title screen."""
+    #key handlers for title buttons
+    title_loop_keys(selector)
 
 @c.GAME_WINDOW.event
 def on_draw() -> None:
-    """This handles the drawing of the sprites on screen."""
-    #TODO, make menu selection screen 
-#     if c.MENU_SCREEN:
-#         draw_menu()        
-#     else:
-    draw_sprites()
-    if problem.showing:
-        draw_problem(problem)
+    """Handles the drawing the sprites on screen."""
+    if Screens.TITLE:
+        c.GAME_WINDOW.clear()
+        draw_title()
+    else:
+        draw_sprites()
+        if problem.showing:
+            draw_problem(problem)
 
 if __name__ == "__main__":
-    pyglet.clock.schedule_interval(update, c.FRAME_SPEED)
+    if Screens.TITLE:
+        pyglet.clock.schedule_interval(title_loop, c.FRAME_SPEED)
+    else:
+        pyglet.clock.schedule_interval(game_loop, c.FRAME_SPEED)
     pyglet.app.run()
