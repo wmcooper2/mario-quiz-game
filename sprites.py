@@ -18,7 +18,6 @@ from constants import Constants as c
 import temporarydatasolution as tds
 import util as u
 
-# all_sprites = c.IMG("allsprites.png")
 all_sprites = c.IMG("allsprites2.png")
 all_letters = c.IMG("letters.png")
 data = tds.Data()
@@ -615,72 +614,27 @@ class Score(c.SPRITE):
             self.value = player.points
             self.number.text = str(self.value)
 
+class Selector():
+    def __init__(self, coords: list):
+        self.pos = c.SPRITE(c.IMG("redmushroom.png"))
+        coords.reverse()
+        self.coords = coords
+        self.index = 0
+        self.pos.x = coords[0].x
+        self.pos.y = coords[0].y
+#         print("coords:", self.coords)
 
-#TITLE MENU
-class Title(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("title.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-        self.scale = 2
-        self.x = (c.GAME_WINDOW.width - self.width) / 2
-        self.y = (c.GAME_WINDOW.height - self.height) / 2
+    def update(self) -> None:
+        self.pos.draw()
 
-class SubTitle(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("quizlabel2.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-        self.scale = 0.5
-        self.x = (c.GAME_WINDOW.width - self.width) / 2
-        self.y = (c.GAME_WINDOW.height - self.height) / 2 - 100
+    def up(self) -> None:
+        self.index += 1
+        if self.index >= len(self.coords):
+            self.index = 0
+        self.pos.y = self.coords[self.index].y
 
-class TitleBorder(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("titleborder.png")
-        super().__init__(image, *args, **kwargs)
-        self.scale = 2.5
-        self.x = (c.GAME_WINDOW.width - self.width) / 2
-        self.y = (c.GAME_WINDOW.height - self.height) / 2
-
-class TitleBackground(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("titlebackground.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BACKGROUND_BATCH
-
-class TitleGround(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("titleground.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.GROUND_BATCH
-
-class QuizLabel(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("quizlabel.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-
-class OptionsBtn(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("optionsbtn.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-        self.x = (c.GAME_WINDOW.width - self.width) / 2
-        self.y = 100
-
-class GameBtn(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("gamebtn.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-        self.x = (c.GAME_WINDOW.width - self.width) / 2
-        self.y = 130
-
-class Selector(c.SPRITE):
-    def __init__(self, *args, **kwargs):
-        image = c.IMG("redmushroom.png")
-        super().__init__(image, *args, **kwargs)
-        self.batch = c.TITLE_BATCH
-        self.x = (c.GAME_WINDOW.width - self.width) / 2 - 50
-        self.y = 100 
+    def down(self) -> None:
+        self.index -= 1
+        if self.index < 0:
+            self.index = len(self.coords) - 1
+        self.pos.y = self.coords[self.index].y

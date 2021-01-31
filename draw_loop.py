@@ -17,13 +17,13 @@ import sprites as s
 #     color=(255, 0, 0, 255),
 #     batch=c.TITLE_BATCH)
 
-title = s.Title()
-subtitle = s.SubTitle()
-title_background = s.TitleBackground()
-title_ground = s.TitleGround()
-options_button = s.OptionsBtn()
-game_button = s.GameBtn()
-
+# title = s.Title()
+# subtitle = s.SubTitle()
+# title_background = s.TitleBackground()
+# title_ground = s.TitleGround()
+# options_button = s.OptionsBtn()
+# game_button = s.GameBtn()
+ 
 def draw_menu() -> None:
     print("menu")
 

@@ -4,34 +4,9 @@ import enum
 
 #custom
 from constants import Constants as c
+import sprites as s
 
 Coord = namedtuple("Coord", ["x", "y"])
-
-class Selector():
-    def __init__(self, coords: list):
-        self.pos = c.SPRITE(c.IMG("redmushroom.png"))
-        coords.reverse()
-        self.coords = coords
-        self.selection = 0
-        self.pos.x = coords[0].x
-        self.pos.y = coords[0].y
-#         print("coords:", self.coords)
-
-    def update(self) -> None:
-        self.pos.draw()
-
-    def up(self) -> None:
-        self.selection += 1
-        if self.selection >= len(self.coords):
-            self.selection = 0
-        self.pos.y = self.coords[self.selection].y
-
-    def down(self) -> None:
-        self.selection -= 1
-        if self.selection < 0:
-            self.selection = len(self.coords) - 1
-        self.pos.y = self.coords[self.selection].y
-
 
 class OptionsScreen():
     def __init__(self):
@@ -69,7 +44,7 @@ class OptionsScreen():
         self.items_label.x = self.coords[5].x
         self.items_label.y = self.coords[5].y
 
-        self.selector = Selector(self.coords)
+        self.selector = s.Selector(self.coords)
 
     def update(self) -> None:
         self.background.draw()
@@ -86,11 +61,3 @@ class OptionsScreen():
         
     def selector_down(self) -> None:
         self.selector.down()
-
-    def is_game_selected(self) -> bool:
-        return self.selector.y == 130
-        
-    def is_options_selected(self) -> bool:
-        return self.selector.y == 100
-
-    

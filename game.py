@@ -12,11 +12,11 @@ from constants import Constants as c
 from constants import Screens
 from draw_loop import draw_menu, draw_problem, draw_sprites
 import items as i
-from key_presses import (
-    game_loop_keys,
-    options_loop_keys,
-    options_loop_keys2,
-    title_loop_keys)
+# from key_presses import (
+#     game_loop_keys)
+#     options_loop_keys,
+#     options_loop_keys2,
+#     title_loop_keys)
 from title_screen import TitleScreen
 from options_screen import OptionsScreen
 import util as u
@@ -33,7 +33,7 @@ source.play()
 
 #SPRITES
 background = s.Background()
-selector = s.Selector()
+# selector = s.Selector()
 yammy = s.Yammy()
 
 #floaters
@@ -96,11 +96,92 @@ options = OptionsScreen()
 
 @c.GAME_WINDOW.event
 def on_key_release(symbol, modifiers):
+    #OPTIONS
     if u.is_options_screen():
         if symbol == key.UP:
             options.selector_up()
         elif symbol == key.DOWN:
             options.selector_down()
+        elif u.key_b():
+            c.SCREEN = Screens.TITLE
+
+    #TITLE
+    elif u.is_title_screen():
+#         if u.key_up():
+        if symbol == key.UP:
+            title.selector_up()
+        elif symbol == key.DOWN:
+            title.selector_down()
+
+        #make a selection
+        elif symbol == key.ENTER:
+            if title.is_game_selected():
+                c.SCREEN = Screens.GAME
+            elif title.is_options_selected():
+                c.SCREEN = Screens.OPTIONS
+
+    #GAME
+    elif u.is_game_screen():
+        """
+            Digits:     1
+            Letters:    ADFOSUX
+            Arrows:     Left Right Up
+        """
+        player = u.player_in_front()
+        if not u.any_movement():
+            if u.key_1():
+                if not problem.showing:
+                    problem.question.draw()
+                    problem.toggle()
+                player.use_item()
+                yammy.wave_wand()
+                c.TRANSFER_ITEM = u.remove_item_from_platform()
+                i.add_item()
+
+            elif u.key_left():
+                u.rotate_players_left()
+
+            elif u.key_right():
+                u.rotate_players_right()
+
+            elif u.key_up():
+                c.PLAYERS = u.mix(c.PLAYERS)
+
+            #plus one point
+            elif u.key_o():
+                u.right_answer(player)
+                u.rotate_players_left()
+
+                if problem.showing:
+                    problem.toggle()
+
+                #delete prior problem letter sprites
+
+            #minus one point
+            elif u.key_x():
+                u.wrong_answer(player)
+                if player.item:
+                    player.item.poof()
+                    player.item = None
+                u.rotate_players_left()
+
+                if problem.showing:
+                    problem.toggle()
+
+                #delete prior problem letter sprites
+
+            elif u.key_a():
+                u.rotate_items_left()
+
+            elif u.key_d():
+                u.rotate_items_right()
+
+            elif u.key_s():
+                c.ALL_ITEMS = u.mix(c.ALL_ITEMS)
+
+            elif u.key_u():
+                player.use_item()
+                
 
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
@@ -120,7 +201,7 @@ def game_loop(dt) -> None:
     yammy.update()
     update_players(dt)
     update_items(dt)
-    game_loop_keys(yammy, problem)
+#     game_loop_keys(yammy, problem)
     transfer_item()
     draw_sprites()
     if problem.showing:
@@ -130,7 +211,7 @@ def title_loop(dt) -> None:
     """Handles the business logic for the Title screen."""
     c.GAME_WINDOW.clear()
     title.update()
-    title_loop_keys(title)
+#     title_loop_keys(title)
 
 def options_loop(dt) -> None:
     """Handles the business logic for the Options screen."""

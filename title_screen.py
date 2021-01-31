@@ -1,8 +1,11 @@
 #std lib
 from constants import Constants as c
+from collections import namedtuple
+import sprites as s
+
+Coord = namedtuple("Coord", ["x", "y"])
 
 class TitleScreen():
-
     def __init__(self):
         self.title = c.SPRITE(c.IMG("title.png"))
         self.title.scale = 2
@@ -13,46 +16,40 @@ class TitleScreen():
         self.subtitle.x = (c.GAME_WINDOW.width - self.subtitle.width) / 2
         self.subtitle.y = (c.GAME_WINDOW.height - self.subtitle.height) / 2 - 100
 
-#         self.titleborder = c.SPRITE(c.IMG("titleborder.png"))
-#         self.titleborder.scale = 2.5
-#         self.titleborder.x = (c.GAME_WINDOW.width - self.titleborder.width) / 2
-#         self.titleborder.y = (c.GAME_WINDOW.height - self.titleborder.height) / 2
-
         self.title_background = c.SPRITE(c.IMG("titlebackground.png"))
         self.title.ground = c.SPRITE(c.IMG("titleground.png"))
-#         self.quiz_label = c.IMG("quizlabel2.png")
+    
+        self.label_center = 450 #xpos of buttons, i becomes ypos
+        self.coords = [Coord(self.label_center, i) for i in range(120, 60, -30)]
+        self.coords.reverse()
 
         self.options_button = c.SPRITE(c.IMG("optionsbtn.png"))
-        self.options_button.x = (c.GAME_WINDOW.width - self.options_button.width) / 2
-        self.options_button.y = 100
+        self.options_button.x = self.coords[0].x + 20
+        self.options_button.y = self.coords[0].y
 
         self.game_button = c.SPRITE(c.IMG("gamebtn.png"))
-        self.game_button.x = (c.GAME_WINDOW.width - self.game_button.width) / 2
-        self.game_button.y = 130
+        self.game_button.x = self.coords[1].x + 20
+        self.game_button.y = self.coords[1].y
 
-        self.selector = c.SPRITE(c.IMG("redmushroom.png"))
-        self.selector.x = (c.GAME_WINDOW.width - self.selector.width) / 2 - 50
-        self.selector.y = 100 
+        self.selector = s.Selector(self.coords)
 
     def update(self) -> None:
         self.title_background.draw()
         self.title.ground.draw()
         self.title.draw()
         self.subtitle.draw()
-#         self.titleborder.draw()
-#         self.quiz_label.draw()
         self.options_button.draw()
         self.game_button.draw()
-        self.selector.draw()
+        self.selector.update()
 
     def selector_up(self) -> None:
-        self.selector.y = 130
+        self.selector.up()
         
     def selector_down(self) -> None:
-        self.selector.y = 100
+        self.selector.down()
 
     def is_game_selected(self) -> bool:
-        return self.selector.y == 130
+        return self.selector.index == 0
         
     def is_options_selected(self) -> bool:
-        return self.selector.y == 100
+        return self.selector.index == 1

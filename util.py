@@ -20,22 +20,15 @@ def is_title_screen() -> bool:
 def is_options_screen() -> bool:
     return c.SCREEN == Screens.OPTIONS
 
-#GAMEPLAY
-# def any_movement(players: List[Any], items: List[Any], transfer_item: List[Any]) -> bool:
-#     """Checks if anything is moving."""
-#     if c.TRANSFER_ITEM != None:
-#         return any([movement(players), movement(items), movement(transfer_item)])
-#     return any([movement(players), movement(items)])
+def is_game_screen() -> bool:
+    return c.SCREEN == Screens.GAME
 
+#GAMEPLAY
 def any_movement() -> bool:
     """Checks if anything is moving."""
     if c.TRANSFER_ITEM != None:
         return any([movement(c.PLAYERS), movement(c.ALL_ITEMS), movement(c.TRANSFER_ITEM)])
     return any([movement(c.PLAYERS), movement(c.ALL_ITEMS)])
-
-# def black_box_visible() -> bool:
-#     """Is the black box visible?"""
-#     return c.SHOWING_BLACK_BOX
 
 def mix(list_: List[Any]) -> List[Any]:
     """Mix elements of 'list_'."""
@@ -47,7 +40,6 @@ def mix(list_: List[Any]) -> List[Any]:
         copy.remove(choice)
     return mixed[:]
 
-# def movement(list_: List[Any]) -> bool:
 def movement(obj: Any) -> bool:
     """Checks if anything is moving."""
     if type(obj) == list:
@@ -90,9 +82,6 @@ def rotate_players_left() -> None:
 def rotate_players_right() -> None:
     """Rotates contents of players list to the right by one."""
     c.PLAYERS.insert(0, c.PLAYERS.pop())
-
-# def is_transfer_item_on_player(player: Any) -> bool:
-#     return player.x == c.TRANSFER_ITEM.x and player.y == c.TRANSFER_ITEM.y
 
 def wrong_answer(player) -> None:
     """Takes away a point from the player in the ready position."""
