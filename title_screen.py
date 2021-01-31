@@ -23,11 +23,13 @@ class TitleScreen():
         self.coords = [Coord(self.label_center, i) for i in range(120, 60, -30)]
         self.coords.reverse()
 
-        self.options_button = c.SPRITE(c.IMG("optionsbtn.png"))
+        self.options_button = c.LABEL("Options", font_size=c.FONT_SIZE, color=c.BLACK, bold=True)
+#         self.options_button = c.SPRITE(c.IMG("optionsbtn.png"))
         self.options_button.x = self.coords[0].x + 20
         self.options_button.y = self.coords[0].y
 
-        self.game_button = c.SPRITE(c.IMG("gamebtn.png"))
+        self.game_button = c.LABEL("Game", font_size=c.FONT_SIZE, color=c.BLACK, bold=True)
+#         self.game_button = c.SPRITE(c.IMG("gamebtn.png"))
         self.game_button.x = self.coords[1].x + 20
         self.game_button.y = self.coords[1].y
 

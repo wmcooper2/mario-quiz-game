@@ -107,6 +107,9 @@ class Constants():
     MAX_OPACITY = 255
     FONT = "Comic Sans MS"
     FONT_SIZE = 24
+    BLACK = (0, 0, 0, 255)
+    WHITE = (255, 255, 255, 255)
+    FONT_COLOR = (0, 0, 0, 255)
     DIFFICULTY = Difficulty.SUPER_HARD
     ITEM_SCALE = 1.5
     ITEM_START_LEFT = 216   #be careful changing this value
