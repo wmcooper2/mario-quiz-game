@@ -251,7 +251,7 @@ class RedMushroom(Item):
         self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Presents a random English word"""
@@ -264,7 +264,7 @@ class GreenMushroom(Item):
         self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Presents a verb form problem"""
@@ -279,7 +279,7 @@ class YoshiCoin(Item):
         self.left = c.IMG("yoshicoinleft.png")
         self.left_seq = c.GRID(self.left, 1, 5)
         self.left_anim = c.ANIM(self.left_seq, 0.1, True)
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Presents a pronunciation problem."""
@@ -292,7 +292,7 @@ class PirahnaPlant(Item):
         self.right_seq = c.GRID(self.right, 1, 2)
         self.right_anim = c.ANIM(self.right_seq, 0.1, True)
         self.left_anim = self.right_anim
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Presents a sentence translation problem (English to Japanese)"""
@@ -307,7 +307,7 @@ class PowButton(Item):
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left_anim = self.right_anim
         self.left = self.right
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self):
         """Pow Button takes one point away from everyone."""
@@ -320,7 +320,7 @@ class Feather(Item):
         self.right_seq = c.GRID(self.right, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left = self.right
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Allows the player to skip a turn when the item is used."""
@@ -333,7 +333,7 @@ class QuestionBlock(Item):
         self.right_seq = c.GRID(self.right, 1, 4)
         self.right_anim = c.ANIM(self.right_seq, 1, True)
         self.left = self.right
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Choose a random effect from all of the available effects."""
@@ -346,7 +346,7 @@ class Star(Item):
         self.right_seq = c.GRID(img, 1, 1)
         self.right_anim = c.ANIM(self.right_seq, 1, False)
         self.left = self.right
-        super().__init__(self.right, *args, **kwargs)
+        super().__init__(self.right_anim, *args, **kwargs)
     
     def effect(self) -> None:
         """Star allows the player to avoid the negative affects of other items."""
@@ -357,11 +357,10 @@ class Poof(c.SPRITE):
         self.poof = c.IMG("poof.png")
         self.poof_seq = c.GRID(self.poof, 1, 4)
         self.poof_anim = c.ANIM(self.poof_seq, 0.1, False)
-        super().__init__(self.poof, *args, **kwargs)
+        super().__init__(self.poof_anim, *args, **kwargs)
         self.x = x
         self.y = y
         self.batch=c.ANIMATION_BATCH
-        self.image = self.poof_anim
 
 #ITEM RELATED UTILITY FUNCTIONS
 def add_item() -> None:

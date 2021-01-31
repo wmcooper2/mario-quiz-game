@@ -4,6 +4,7 @@ import random
 
 #3rd party
 import pyglet
+from pyglet.window import key
 
 #custom
 from animations import transfer_item
@@ -11,7 +12,11 @@ from constants import Constants as c
 from constants import Screens
 from draw_loop import draw_menu, draw_problem, draw_sprites
 import items as i
-from key_presses import game_loop_keys, options_loop_keys, title_loop_keys
+from key_presses import (
+    game_loop_keys,
+    options_loop_keys,
+    options_loop_keys2,
+    title_loop_keys)
 from title_screen import TitleScreen
 from options_screen import OptionsScreen
 import util as u
@@ -89,6 +94,14 @@ problem = s.Problem()
 title = TitleScreen()
 options = OptionsScreen()
 
+@c.GAME_WINDOW.event
+def on_key_release(symbol, modifiers):
+    if u.is_options_screen():
+        if symbol == key.UP:
+            options.selector_up()
+        elif symbol == key.DOWN:
+            options.selector_down()
+
 def update_items(dt) -> None:
     for item in c.ALL_ITEMS:
         item.dest_x = c.ITEM_SPOTS[c.ALL_ITEMS.index(item)]
@@ -109,28 +122,22 @@ def game_loop(dt) -> None:
     update_items(dt)
     game_loop_keys(yammy, problem)
     transfer_item()
+    draw_sprites()
+    if problem.showing:
+        draw_problem(problem)
 
 def title_loop(dt) -> None:
     """Handles the business logic for the Title screen."""
+    c.GAME_WINDOW.clear()
+    title.update()
     title_loop_keys(title)
 
 def options_loop(dt) -> None:
     """Handles the business logic for the Options screen."""
-    options_loop_keys(options)
-
-@c.GAME_WINDOW.event
-def on_draw() -> None:
-    """Handles the drawing the sprites on screen."""
-    if u.is_title_screen():
-        c.GAME_WINDOW.clear()
-        title.update()
-    elif u.is_options_screen():
-        c.GAME_WINDOW.clear()
-        options.update()
-    else:
-        draw_sprites()
-        if problem.showing:
-            draw_problem(problem)
+    c.GAME_WINDOW.clear()
+    options.update()
+#     options_loop_keys(options)
+#     options_loop_keys2(options)
 
 def screen_choices(dt):
     """Screens are changed here."""

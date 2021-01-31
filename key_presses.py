@@ -3,6 +3,8 @@ import asyncio
 from typing import Any
 
 #3rd party
+from pyglet import window
+from pyglet.window import key
 
 #custom
 from constants import Constants as c
@@ -24,10 +26,33 @@ def title_loop_keys(title: Any) -> None:
         elif title.is_options_selected():
             c.SCREEN = Screens.OPTIONS
 
-def options_loop_keys(selector: Any) -> None:
+# @window.event
+# def on_key_release(symbol, modifiers):
+#     if symbol in pressed_keys:
+#         pressed_keys.remove(symbol)
+def options_loop_keys(options: Any) -> None:
     """"""
     if u.key_b():
         c.SCREEN = Screens.TITLE
+    elif u.key_up():
+        options.selector_up()
+    elif u.key_down():
+        options.selector_down()
+
+
+def options_loop_keys2(options: Any) -> None:
+    """"""
+
+#     def on_key_release(key: Any, func: Any):
+#         func()
+    if u.key_b():
+        c.SCREEN = Screens.TITLE
+    elif u.key_up():
+        window.on_key_release(key.UP)
+#         options.selector_up()
+    elif u.key_down():
+#         options.selector_down()
+        on_key_release(key.DOWN, options.selector_down)
 
 def game_loop_keys(yammy: Any, problem: Any) -> None:
     """

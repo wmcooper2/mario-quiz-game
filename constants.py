@@ -58,8 +58,9 @@ class Screens(enum.Enum):
     TITLE = 3
 
 class Constants():
-    SCREEN = Screens.TITLE
+#     SCREEN = Screens.TITLE
 #     SCREEN = Screens.GAME
+    SCREEN = Screens.OPTIONS
 
 #CONVENIENCE VARIABLES
     IMG = pyglet.resource.image
