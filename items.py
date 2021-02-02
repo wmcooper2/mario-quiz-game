@@ -168,7 +168,7 @@ class Item(c.SPRITE):
         """Poof animation."""
         self.opacity = 0
         self.poof = Poof(x=self.x, y=self.y)
-#         sounds.poof()
+        sounds.poof()
         self.delete()
 
     def toggle_disappear(self) -> None:
