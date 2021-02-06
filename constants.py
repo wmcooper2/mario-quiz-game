@@ -89,10 +89,8 @@ class Constants():
 
     #players
     ALL_PLAYERS = []
-    FLOATING_PLAYERS = []
     PLAYERS = []
     PLAYER_SPOTS = []
-    WALKING_PLAYERS = []
 
     #scores
     SCORE_DISPLAY = []
@@ -158,11 +156,22 @@ class Constants():
     POINT_X_OFFSET = 40
     POINT_Y_OFFSET = 10
     SCORE_SPRITE_Y = 0
+    MUSIC = True
+    SCORES = True
+    TIMER = True
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
     P1 = None
     TRANSFER_ITEM = None
 
 #QUESTION SETTINGS 
-#     SHOWING_BLACK_BOX = False
     NEW_QUESTION = None
+
+#MUSIC and SOUND EFFECTS
+    # source = pyglet.media.load('explosion.wav')
+    # source = pyglet.resource.media('overworld.mp3')
+    THEME_SONG = pyglet.media.load('./music/overworld.mp3')
+    MUSIC_PLAYER = pyglet.media.Player()
+    MUSIC_PLAYER.volume = 0.4
+    MUSIC_PLAYER.queue(THEME_SONG)
+    MUSIC_PLAYER.play()

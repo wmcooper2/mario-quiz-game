@@ -7,7 +7,7 @@ import pyglet
 
 #custom
 from constants import Constants as c
-from constants import Difficulty
+from constants import Difficulty as d
 import sprites as s
 
 Coord = namedtuple("Coord", ["x", "y"])
@@ -61,7 +61,7 @@ class Difficulties():
         self.label_width = 200
         self.label_height = 50
         self.coords = [Coord(i, self.y) for i in range(300, 900, 200)]
-        self.choices = Difficulty
+        self.choices = d
         self.horizontal_index = 0
         self.batch = pyglet.graphics.Batch()
         self.highlight = HighlightBox(
@@ -103,8 +103,17 @@ class Difficulties():
 
     def update(self):
         self.batch.draw()
+
         #pass in new coord to reposition the highlight
         self.highlight.update(self.coords[self.horizontal_index])
+
+        #update constants.py value
+        if self.horizontal_index == 0:
+            c.DIFFICULTY = d.EASY
+        elif self.horizontal_index == 1:
+            c.DIFFICULTY = d.MEDIUM
+        elif self.horizontal_index == 2:
+            c.DIFFICULTY = d.HARD
 
 class OnOff():
     #TODO, if true...set c.PROBLEM_TIMER = True
@@ -188,7 +197,48 @@ class HighlightBox():
             width=self.thickness,
             batch=self.batch)
         self.batch.draw()
-            
+
+class Scores(OnOff):
+    def __init__(self, y, *args, **kwargs):
+        super().__init__(y, *args, **kwargs)
+
+    def update(self):
+        super().update()
+
+        #change the constant in constants.py
+        if self.horizontal_index == 1:
+            c.SCORES = False
+
+        if self.horizontal_index == 0:
+            c.SCORES = True
+
+class Music(OnOff):
+    def __init__(self, y, *args, **kwargs):
+        super().__init__(y, *args, **kwargs)
+
+    def update(self):
+        super().update()
+        #change the constant in constants.py
+        if self.horizontal_index == 1:
+            if c.MUSIC_PLAYER.playing:
+                c.MUSIC_PLAYER.pause()
+        if self.horizontal_index == 0:
+            if not c.MUSIC_PLAYER.playing:
+                c.MUSIC_PLAYER.play()
+
+class Timer(OnOff):
+    def __init__(self, y, *args, **kwargs):
+        super().__init__(y, *args, **kwargs)
+
+    def update(self):
+        super().update()
+
+        #change the constant in constants.py
+        if self.horizontal_index == 0:
+            c.TIMER = False
+        else:
+            c.TIMER = True
+
 class OptionsScreen():
     def __init__(self):
         self.label_x = 50
@@ -219,17 +269,17 @@ class OptionsScreen():
         self.scores_label = c.LABEL("Scores", font_size=c.FONT_SIZE, color=c.WHITE, bold=True)
         self.scores_label.x = self._score_pos.x + self.label_x_offset
         self.scores_label.y = self._score_pos.y
-        self.scores = OnOff(self._score_pos.y)
+        self.scores = Scores(self._score_pos.y)
 
         self.timer_label = c.LABEL("Timer", font_size=c.FONT_SIZE, color=c.WHITE, bold=True)
         self.timer_label.x = self._timer_pos.x + self.label_x_offset
         self.timer_label.y = self._timer_pos.y
-        self.timer = OnOff(self._timer_pos.y)
+        self.timer = Timer(self._timer_pos.y)
 
         self.music_label = c.LABEL("Music", font_size=c.FONT_SIZE, color=c.WHITE, bold=True)
         self.music_label.x = self._music_pos.x + self.label_x_offset
         self.music_label.y = self._music_pos.y
-        self.music = OnOff(self._music_pos.y)
+        self.music = Music(self._music_pos.y)
 
         self.questions_label = c.LABEL("Questions", font_size=c.FONT_SIZE, color=c.WHITE, bold=True)
         self.questions_label.x = self._quest_pos.x + self.label_x_offset
@@ -278,25 +328,22 @@ class OptionsScreen():
         self.questions.update()
         self.items.update()
 
+        #update constants.py values
+
+
     def selector_up(self) -> None:
-        print("up")
         self.vertical_index += 1
         if self.vertical_index >= len(self.coords):
             self.vertical_index = 0
 
     def selector_down(self) -> None:
-        print("down")
         self.vertical_index -= 1
         if self.vertical_index < 0:
             self.vertical_index = len(self.coords) - 1
 
     #TODO, fix index issue...
     def selector_left(self) -> None:
-        print("left")
         self.option_choices[self.vertical_index].left()
-        print(self.option_choices[self.vertical_index], self.option_choices[self.vertical_index].horizontal_index)
 
     def selector_right(self) -> None:
-        print("right")
         self.option_choices[self.vertical_index].right()
-        print(self.option_choices[self.vertical_index], self.option_choices[self.vertical_index].horizontal_index)

@@ -75,7 +75,7 @@ class Player(c.SPRITE):
         self.dx = self.x - self.spot
         self.move()
         self.keep_item(self.dx)
-        if self.points != self.score.value:
+        if self.points != self.score.value and c.SCORES:
             self.score.update(self)
 
     def center_walking_player(self, image: Any) -> None:
@@ -610,7 +610,7 @@ class Score(c.SPRITE):
     def update(self, player: Any) -> None:
         """Update the player's score."""
         #points
-        if self.value != player.points:
+        if self.value != player.points and c.SCORES:
             self.value = player.points
             self.number.text = str(self.value)
 

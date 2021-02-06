@@ -12,11 +12,6 @@ from constants import Constants as c
 from constants import Screens
 from draw_loop import draw_menu, draw_problem, draw_sprites
 import items as i
-# from key_presses import (
-#     game_loop_keys)
-#     options_loop_keys,
-#     options_loop_keys2,
-#     title_loop_keys)
 from title_screen import TitleScreen
 from options_screen import OptionsScreen
 import util as u
@@ -25,15 +20,8 @@ import sprites as s
 #TODO, add the star, feather and question block to the game
 #NOTE, the business logic is separated from the drawing of the sprites in the update loops
 
-#Music
-# source = pyglet.media.load('explosion.wav')
-# source = pyglet.resource.media('overworld.mp3')
-source = pyglet.media.load('./music/overworld.mp3')
-source.play()
-
 #SPRITES
 background = s.Background()
-# selector = s.Selector()
 yammy = s.Yammy()
 
 #floaters
@@ -56,18 +44,6 @@ c.ALL_PLAYERS = [
     big_boo,
     green_koopa,
     big_mole]
-
-
-c.WALKING_PLAYERS = [
-    dragon,
-    green_koopa,
-    big_mole,
-    mario,
-    luigi]
-
-c.FLOATING_PLAYERS = [
-    fire_light,
-    big_boo]
 
 #SOME SETUP
 #Items
