@@ -102,12 +102,15 @@ def on_key_release(symbol, modifiers):
             options.selector_up()
         elif symbol == key.DOWN:
             options.selector_down()
-        elif u.key_b():
+        elif symbol == key.B:
             c.SCREEN = Screens.TITLE
+        elif symbol == key.LEFT:
+            options.selector_left()
+        elif symbol == key.RIGHT:
+            options.selector_right()
 
     #TITLE
     elif u.is_title_screen():
-#         if u.key_up():
         if symbol == key.UP:
             title.selector_up()
         elif symbol == key.DOWN:
@@ -129,7 +132,7 @@ def on_key_release(symbol, modifiers):
         """
         player = u.player_in_front()
         if not u.any_movement():
-            if u.key_1():
+            if symbol == key._1:
                 if not problem.showing:
                     problem.question.draw()
                     problem.toggle()
@@ -138,48 +141,39 @@ def on_key_release(symbol, modifiers):
                 c.TRANSFER_ITEM = u.remove_item_from_platform()
                 i.add_item()
 
-            elif u.key_left():
+            elif symbol == key.LEFT:
                 u.rotate_players_left()
-
-            elif u.key_right():
+            elif symbol == key.RIGHT:
                 u.rotate_players_right()
-
-            elif u.key_up():
+            elif symbol == key.UP:
                 c.PLAYERS = u.mix(c.PLAYERS)
 
             #plus one point
-            elif u.key_o():
+            elif symbol == key.O:
                 u.right_answer(player)
                 u.rotate_players_left()
-
                 if problem.showing:
                     problem.toggle()
-
                 #delete prior problem letter sprites
 
             #minus one point
-            elif u.key_x():
+            elif symbol == key.X:
                 u.wrong_answer(player)
                 if player.item:
                     player.item.poof()
                     player.item = None
                 u.rotate_players_left()
-
                 if problem.showing:
                     problem.toggle()
-
                 #delete prior problem letter sprites
 
-            elif u.key_a():
+            elif symbol == key.A:
                 u.rotate_items_left()
-
-            elif u.key_d():
+            elif symbol == key.D:
                 u.rotate_items_right()
-
-            elif u.key_s():
+            elif symbol == key.S:
                 c.ALL_ITEMS = u.mix(c.ALL_ITEMS)
-
-            elif u.key_u():
+            elif symbol == key.U:
                 player.use_item()
                 
 
@@ -201,7 +195,6 @@ def game_loop(dt) -> None:
     yammy.update()
     update_players(dt)
     update_items(dt)
-#     game_loop_keys(yammy, problem)
     transfer_item()
     draw_sprites()
     if problem.showing:
@@ -211,14 +204,11 @@ def title_loop(dt) -> None:
     """Handles the business logic for the Title screen."""
     c.GAME_WINDOW.clear()
     title.update()
-#     title_loop_keys(title)
 
 def options_loop(dt) -> None:
     """Handles the business logic for the Options screen."""
     c.GAME_WINDOW.clear()
     options.update()
-#     options_loop_keys(options)
-#     options_loop_keys2(options)
 
 def screen_choices(dt):
     """Screens are changed here."""

@@ -33,6 +33,7 @@ class TitleScreen():
         self.game_button.x = self.coords[1].x + 20
         self.game_button.y = self.coords[1].y
 
+        self.vertical_index = 0
         self.selector = s.Selector(self.coords)
 
     def update(self) -> None:
@@ -42,13 +43,26 @@ class TitleScreen():
         self.subtitle.draw()
         self.options_button.draw()
         self.game_button.draw()
-        self.selector.update()
+        self.selector.update(self.vertical_index)
+
+#     def selector_up(self) -> None:
+#         self.selector.up()
 
     def selector_up(self) -> None:
-        self.selector.up()
-        
+        print("up")
+        self.vertical_index += 1
+        if self.vertical_index >= len(self.coords):
+            self.vertical_index = 0
+
     def selector_down(self) -> None:
-        self.selector.down()
+        print("down")
+        self.vertical_index -= 1
+        if self.vertical_index < 0:
+            self.vertical_index = len(self.coords) - 1
+
+        
+#     def selector_down(self) -> None:
+#         self.selector.down()
 
     def is_game_selected(self) -> bool:
         return self.selector.index == 0

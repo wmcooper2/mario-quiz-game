@@ -619,22 +619,9 @@ class Selector():
         self.pos = c.SPRITE(c.IMG("redmushroom.png"))
         coords.reverse()
         self.coords = coords
-        self.index = 0
-        self.pos.x = coords[0].x
-        self.pos.y = coords[0].y
-#         print("coords:", self.coords)
 
-    def update(self) -> None:
+    def update(self, index: int) -> None:
+        self.index = index
+        self.pos.x = self.coords[self.index].x
+        self.pos.y = self.coords[self.index].y
         self.pos.draw()
-
-    def up(self) -> None:
-        self.index += 1
-        if self.index >= len(self.coords):
-            self.index = 0
-        self.pos.y = self.coords[self.index].y
-
-    def down(self) -> None:
-        self.index -= 1
-        if self.index < 0:
-            self.index = len(self.coords) - 1
-        self.pos.y = self.coords[self.index].y
