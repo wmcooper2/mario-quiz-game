@@ -7,9 +7,11 @@ import pyglet
 
 #custom
 from constants import Constants as c
+from constants import Items as i
 from constants import Difficulty as d
 from constants import QuestionTypes
 import sprites as s
+import items as item_sprites
 
 Coord = namedtuple("Coord", ["x", "y"])
 
@@ -328,20 +330,101 @@ class Questions():
         if self.horizontal_index >= len(self.coords):
             self.horizontal_index = 0
 
-
-
 class Items():
-    def __init__(self):
-        pass
-        #list of sprite objects for items
-        # images only
-        # add custom highlight option to toggle choices 
+    def __init__(self, y: int):
+        self._top_row_y = y
+        self._bottom_row_y = self._top_row_y - 50
+        self._item_x_gap = 150
+        self._item_x_start = 300
+
+        #Coords
+        self._top_row = [
+            Coord(i, self._top_row_y)
+                for i in range(self._item_x_start, 1050, self._item_x_gap)]
+        self._bottom_row = [
+            Coord(i, self._bottom_row_y)
+                for i in range(self._item_x_start, 1050, self._item_x_gap)]
+        self.coords = self._top_row + self._bottom_row
+#         print("coords: ", self.coords)
+
+        #Labels
+        self.label_width = 50
+        self.label_height = 50
+        self.choices = [
+            i.RED_MUSHROOM,
+            i.GREEN_MUSHROOM,
+            i.YOSHI_COIN,
+            i.PIRAHNA_PLANT,
+            i.SPINY_BEETLE,
+            i.POW_BUTTON,
+            i.BOMBOMB,
+            i.FEATHER,
+            i.STAR,
+            i.QUESTION_BLOCK]
+
+
+        self.items = [
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+            item_sprites.SpinyBeetle(),
+        ]
+
+        #TODO, make the sprites fit in the highlight box
+        for s in self.items:
+            s.batch = c.OPTIONS_BATCH
+
+
+#         self.images = [
+#             c.IMG("redmushroom.png"),
+#             c.IMG("greenmushroom.png"),
+#             c.IMG("yoshicoinright.png"),
+#             c.IMG("pirahnaplantsmall.png"),
+#             c.IMG("spinybeetlestandright.png"),
+#             c.IMG("powbutton.png"),
+#             c.IMG("bombombstandright.png"),
+#             c.IMG("feather.png"),
+#             c.IMG("star.png"),
+#             c.IMG("questionblock.png")]
+# 
+#         #TODO, fix these sprites
+#         self.sprites = [
+#             c.SPRITE(image[1], x=self.coords[image[0]].x, y=self.coords[image[0]].y, batch=c.OPTIONS_BATCH)
+#                 for image in enumerate(self.images)]
+# 
+#         for s in self.sprites:
+#             s.scale = 2
+
+        self._types = QuestionTypes
+        self.batch = pyglet.graphics.Batch()
+        self.horizontal_index = 0
+        self.highlight = HighlightBox(
+            self.coords[self.horizontal_index],
+            self.label_width,
+            self.label_height)
         # change opacity on highlight
 
     def update(self) -> None:
         # add/remove item to c.ALL_ITEMS
-        pass
+        self.batch.draw()
+        #pass in new coord to reposition the highlight
+        self.highlight.update(self.coords[self.horizontal_index])
 
+    def left(self) -> None:
+        self.horizontal_index -= 1
+        if self.horizontal_index < 0:
+            self.horizontal_index = len(self.coords) - 1 
+
+    def right(self) -> None:
+        self.horizontal_index += 1
+        if self.horizontal_index >= len(self.coords):
+            self.horizontal_index = 0
 
 class OptionsScreen():
     def __init__(self):
@@ -396,7 +479,8 @@ class OptionsScreen():
         self.items_label.x = self._items_pos.x + self.label_x_offset
         self.items_label.y = self._items_pos.y
         #TODO
-        self.items = Placeholder(self._items_pos.y)
+#         self.items = Placeholder(self._items_pos.y)
+        self.items = Items(self._items_pos.y)
 
         self.selector = s.Selector(self.coords)
         self.selector.pos.scale = 2
