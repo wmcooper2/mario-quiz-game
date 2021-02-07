@@ -141,13 +141,11 @@ class Player(c.SPRITE):
         """Set player's item to trail on the right side."""
         if self.item:
             self.item.x, self.item.y = self._trail_right_pos(), self.y
-#             self.item.dest_x, self.item.y = self._trail_right_pos(), self.y
 
     def trailing_left(self) -> None:
         """Set player's item to trail on the left side."""
         if self.item:
             self.item.x, self.item.y = self._trail_left_pos(), self.y
-#             self.item.dest_x, self.item.y = self._trail_left_pos(), self.y
 
     def _trail_right_pos(self) -> int:
         """Calculate the item's trailing position for the right side of the player."""
@@ -241,13 +239,14 @@ class FireLight(FloatingPlayer):
     def __init__(self, *args, **kwargs):
         self.left = c.IMG("firelightwalkleft.png")
         self.left_seq = c.GRID(self.left, 1, 2)
-        self.left_anim = c.ANIM(self.left_seq, 0.1, False)  #not animated while standing 
+#         self.left_anim = c.ANIM(self.left_seq, 0.1, False)  #not animated while standing 
         self.walk_right = c.IMG("firelightwalkright.png")
         self.walk_right_seq = c.GRID(self.walk_right, 1, 2)
         self.walk_right_anim = c.ANIM(self.walk_right_seq, 0.1, True)
         self.walk_left = c.IMG("firelightwalkleft.png")
         self.walk_left_seq = c.GRID(self.walk_left, 1, 2)
         self.walk_left_anim = c.ANIM(self.walk_left_seq, 0.1, True)
+        self.left_anim = self.walk_left_anim
 
         super().__init__(self.left, *args, **kwargs)
         self.x=c.OFF_SCREEN_R
@@ -610,7 +609,7 @@ class Score(c.SPRITE):
     def update(self, player: Any) -> None:
         """Update the player's score."""
         #points
-        if self.value != player.points and c.SCORES:
+        if self.value != player.points:
             self.value = player.points
             self.number.text = str(self.value)
 

@@ -28,6 +28,16 @@ class Items(enum.Enum):
     STAR = 8
     QUESTION_BLOCK = 9
 
+class QuestionTypes(enum.Enum):
+    WORD_JAPANESE = 0
+    WORD_ENGLISH = 1
+    VERB_FORM = 2
+    VERB_DICT = 3
+    VERB_PAST = 4
+    SENTENCE_ENGLISH = 5
+    SENTENCE_JAPANESE = 6
+    PRONUNCIATION = 7
+
 #DIFFICULTY LEVEL
 class Difficulty(enum.Enum):
     SUPER_EASY = 0
@@ -130,16 +140,17 @@ class Constants():
 
 #DRAWING SPRITES
     ANIMATION_BATCH = pyglet.graphics.Batch()
-    MAIN_BATCH = pyglet.graphics.Batch()
     BACKGROUND_BATCH = pyglet.graphics.Batch()
     GROUND_BATCH = pyglet.graphics.Batch()
-    PLAYER_BATCH = pyglet.graphics.Batch()
     ITEM_BATCH = pyglet.graphics.Batch()
-    SCORE_BATCH = pyglet.graphics.Batch()
-    YAMMY_BATCH = pyglet.graphics.Batch()
+    MAIN_BATCH = pyglet.graphics.Batch()
+    OPTIONS_BATCH = pyglet.graphics.Batch()
+    PLAYER_BATCH = pyglet.graphics.Batch()
     PROBLEM_BATCH = pyglet.graphics.Batch()
+    SCORE_BATCH = pyglet.graphics.Batch()
     TITLE_BATCH = pyglet.graphics.Batch()
     TITLE_BACKGROUND_BATCH = pyglet.graphics.Batch()
+    YAMMY_BATCH = pyglet.graphics.Batch()
 
 #GAMEPLAY SETTINGS
     FRAME_SPEED = 1/90

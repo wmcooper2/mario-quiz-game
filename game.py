@@ -103,11 +103,13 @@ def on_key_release(symbol, modifiers):
     elif u.is_game_screen():
         """
             Digits:     1
-            Letters:    ADFOSUX
+            Letters:    ABDFOSUX
             Arrows:     Left Right Up
         """
         player = u.player_in_front()
-        if not u.any_movement():
+        if symbol == key.B:
+            c.SCREEN = Screens.TITLE
+        elif not u.any_movement():
             if symbol == key._1:
                 if not problem.showing:
                     problem.question.draw()

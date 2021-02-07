@@ -143,7 +143,7 @@ class Data():
             self.japanese_target_sentences.append(sentence)
         for sentence in self.book_3_japanese_target_sentences:
             self.japanese_target_sentences.append(sentence)
-        
+
     def japanese_word(self, word: str) -> str:
         """Gets the Japanese definition."""
         return self.dictionary[word]["japanese"]

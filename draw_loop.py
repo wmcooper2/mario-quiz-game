@@ -48,6 +48,7 @@ def draw_sprites() -> None:
     c.BACKGROUND_BATCH.draw()
     c.YAMMY_BATCH.draw()
     c.PLAYER_BATCH.draw()
-    c.SCORE_BATCH.draw()
+    if c.SCORES:
+        c.SCORE_BATCH.draw()
     c.ITEM_BATCH.draw()
     c.ANIMATION_BATCH.draw()
