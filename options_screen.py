@@ -270,6 +270,7 @@ class Questions():
         self._bottom_row = [Coord(i, self._bottom_row_y) for i in range(300, 900, 150)]
         self.coords = self._top_row + self._bottom_row
 
+        #TODO, make questions an ON/OFF choice
         #Labels
         self.label_width = 100
         self.label_height = 50
@@ -336,6 +337,9 @@ class Items():
         self._bottom_row_y = self._top_row_y - 50
         self._item_x_gap = 150
         self._item_x_start = 300
+        self.item_choice_x_offset = 10
+        self.item_choice_y_offset = 10
+
 
         #Coords
         self._top_row = [
@@ -363,43 +367,43 @@ class Items():
             i.QUESTION_BLOCK]
 
 
-        self.items = [
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-            item_sprites.SpinyBeetle(),
-        ]
-
-        #TODO, make the sprites fit in the highlight box
-        for s in self.items:
-            s.batch = c.OPTIONS_BATCH
-
-
-#         self.images = [
-#             c.IMG("redmushroom.png"),
-#             c.IMG("greenmushroom.png"),
-#             c.IMG("yoshicoinright.png"),
-#             c.IMG("pirahnaplantsmall.png"),
-#             c.IMG("spinybeetlestandright.png"),
-#             c.IMG("powbutton.png"),
-#             c.IMG("bombombstandright.png"),
-#             c.IMG("feather.png"),
-#             c.IMG("star.png"),
-#             c.IMG("questionblock.png")]
+#         self.items = [
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#             item_sprites.SpinyBeetle(),
+#         ]
 # 
-#         #TODO, fix these sprites
-#         self.sprites = [
-#             c.SPRITE(image[1], x=self.coords[image[0]].x, y=self.coords[image[0]].y, batch=c.OPTIONS_BATCH)
-#                 for image in enumerate(self.images)]
-# 
-#         for s in self.sprites:
-#             s.scale = 2
+#         #TODO, make the sprites fit in the highlight box
+#         for s in self.items:
+#             s.batch = c.OPTIONS_BATCH
+
+
+        self.images = [
+            c.IMG("redmushroom.png"),
+            c.IMG("greenmushroom.png"),
+            c.IMG("yoshicoinoption.png"),
+            c.IMG("pirahnaplantoption.png"),
+            c.IMG("spinybeetlestandright.png"),
+            c.IMG("powbutton.png"),
+            c.IMG("bombombstandright.png"),
+            c.IMG("feather.png"),
+            c.IMG("star.png"),
+            c.IMG("questionblockoption.png")]
+
+        #TODO, fix these sprites
+        self.sprites = [
+            c.SPRITE(image[1], x=self.coords[image[0]].x+self.item_choice_x_offset, y=self.coords[image[0]].y+self.item_choice_y_offset, batch=c.OPTIONS_BATCH)
+                for image in enumerate(self.images)]
+
+        for s in self.sprites:
+            s.scale = 2
 
         self._types = QuestionTypes
         self.batch = pyglet.graphics.Batch()
