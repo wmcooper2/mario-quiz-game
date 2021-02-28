@@ -1,9 +1,6 @@
 # Mario-Themed English Quiz Game
 A turn-based English flashcard review game.  
-Up to 6 players.
-
-
-### How to Play
+Up to 6 players.  
 Don't forget to install dependencies with `pip install -r requirements.txt` and to start up your virtual environment.  
 Tested on python 3.9 and macOS (Big Sur).  
 
@@ -60,3 +57,5 @@ question block
 ![Option Screen](optionScreen.png)
 
 ![Game Screen](gameScreen.png)
+
+![Game Screen 2](gameScreen2.png)
