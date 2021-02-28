@@ -36,7 +36,9 @@ def draw_title() -> None:
 def draw_problem(problem: Any) -> None:
     """Draw the problem."""
     player = u.player_in_front()
-    if not u.movement(player):
+    #TODO, uncomment this line for future complexity additions
+#     if not u.movement(player):
+    if not u.movement(player) and c.QUESTIONS:
         problem.box.draw()
         c.PROBLEM_BATCH.draw()
 

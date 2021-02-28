@@ -170,6 +170,7 @@ class Constants():
     MUSIC = True
     SCORES = True
     TIMER = True
+    QUESTIONS = True
 
 #CHANGING POINTS OF FOCUS DURING GAMEPLAY
     P1 = None

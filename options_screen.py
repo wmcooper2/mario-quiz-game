@@ -62,34 +62,45 @@ class Difficulties():
         self.y = y
         self.label_width = 200
         self.label_height = 50
+        self.label_vertical_offset = 13
         self.coords = [Coord(i, self.y) for i in range(300, 900, 200)]
         self.choices = d
         self.horizontal_index = 0
         self.batch = pyglet.graphics.Batch()
+
         self.highlight = HighlightBox(
             self.coords[self.horizontal_index],
             self.label_width,
             self.label_height)
-        self._easy = c.LABEL("EASY",
-            x=self.coords[0][0],
-            y=self.coords[0][1],
+
+        self._easy = c.LABEL(
+            "EASY",
+            x=self.coords[0][0] + self.label_width // 2,
+            y=self.coords[0][1] + self.label_vertical_offset,
             font_size=c.FONT_SIZE,
             color=c.WHITE,
             bold=True,
+            anchor_x="center",
             batch=self.batch)
-        self._normal = c.LABEL("NORMAL",
-            x=self.coords[1][0],
-            y=self.coords[1][1],
+
+        self._normal = c.LABEL(
+            "NORMAL",
+            x=self.coords[1][0] + self.label_width // 2,
+            y=self.coords[1][1] + self.label_vertical_offset,
             font_size=c.FONT_SIZE,
             color=c.WHITE,
             bold=True,
+            anchor_x="center",
             batch=self.batch)
-        self._hard = c.LABEL("HARD",
-            x=self.coords[2][0],
-            y=self.coords[2][1],
+
+        self._hard = c.LABEL(
+            "HARD",
+            x=self.coords[2][0] + self.label_width // 2,
+            y=self.coords[2][1] + self.label_vertical_offset,
             font_size=c.FONT_SIZE,
             color=c.WHITE,
             bold=True,
+            anchor_x="center",
             batch=self.batch)
 
     def left(self) -> None:
@@ -117,31 +128,37 @@ class Difficulties():
             c.DIFFICULTY = d.HARD
 
 class OnOff():
-    #TODO, if true...set c.PROBLEM_TIMER = True
     def __init__(self, y):
         self.y = y
         self.label_width = 100
         self.label_height = 50
         self.horizontal_index = 0
+        self.label_vertical_offset = 13
         self.coords = [Coord(i, self.y) for i in range(300, 500, 100)]
         self.batch = pyglet.graphics.Batch()
         self.highlight = HighlightBox(
             self.coords[self.horizontal_index],
             self.label_width,
             self.label_height)
-        self.on = c.LABEL("ON",
-            x=self.coords[0].x,
-            y=self.y,
+
+        self.on = c.LABEL(
+            "ON",
+            x=self.coords[0].x + self.label_width // 2,
+            y=self.y + self.label_vertical_offset,
             font_size=c.FONT_SIZE,
             color=c.WHITE,
             bold=True,
+            anchor_x="center",
             batch=self.batch)
-        self.off = c.LABEL("OFF",
-            x=self.coords[1].x,
-            y=self.y,
+
+        self.off = c.LABEL(
+            "OFF",
+            x=self.coords[1].x + self.label_width // 2,
+            y=self.y + self.label_vertical_offset,
             font_size=c.FONT_SIZE,
             color=c.WHITE,
             bold=True,
+            anchor_x="center",
             batch=self.batch)
 
     def left(self) -> None:
@@ -163,8 +180,8 @@ class HighlightBox():
         self.coord = coord
         self.w = w
         self.h = h
-        self.margin = 6
-        self.thickness = 6
+        self.margin = 2
+        self.thickness = 2
         self.batch = pyglet.graphics.Batch()
         self.bottom = pyglet.shapes.Line(
             coord.x,
@@ -248,6 +265,7 @@ class Music(OnOff):
                 c.MUSIC_PLAYER.play()
 
 class Timer(OnOff):
+    #TODO: make a timer in the problem box
     def __init__(self, y, *args, **kwargs):
         super().__init__(y, *args, **kwargs)
 
@@ -260,7 +278,21 @@ class Timer(OnOff):
         else:
             c.TIMER = True
 
-class Questions():
+class Questions(OnOff):
+    def __init__(self, y, *args, **kwargs):
+        super().__init__(y, *args, **kwargs)
+
+    def update(self):
+        super().update()
+
+        #change the constant in constants.py
+        if self.horizontal_index == 0:
+            c.QUESTIONS = True
+        else:
+            c.QUESTIONS = False
+
+#Use this version of the questions class for future complexity
+class Questions2():
     def __init__(self, y: int):
         self._top_row_y = y
         self._bottom_row_y = self._top_row_y - 50 
@@ -270,7 +302,6 @@ class Questions():
         self._bottom_row = [Coord(i, self._bottom_row_y) for i in range(300, 900, 150)]
         self.coords = self._top_row + self._bottom_row
 
-        #TODO, make questions an ON/OFF choice
         #Labels
         self.label_width = 100
         self.label_height = 50
@@ -334,12 +365,12 @@ class Questions():
 class Items():
     def __init__(self, y: int):
         self._top_row_y = y
-        self._bottom_row_y = self._top_row_y - 50
+        self._bottom_row_y = self._top_row_y - 60
         self._item_x_gap = 150
         self._item_x_start = 300
-        self.item_choice_x_offset = 10
-        self.item_choice_y_offset = 10
-
+        self.label_width = 50
+        self.label_height = 50
+        self.item_choice_y_offset = 9
 
         #Coords
         self._top_row = [
@@ -349,11 +380,8 @@ class Items():
             Coord(i, self._bottom_row_y)
                 for i in range(self._item_x_start, 1050, self._item_x_gap)]
         self.coords = self._top_row + self._bottom_row
-#         print("coords: ", self.coords)
 
         #Labels
-        self.label_width = 50
-        self.label_height = 50
         self.choices = [
             i.RED_MUSHROOM,
             i.GREEN_MUSHROOM,
@@ -366,25 +394,6 @@ class Items():
             i.STAR,
             i.QUESTION_BLOCK]
 
-
-#         self.items = [
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#             item_sprites.SpinyBeetle(),
-#         ]
-# 
-#         #TODO, make the sprites fit in the highlight box
-#         for s in self.items:
-#             s.batch = c.OPTIONS_BATCH
-
-
         self.images = [
             c.IMG("redmushroom.png"),
             c.IMG("greenmushroom.png"),
@@ -392,18 +401,31 @@ class Items():
             c.IMG("pirahnaplantoption.png"),
             c.IMG("spinybeetlestandright.png"),
             c.IMG("powbutton.png"),
-            c.IMG("bombombstandright.png"),
+            c.IMG("bombomboption.png"),
             c.IMG("feather.png"),
             c.IMG("star.png"),
             c.IMG("questionblockoption.png")]
 
-        #TODO, fix these sprites
+        #center all the images
+        for image in self.images:
+            image.anchor_x = image.width // 2
+
+        #setup the sprites
         self.sprites = [
-            c.SPRITE(image[1], x=self.coords[image[0]].x+self.item_choice_x_offset, y=self.coords[image[0]].y+self.item_choice_y_offset, batch=c.OPTIONS_BATCH)
-                for image in enumerate(self.images)]
+            c.SPRITE(
+                image[1],
+                x=self.coords[image[0]].x + self.label_width // 2,
+                y=self.coords[image[0]].y + self.item_choice_y_offset,
+                batch=c.OPTIONS_BATCH)
+            for image in enumerate(self.images)]
 
         for s in self.sprites:
             s.scale = 2
+
+        #custom adjustments to get images to fit inside the highlight box
+        #TODO
+        self.sprites[2].y -= 9  #yoshicoin
+        self.sprites[3].y -= 5  #pirahnaplant
 
         self._types = QuestionTypes
         self.batch = pyglet.graphics.Batch()
@@ -413,6 +435,7 @@ class Items():
             self.label_width,
             self.label_height)
         # change opacity on highlight
+        #TODO: to enable/disable, change opacity of image, then add to c.ALL_ITEMS
 
     def update(self) -> None:
         # add/remove item to c.ALL_ITEMS
