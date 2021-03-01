@@ -367,6 +367,7 @@ def add_item() -> None:
     """Adds 1 new item to c.ALL_ITEMS."""
     c.ALL_ITEMS.append(new_item())
 
+#TODO, change the all_items to "items in play" so that I can add/remove from the options list.
 def add_items() -> None:
     """Populates c.ALL_ITEMS."""
     for item in range(c.NUM_ITEMS):

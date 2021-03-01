@@ -28,6 +28,13 @@ Tested on python 3.9 and macOS (Big Sur).
 |up arrow|randomly mix players  
 |esc|quit the game  
 
+#### Options Menu
+|Key|Description|
+|:---|:---|
+|left right|move left and right
+|up down|move up and down
+|space|enable or disable (items only)  
+
 ### Items
 |Item|Description|
 |:---|:---|
@@ -46,10 +53,9 @@ question block
 
 ### Notes
 * Still need to add effects for the items.  
-* Character and item z-indices are a little wierd and you can notice it when they move across other sprites.
-* Need to add player selection screen.
-* Loop the background music.
-* Add difficutly changes. The labels are there but nothing changes yet in the game.
+* Character and item z-indices are a little wierd and you can notice it when they move across other sprites.  
+* Need to add player selection screen.  
+* Add difficutly changes. The labels are there but nothing changes yet in the game.  
 
 ### Screen Shots
 ![Title Screen](titleScreen.png)

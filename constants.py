@@ -181,9 +181,9 @@ class Constants():
 
 #MUSIC and SOUND EFFECTS
     # source = pyglet.media.load('explosion.wav')
-    # source = pyglet.resource.media('overworld.mp3')
-    THEME_SONG = pyglet.media.load('./music/overworld.mp3')
+    THEME_SONG = pyglet.media.load('./music/overworld_extended.mp3')
     MUSIC_PLAYER = pyglet.media.Player()
     MUSIC_PLAYER.volume = 0.4
+    MUSIC_PLAYER.loop = True
     MUSIC_PLAYER.queue(THEME_SONG)
     MUSIC_PLAYER.play()

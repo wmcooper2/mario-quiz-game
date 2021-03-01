@@ -120,6 +120,7 @@ class Difficulties():
         self.highlight.update(self.coords[self.horizontal_index])
 
         #update constants.py value
+        #super easy and super hard not used
         if self.horizontal_index == 0:
             c.DIFFICULTY = d.EASY
         elif self.horizontal_index == 1:
@@ -371,6 +372,7 @@ class Items():
         self.label_width = 50
         self.label_height = 50
         self.item_choice_y_offset = 9
+        self.opacity = 255
 
         #Coords
         self._top_row = [
@@ -416,14 +418,15 @@ class Items():
                 image[1],
                 x=self.coords[image[0]].x + self.label_width // 2,
                 y=self.coords[image[0]].y + self.item_choice_y_offset,
+#                 opacity=self.opacity,
                 batch=c.OPTIONS_BATCH)
             for image in enumerate(self.images)]
 
         for s in self.sprites:
             s.scale = 2
+            s.opacity = 255
 
         #custom adjustments to get images to fit inside the highlight box
-        #TODO
         self.sprites[2].y -= 9  #yoshicoin
         self.sprites[3].y -= 5  #pirahnaplant
 
@@ -434,13 +437,10 @@ class Items():
             self.coords[self.horizontal_index],
             self.label_width,
             self.label_height)
-        # change opacity on highlight
-        #TODO: to enable/disable, change opacity of image, then add to c.ALL_ITEMS
+        # add/remove item to c.ALL_ITEMS
 
     def update(self) -> None:
-        # add/remove item to c.ALL_ITEMS
         self.batch.draw()
-        #pass in new coord to reposition the highlight
         self.highlight.update(self.coords[self.horizontal_index])
 
     def left(self) -> None:
@@ -452,6 +452,14 @@ class Items():
         self.horizontal_index += 1
         if self.horizontal_index >= len(self.coords):
             self.horizontal_index = 0
+
+    def toggle_item_opacity(self) -> None:
+        """Toggle opacity between full and half opacity."""
+        if self.sprites[self.horizontal_index].opacity == 255:
+            self.sprites[self.horizontal_index].opacity = 50
+        else:
+            self.sprites[self.horizontal_index].opacity = 255
+
 
 class OptionsScreen():
     def __init__(self):
@@ -563,3 +571,15 @@ class OptionsScreen():
 
     def selector_right(self) -> None:
         self.option_choices[self.vertical_index].right()
+
+    def toggle_item(self) -> None:
+        """Enables and disables the item."""
+        if self.vertical_index == self.option_choices.index(self.items):
+            #TODO
+            #get the currently highlighted item
+            print("current item highlighted:", self.items.horizontal_index)
+            self.items.toggle_item_opacity() 
+            #if the current item is in c.ITEMS:
+                #remove it
+            #else
+                #add it

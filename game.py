@@ -84,6 +84,8 @@ def on_key_release(symbol, modifiers):
             options.selector_left()
         elif symbol == key.RIGHT:
             options.selector_right()
+        elif symbol == key.SPACE:
+            options.toggle_item()
 
     #TITLE
     elif u.is_title_screen():
