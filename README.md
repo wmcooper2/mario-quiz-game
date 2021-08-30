@@ -67,6 +67,7 @@ question block
 * Want to add player selection screen.  
 * Add difficutly changes. The labels are there but nothing changes yet in the game. 
 * Flow chart created here: https://whimsical.com/mario-quiz-game-UmbMmMaY6MUGTp341ngNJW  
+* Adding different text files for the different items. If there is a question/problem you want to associate with an item, then you can add your own text. (ex, gamedata/redmushroomQuestions.txt)
 
 ### Screen Shots
 ![Title Screen](titleScreen.png)

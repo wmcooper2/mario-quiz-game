@@ -471,6 +471,77 @@ class Problem(c.LABEL):
         letter.scale = self.letter_scale
         self.letters.append(letter)
 
+    #TODO
+    def new_problem(self, text) -> None:
+        """Setup a new problem."""
+        self.letters = []                   #clear previous problem
+        question = text
+        box_width = self.box.width * .9
+        length = len(question)*8            #8px, width of letter-sprite
+
+        #ensure question fits within the box's boundaries
+        if length <= box_width:             #fits on one line
+            for char in enumerate(question):
+                if char[1] in s.printable:  #if is ascii
+#                     print("printable char:", char)
+
+                    #TODO, set the y pos and adjust to center x pos
+                    self.adjustment_width = self.box.width // 2 - (len(question) // 2)
+                    print("adjustment width:", self.adjustment_width)
+
+        #split question into words
+        #for each word
+            #calculate width
+            #add width to total width of problem
+            #if accumulated total width for the current line is too wide for black box
+                # decrement the y-value to drop to the next line
+            #for each letter in word
+                #make a sprite and add it to the sprite list for this problem
+                #make sure to add them to the batch
+
+                    #if lowercase
+                    if char[1] in lowercase:
+                        self.lowercase_sprite(char)
+
+                    #if uppercase
+                    elif char[1] in uppercase:
+                        letter = c.SPRITE(
+                            all_letters.get_region(
+                                x=self.coords[char[1]],
+                                y=8,
+                                width=8,
+                                height=8),
+                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
+#                             x=self.box.x+8*char[0]*self.letter_scale,
+#                             x=self.box.x+8*char[0] + self.adjustment_width,
+                            y=self.box.y,
+                            batch=c.PROBLEM_BATCH)
+                        letter.scale = self.letter_scale
+                        self.letters.append(letter)
+
+                    elif char[1] in punc:
+                        letter = c.SPRITE(
+                            all_letters.get_region(
+                                x=punc[char[1]]["x"],
+                                y=punc[char[1]]["y"],
+                                width=8,
+                                height=8),
+                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
+#                             x=self.box.x+8*char[0]*self.letter_scale,
+#                             x=self.box.x+8*char[0] + self.adjustment_width,
+                            y=self.box.y,
+                            batch=c.PROBLEM_BATCH)
+                        letter.scale = self.letter_scale
+                        self.letters.append(letter)
+
+                else:
+                    print("not printable...")
+                    #probably japanese, just make a Label class sprite for now
+        else:
+            print("Need multiple lines.") 
+ 
+
+    #TODO, remove this method, it was replaced with self.new_problem()
     def new_question(self) -> None:
         """Setup a new question."""
         self.letters = []                   #clear previous problem

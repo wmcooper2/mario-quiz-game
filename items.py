@@ -257,6 +257,12 @@ class RedMushroom(Item):
         """Presents a random English word"""
         print("RedMushroom effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/redmushroomQuestions.txt"""
+        with open("gamedata/redmushroomQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
 class GreenMushroom(Item):
     """Green Mushroom is a random verb form question."""
     def __init__(self, *args, **kwargs):
