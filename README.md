@@ -4,6 +4,16 @@ Up to 6 players.
 Don't forget to install dependencies with `pip install -r requirements.txt` and to start up your virtual environment.  
 Tested on python 3.9 and macOS (Big Sur).  
 
+## Operation
+1. Create and run virtual environment:  
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```  
+
+2. Run `./startGame`  
+3. Run tests with `./test`
+
 ### Basic Gameplay
 1. Decide the order of the teams and let them choose their players.
 2. Run the game with `./start`
@@ -54,8 +64,9 @@ question block
 ### Notes
 * Still need to add effects for the items.  
 * Character and item z-indices are a little wierd and you can notice it when they move across other sprites.  
-* Need to add player selection screen.  
-* Add difficutly changes. The labels are there but nothing changes yet in the game.  
+* Want to add player selection screen.  
+* Add difficutly changes. The labels are there but nothing changes yet in the game. 
+* Flow chart created here: https://whimsical.com/mario-quiz-game-UmbMmMaY6MUGTp341ngNJW  
 
 ### Screen Shots
 ![Title Screen](titleScreen.png)

@@ -20,7 +20,9 @@ import sprites as s
 #TODO, add the star, feather and question block to the game
 #NOTE, the business logic is separated from the drawing of the sprites in the update loops
 
-#SPRITES
+
+################################################################################
+# Player setup
 background = s.Background()
 yammy = s.Yammy()
 
@@ -44,17 +46,18 @@ c.ALL_PLAYERS = [
     big_boo,
     green_koopa,
     big_mole]
-
-#SOME SETUP
-#Items
-u.set_item_spots()
-i.add_items()
-
-#Players
 u.set_player_spots()
 u.add_players()
 
-#Scores
+
+################################################################################
+# Item setup
+u.set_item_spots()
+i.add_items()
+
+
+################################################################################
+# Scores setup
 #TODO, move these to their respective classes?
 u.set_score_spots()
 u.set_score_indices()
@@ -62,17 +65,25 @@ u.set_player_score_sprites()
 u.assign_x_pos_to_player_score_sprites()
 u.set_score_values_x()
 
+
+################################################################################
+# Problem setup
 #Problems
 question = c.NEW_QUESTION
 problem = s.Problem()
 
-#Screens
+################################################################################
+# Menu screens setup
 title = TitleScreen()
 options = OptionsScreen()
 
+
+################################################################################
+# Game event loop
 @c.GAME_WINDOW.event
 def on_key_release(symbol, modifiers):
-    #OPTIONS
+
+    # options screen
     if u.is_options_screen():
         if symbol == key.UP:
             options.selector_up()
@@ -87,7 +98,7 @@ def on_key_release(symbol, modifiers):
         elif symbol == key.SPACE:
             options.toggle_item()
 
-    #TITLE
+    # title screen
     elif u.is_title_screen():
         if symbol == key.UP:
             title.selector_up()
@@ -101,7 +112,7 @@ def on_key_release(symbol, modifiers):
             elif title.is_options_selected():
                 c.SCREEN = Screens.OPTIONS
 
-    #GAME
+    # game screen
     elif u.is_game_screen():
         """
             Digits:     1
@@ -114,6 +125,11 @@ def on_key_release(symbol, modifiers):
         elif not u.any_movement():
             if symbol == key._1:
                 if not problem.showing:
+                    #TODO, 
+                    # determine what item the player will get, 
+                    # pass it to the problem instance
+                    # the problem class should update itself based on the item passed to it.
+
                     problem.question.draw()
                     problem.toggle()
                 player.use_item()
@@ -178,6 +194,8 @@ def game_loop(dt) -> None:
     transfer_item()
     draw_sprites()
     if problem.showing:
+        #TODO, call the item's problem method to return a string from a specific text file
+        # Then pass that string into the problem class and have it update its text
         draw_problem(problem)
 
 def title_loop(dt) -> None:
