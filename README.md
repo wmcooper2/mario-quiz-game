@@ -10,7 +10,6 @@ Tested on python 3.9 and macOS (Big Sur).
 python3 -m venv venv
 source venv/bin/activate
 ```  
-
 2. Run `./startGame`  
 3. Run tests with `./test`
 
@@ -77,3 +76,21 @@ question block
 ![Game Screen](gameScreen.png)
 
 ![Game Screen 2](gameScreen2.png)
+
+
+### Purpose of This Project
+To review material in the Total English book series as well as custom questions/problems the teacher would contribute.
+
+### What I learned
+* How to focus my attention on the task at hand given a one month deadline.
+* How to learn a piece of software (pyglet) with a deadline in mind.
+* I learned about the similarities between Pyglet and Pygame.
+* How to make a simple a 2D game
+* Basic use of GIMP to create (extract) my own sprites.
+* The benefits and drawbacks of using a single module to control the constants for a program.
+* How to think more about what the customer needs and less about "just making the program work".
+  * I made a successful program, but the target audience (my students) were just not that "in to it" as I had hoped. 
+  * It is important to make something with the target audience in mind. Make what they want, not what you think they want if you want to increase the chances of having a successful product.
+  * I should have gathered more data about my market before making a product. 
+  * The program worked but it "missed the mark."
+* The importance of having a flowchart to keep track of the logic as the code grows.
