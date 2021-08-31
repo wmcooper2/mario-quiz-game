@@ -38,7 +38,12 @@ def draw_problem(problem: Any) -> None:
     player = u.player_in_front()
     #TODO, uncomment this line for future complexity additions
 #     if not u.movement(player):
-    if not u.movement(player) and c.QUESTIONS:
+
+    #WORKS
+#     if not u.movement(player) and c.QUESTIONS:
+
+    #TESTING
+    if not u.any_movement() and c.QUESTIONS:
         problem.box.draw()
         c.PROBLEM_BATCH.draw()
 
