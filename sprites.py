@@ -421,12 +421,13 @@ class Problem(c.LABEL):
         self.center_x = (self.img.width // 2) + self.box.x
         self.center_y = (self.img.height // 2) + self.box.y
         self.showing = False
+        self.decided = False
         self.letters = []        
         self.letter_scale = 3
         self.coords = {}
         self.adjustment_width = 0
         self.question = c.LABEL(
-            text="blank",
+#             text="blank",
             font_name=c.FONT,
             x=self.center_x,
             y=self.center_y,
@@ -471,23 +472,49 @@ class Problem(c.LABEL):
         letter.scale = self.letter_scale
         self.letters.append(letter)
 
+
+
+
+
+
+
+
     #TODO
     def new_problem(self, text) -> None:
         """Setup a new problem."""
-        self.letters = []                   #clear previous problem
+
+        def _clear_question_text() -> None:
+            """Sets the question sprite's text to a blank string."""
+            letters = []
+
+        def _fits_on_one_line() -> bool:
+            """Checks if question will fit on a single line within the inner box."""
+            return question_length <= inner_box
+
+        def _x_offset() -> int:
+            """Calculates x offset of the question's text within the outer box."""
+            return (self.box.width // 2) - (question_length // 2)
+
+        def _is_ascii(char) -> bool:
+            """Checks if char is a printable ascii character."""
+            return char in s.printable
+
+        _clear_question_text()
         question = text
-        box_width = self.box.width * .9
-        length = len(question)*8            #8px, width of letter-sprite
+        inner_box = self.box.width * .9     # 90% of the outer black box
+        question_length = len(question)*8   # width of letter-sprite is 8px
+        x_offset = 0
 
-        #ensure question fits within the box's boundaries
-        if length <= box_width:             #fits on one line
+            
+
+
+        #start here
+        if _fits_on_one_line():
             for char in enumerate(question):
-                if char[1] in s.printable:  #if is ascii
-#                     print("printable char:", char)
-
-                    #TODO, set the y pos and adjust to center x pos
-                    self.adjustment_width = self.box.width // 2 - (len(question) // 2)
-                    print("adjustment width:", self.adjustment_width)
+                text = char[1]
+                text_index = char[0]
+                if _is_ascii(text):
+                    x_offset = _x_offset()
 
         #split question into words
         #for each word
@@ -499,38 +526,36 @@ class Problem(c.LABEL):
                 #make a sprite and add it to the sprite list for this problem
                 #make sure to add them to the batch
 
-                    #if lowercase
-                    if char[1] in lowercase:
+                    #TODO
+                    # handle lowercase letters
+                    if text in lowercase:
                         self.lowercase_sprite(char)
 
-                    #if uppercase
-                    elif char[1] in uppercase:
+                    # handle uppercase letters
+                    elif text in uppercase:
                         letter = c.SPRITE(
                             all_letters.get_region(
-                                x=self.coords[char[1]],
-                                y=8,
-                                width=8,
-                                height=8),
-                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
-#                             x=self.box.x+8*char[0]*self.letter_scale,
-#                             x=self.box.x+8*char[0] + self.adjustment_width,
-                            y=self.box.y,
-                            batch=c.PROBLEM_BATCH)
+                                x = self.coords[text],
+                                y = 8,
+                                width = 8,
+                                height = 8),
+                            x = self.box.x + (8 * text_index * self.letter_scale) + x_offset,
+                            y = self.box.y,
+                            batch = c.PROBLEM_BATCH)
                         letter.scale = self.letter_scale
                         self.letters.append(letter)
 
-                    elif char[1] in punc:
+                    # handle punctuation
+                    elif text in punc:
                         letter = c.SPRITE(
                             all_letters.get_region(
-                                x=punc[char[1]]["x"],
-                                y=punc[char[1]]["y"],
-                                width=8,
-                                height=8),
-                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
-#                             x=self.box.x+8*char[0]*self.letter_scale,
-#                             x=self.box.x+8*char[0] + self.adjustment_width,
-                            y=self.box.y,
-                            batch=c.PROBLEM_BATCH)
+                                x = punc[text]["x"],
+                                y = punc[text]["y"],
+                                width = 8,
+                                height = 8),
+                            x = self.box.x + (8 * text_index * self.letter_scale) + x_offset,
+                            y = self.box.y,
+                            batch = c.PROBLEM_BATCH)
                         letter.scale = self.letter_scale
                         self.letters.append(letter)
 
@@ -539,7 +564,17 @@ class Problem(c.LABEL):
                     #probably japanese, just make a Label class sprite for now
         else:
             print("Need multiple lines.") 
+
+        # reset the flag so that it doesn't keep choosing
+        self.decided = True
  
+
+
+
+
+
+
+
 
     #TODO, remove this method, it was replaced with self.new_problem()
     def new_question(self) -> None:

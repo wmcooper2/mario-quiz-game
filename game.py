@@ -150,6 +150,7 @@ def on_key_release(symbol, modifiers):
                 u.rotate_players_left()
                 if problem.showing:
                     problem.toggle()
+                    problem.decided = False # clear the flag
                 #delete prior problem letter sprites
 
             #minus one point
@@ -161,6 +162,7 @@ def on_key_release(symbol, modifiers):
                 u.rotate_players_left()
                 if problem.showing:
                     problem.toggle()
+                    problem.decided = False # clear the flag
                 #delete prior problem letter sprites
 
             elif symbol == key.A:
@@ -196,15 +198,16 @@ def game_loop(dt) -> None:
     if problem.showing:
 
         #TODO, call the item's problem method to return a string from a specific text file
-        try: 
-#         if c.TRANSFER_ITEM:
+#         try: 
+        if c.TRANSFER_ITEM:
             problem_text = c.TRANSFER_ITEM.problem()
-            # Then pass that string into the problem class and have it update its text
-            problem.new_problem(problem_text)
-            # if problem showing and no movement?
+
+            # if the problem is not decided, then decide on a problem
+            if not problem.decided:
+                problem.new_problem(problem_text)
             # show the problem and toggle a flag to keep from randomly changing the problem while floating in air.
-        except:
-            pass
+#         except:
+#             pass
         draw_problem(problem)
 
 def title_loop(dt) -> None:

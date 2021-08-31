@@ -224,6 +224,13 @@ class Bombomb(Walker):
         """Randomly mix the order of items on the screen."""
         c.PLAYERS = u.mix(c.PLAYERS)
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/bombombQuestions.txt"""
+        with open("gamedata/bombombQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
 class SpinyBeetle(Walker): 
     """Spiny Beetle is a question problem from 3rd year JHS at DaiKyuuChuu."""
     def __init__(self, *args, **kwargs):
@@ -242,6 +249,12 @@ class SpinyBeetle(Walker):
     def effect(self) -> None:
         """Presents a question from yomitore, qa 100, and custom questions."""
         print("SpinyBeetle effect")
+
+    def problem(self) -> str:
+        """Returns random line from gamedata/spinybeetleQuestions.txt"""
+        with open("gamedata/spinybeetleQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
 
 #SLIDERS
 class RedMushroom(Item):
@@ -276,6 +289,13 @@ class GreenMushroom(Item):
         """Presents a verb form problem"""
         print("GreenMushroom effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/greenmushroomQuestions.txt"""
+        with open("gamedata/greenmushroomQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
 class YoshiCoin(Item):
     """Yoshi Coin is a pronunciation question."""
     def __init__(self, *args, **kwargs):
@@ -291,6 +311,14 @@ class YoshiCoin(Item):
         """Presents a pronunciation problem."""
         print("YoshiCoin effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/yoshicoinQuestions.txt"""
+        with open("gamedata/yoshicoinQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
 class PirahnaPlant(Item):
     """Pirahna Plant is a sentence translation problem (English to Japanese)."""
     def __init__(self, *args, **kwargs):
@@ -304,6 +332,15 @@ class PirahnaPlant(Item):
         """Presents a sentence translation problem (English to Japanese)"""
         pass
         print("PirahnaPlant effect")
+
+    def problem(self) -> str:
+        """Returns random line from gamedata/pirahnaplantQuestions.txt"""
+        with open("gamedata/pirahnaplantQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
 
 class PowButton(Item):
     """Pow Button takes away one point from everyone."""
@@ -319,6 +356,16 @@ class PowButton(Item):
         """Pow Button takes one point away from everyone."""
         print("Pow effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/powbuttonQuestions.txt"""
+        with open("gamedata/powbuttonQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
+
+
 class Feather(Item):
     """Feather allows the player to skip their turn when the item is used."""
     def __init__(self, *args, **kwargs):
@@ -331,6 +378,17 @@ class Feather(Item):
     def effect(self) -> None:
         """Allows the player to skip a turn when the item is used."""
         u.rotate_players_left()
+
+    def problem(self) -> str:
+        """Returns random line from gamedata/featherQuestions.txt"""
+        with open("gamedata/featherQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
+
+
 
 class QuestionBlock(Item):
     """Question block chooses a random effect."""
@@ -345,6 +403,18 @@ class QuestionBlock(Item):
         """Choose a random effect from all of the available effects."""
         print("QuestionBlock effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/questionblockQuestions.txt"""
+        with open("gamedata/questionblockQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
+
+
+
+
 class Star(Item):
     """Star allows the player to avoid the negative affects of other items."""
     def __init__(self, *args, **kwargs):
@@ -358,7 +428,21 @@ class Star(Item):
         """Star allows the player to avoid the negative affects of other items."""
         print("Star effect")
 
+    def problem(self) -> str:
+        """Returns random line from gamedata/starQuestions.txt"""
+        with open("gamedata/starQuestions.txt", "r") as f:
+            lines = f.readlines()
+            return random.choice(lines)
+
+
+
+
+
+
+
+
 class Poof(c.SPRITE):
+    """The puff of smoke when an item disappears."""
     def __init__(self, x=0, y=0, *args, **kwargs):
         self.poof = c.IMG("poof.png")
         self.poof_seq = c.GRID(self.poof, 1, 4)
