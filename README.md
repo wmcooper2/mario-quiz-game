@@ -5,6 +5,8 @@ Don't forget to install dependencies with `pip install -r requirements.txt` and 
 Tested on python 3.9 and macOS (Big Sur).  
 
 ## Operation
+Here is a [YouTube video demo](https://youtu.be/DmhNWh03no8). There is no audio in this video, but the actual game has music and sound effects.
+
 1. Create and run virtual environment:  
 ```bash
 python3 -m venv venv
