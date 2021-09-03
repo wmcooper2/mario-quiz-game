@@ -248,7 +248,8 @@ class SpinyBeetle(Walker):
     
     def effect(self) -> None:
         """Presents a question from yomitore, qa 100, and custom questions."""
-        print("SpinyBeetle effect")
+#         print("SpinyBeetle effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/spinybeetleQuestions.txt"""
@@ -268,7 +269,8 @@ class RedMushroom(Item):
     
     def effect(self) -> None:
         """Presents a random English word"""
-        print("RedMushroom effect")
+#         print("RedMushroom effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/redmushroomQuestions.txt"""
@@ -287,7 +289,8 @@ class GreenMushroom(Item):
     
     def effect(self) -> None:
         """Presents a verb form problem"""
-        print("GreenMushroom effect")
+#         print("GreenMushroom effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/greenmushroomQuestions.txt"""
@@ -309,7 +312,8 @@ class YoshiCoin(Item):
     
     def effect(self) -> None:
         """Presents a pronunciation problem."""
-        print("YoshiCoin effect")
+#         print("YoshiCoin effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/yoshicoinQuestions.txt"""
@@ -330,8 +334,8 @@ class PirahnaPlant(Item):
     
     def effect(self) -> None:
         """Presents a sentence translation problem (English to Japanese)"""
+#         print("PirahnaPlant effect")
         pass
-        print("PirahnaPlant effect")
 
     def problem(self) -> str:
         """Returns random line from gamedata/pirahnaplantQuestions.txt"""
@@ -354,7 +358,8 @@ class PowButton(Item):
     
     def effect(self):
         """Pow Button takes one point away from everyone."""
-        print("Pow effect")
+#         print("Pow effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/powbuttonQuestions.txt"""
@@ -401,7 +406,8 @@ class QuestionBlock(Item):
     
     def effect(self) -> None:
         """Choose a random effect from all of the available effects."""
-        print("QuestionBlock effect")
+#         print("QuestionBlock effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/questionblockQuestions.txt"""
@@ -426,7 +432,8 @@ class Star(Item):
     
     def effect(self) -> None:
         """Star allows the player to avoid the negative affects of other items."""
-        print("Star effect")
+#         print("Star effect")
+        pass
 
     def problem(self) -> str:
         """Returns random line from gamedata/starQuestions.txt"""

@@ -20,8 +20,8 @@ import util as u
 
 all_sprites = c.IMG("allsprites2.png")
 all_letters = c.IMG("letters.png")
+letter_width = 8  #pixels
 data = tds.Data()
-
 punc = {
     "!": {"x": 208, "y": 9},
     ".": {"x": 216, "y": 9},
@@ -425,16 +425,14 @@ class Problem(c.LABEL):
         self.letters = []        
         self.letter_scale = 3
         self.coords = {}
-        self.adjustment_width = 0
         self.question = c.LABEL(
-#             text="blank",
             font_name=c.FONT,
             x=self.center_x,
             y=self.center_y,
             font_size=24,
             width=self.box.width,
             batch=c.PROBLEM_BATCH)
-
+        self.x_offset = 40
 
         #setup alphabet image indices
         for letter in enumerate(lowercase):
@@ -456,195 +454,113 @@ class Problem(c.LABEL):
             self.verb_form])
         return choice()
 
-    def lowercase_sprite(self, char) -> None:
-        """Add lowercase sprite."""
-        letter = c.SPRITE(
-            all_letters.get_region(
-                x=self.coords[char[1]],
-                y=0,
-                width=8,
-                height=7),
-            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
-#             x=self.box.x+8*char[0]*self.letter_scale,
-#             x=self.box.x+8*char[0] + self.adjustment_width,
-            y=self.box.y,
-            batch=c.PROBLEM_BATCH)
+    def lowercase_sprite(self, char, ypos) -> None:
+        """Add lowercase sprite to the current problem's text."""
+        index = char[0]
+        text = char[1]
+        xpos = self.box.x + (8 * index * self.letter_scale)
+        letter = c.SPRITE(all_letters.get_region(x=self.coords[text], y=0, width=8, height=7),
+                            x = xpos + self.x_offset,
+                            y = ypos,
+                            batch=c.PROBLEM_BATCH)
         letter.scale = self.letter_scale
         self.letters.append(letter)
 
+    def uppercase_sprite(self, char, ypos) -> None:
+        """Add uppercase sprite to the current problem's text."""
+        index = char[0]
+        text = char[1]
+        xpos = self.box.x + (8 * index * self.letter_scale)
+        letter = c.SPRITE(all_letters.get_region(x=self.coords[text], y=8, width=8, height=8),
+                            x = xpos + self.x_offset,
+                            y = ypos,
+                            batch = c.PROBLEM_BATCH)
+        letter.scale = self.letter_scale
+        self.letters.append(letter)
 
-
-
-
-
-
+    def punctuation_sprite(self, char, ypos) -> None:
+        """Add punctuation sprite to the current problem's text."""
+        index = char[0]
+        text = char[1]
+        xpos = self.box.x + (8 * index * self.letter_scale)
+        punct_xpos = punc[text]["x"]
+        punct_ypos = punc[text]["y"]
+        letter = c.SPRITE(all_letters.get_region(x=punct_xpos, y=punct_ypos, width=8, height=8),
+                            x = xpos + self.x_offset,
+                            y = ypos,
+                            batch = c.PROBLEM_BATCH)
+        letter.scale = self.letter_scale
+        self.letters.append(letter)
 
     #TODO
     def new_problem(self, text) -> None:
         """Setup a new problem."""
 
+        question = text
+        inner_box = self.box.width * .9     # 90% of the outer black box
+        question_length = len(question)*8   # width of letter-sprite is 8px
+        x_offset = 0
+        max_line_length = int(inner_box // letter_width)
+
         def _clear_question_text() -> None:
             """Sets the question sprite's text to a blank string."""
-            letters = []
+            self.letters = []
 
         def _fits_on_one_line() -> bool:
             """Checks if question will fit on a single line within the inner box."""
-            return question_length <= inner_box
-
-        def _x_offset() -> int:
-            """Calculates x offset of the question's text within the outer box."""
-            return (self.box.width // 2) - (question_length // 2)
+            return int(question_length*self.letter_scale) <= int(inner_box)
 
         def _is_ascii(char) -> bool:
             """Checks if char is a printable ascii character."""
             return char in s.printable
 
-        _clear_question_text()
-        question = text
-        inner_box = self.box.width * .9     # 90% of the outer black box
-        question_length = len(question)*8   # width of letter-sprite is 8px
-        x_offset = 0
+        def _multi_line_question(string, ypos) -> None:
+            """Makes a multi-line question."""
+            index = int(max_line_length//self.letter_scale)
+            if (len(string)*self.letter_scale) > max_line_length:
+                while string[index] != " " and index > -1:
+                    index -= 1
+                _make_line_of_text(string[:index], ypos)
+                _multi_line_question(string[index:], ypos - (10*self.letter_scale))
+            else:
+                _make_line_of_text(string, ypos)
 
-            
-
-
-        #start here
-        if _fits_on_one_line():
-            for char in enumerate(question):
+        def _make_line_of_text(string, ypos) -> None:
+            """Makes a single line of text for the problem on screen."""
+            for char in enumerate(string):
                 text = char[1]
                 text_index = char[0]
                 if _is_ascii(text):
-                    x_offset = _x_offset()
-
-        #split question into words
-        #for each word
-            #calculate width
-            #add width to total width of problem
-            #if accumulated total width for the current line is too wide for black box
-                # decrement the y-value to drop to the next line
-            #for each letter in word
-                #make a sprite and add it to the sprite list for this problem
-                #make sure to add them to the batch
-
                     #TODO
                     # handle lowercase letters
                     if text in lowercase:
-                        self.lowercase_sprite(char)
+                        self.lowercase_sprite(char, ypos)
 
                     # handle uppercase letters
                     elif text in uppercase:
-                        letter = c.SPRITE(
-                            all_letters.get_region(
-                                x = self.coords[text],
-                                y = 8,
-                                width = 8,
-                                height = 8),
-                            x = self.box.x + (8 * text_index * self.letter_scale) + x_offset,
-                            y = self.box.y,
-                            batch = c.PROBLEM_BATCH)
-                        letter.scale = self.letter_scale
-                        self.letters.append(letter)
+                        self.uppercase_sprite(char, ypos)
 
                     # handle punctuation
                     elif text in punc:
-                        letter = c.SPRITE(
-                            all_letters.get_region(
-                                x = punc[text]["x"],
-                                y = punc[text]["y"],
-                                width = 8,
-                                height = 8),
-                            x = self.box.x + (8 * text_index * self.letter_scale) + x_offset,
-                            y = self.box.y,
-                            batch = c.PROBLEM_BATCH)
-                        letter.scale = self.letter_scale
-                        self.letters.append(letter)
+                        self.punctuation_sprite(char, ypos)
 
                 else:
                     print("not printable...")
                     #probably japanese, just make a Label class sprite for now
-        else:
-            print("Need multiple lines.") 
+
+        #method starts here
+        _clear_question_text()
+        question_ypos = self.box.y+int(self.box.height//1.5)
+
+        if (len(question)*self.letter_scale) > max_line_length:
+            _multi_line_question(question, question_ypos)
+
+        elif _fits_on_one_line():
+            _make_line_of_text(question, question_ypos)
 
         # reset the flag so that it doesn't keep choosing
         self.decided = True
  
-
-
-
-
-
-
-
-
-    #TODO, remove this method, it was replaced with self.new_problem()
-    def new_question(self) -> None:
-        """Setup a new question."""
-        self.letters = []                   #clear previous problem
-        question = self.random_question()
-        box_width = self.box.width * .9
-        length = len(question)*8            #8px, width of letter-sprite
-
-        #ensure question fits within the box's boundaries
-        if length <= box_width:             #fits on one line
-            for char in enumerate(question):
-                if char[1] in s.printable:  #if is ascii
-#                     print("printable char:", char)
-
-                    #TODO, set the y pos and adjust to center x pos
-                    self.adjustment_width = self.box.width // 2 - (len(question) // 2)
-                    print("adjustment width:", self.adjustment_width)
-
-        #split question into words
-        #for each word
-            #calculate width
-            #add width to total width of problem
-            #if accumulated total width for the current line is too wide for black box
-                # decrement the y-value to drop to the next line
-            #for each letter in word
-                #make a sprite and add it to the sprite list for this problem
-                #make sure to add them to the batch
-
-                    #if lowercase
-                    if char[1] in lowercase:
-                        self.lowercase_sprite(char)
-
-                    #if uppercase
-                    elif char[1] in uppercase:
-                        letter = c.SPRITE(
-                            all_letters.get_region(
-                                x=self.coords[char[1]],
-                                y=8,
-                                width=8,
-                                height=8),
-                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
-#                             x=self.box.x+8*char[0]*self.letter_scale,
-#                             x=self.box.x+8*char[0] + self.adjustment_width,
-                            y=self.box.y,
-                            batch=c.PROBLEM_BATCH)
-                        letter.scale = self.letter_scale
-                        self.letters.append(letter)
-
-                    elif char[1] in punc:
-                        letter = c.SPRITE(
-                            all_letters.get_region(
-                                x=punc[char[1]]["x"],
-                                y=punc[char[1]]["y"],
-                                width=8,
-                                height=8),
-                            x=self.box.x+8*char[0]*self.letter_scale + self.adjustment_width,
-#                             x=self.box.x+8*char[0]*self.letter_scale,
-#                             x=self.box.x+8*char[0] + self.adjustment_width,
-                            y=self.box.y,
-                            batch=c.PROBLEM_BATCH)
-                        letter.scale = self.letter_scale
-                        self.letters.append(letter)
-
-                else:
-                    print("not printable...")
-                    #probably japanese, just make a Label class sprite for now
-        else:
-            print("Need multiple lines.") 
-            
     def eng_word(self) -> str:
         """Chooses a random English vocabulary word."""
         return data.english_word()

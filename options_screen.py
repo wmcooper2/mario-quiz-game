@@ -577,7 +577,7 @@ class OptionsScreen():
         if self.vertical_index == self.option_choices.index(self.items):
             #TODO
             #get the currently highlighted item
-            print("current item highlighted:", self.items.horizontal_index)
+#             print("current item highlighted:", self.items.horizontal_index)
             self.items.toggle_item_opacity() 
             #if the current item is in c.ITEMS:
                 #remove it
